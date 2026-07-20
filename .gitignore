@@ -1,22 +1,38 @@
+# Dependencies & build
 node_modules
 .next
 out
 dist
 build
+
+# Env / secrets — never commit real credentials
+# Keep `.env.example` trackable (negation below).
 .env
-.env.local
-.env.*.local
+.env.*
+!.env.example
+*.pem
+*.p12
+*.key
+credentials.json
+**/secrets/
+**/*secret*.local
+
+# Logs & OS
 *.log
 .DS_Store
+
+# Hosting / IDE
 .vercel
 .vscode
 .idea
+
+# Coverage & tooling
 coverage
 prisma/.env
 prisma/migrations/dev.db*
-
 test-results/
 playwright-report/
 tsconfig.tsbuildinfo
 
+# Local GitHub auth scratch (if any)
 .gh-auth-*.txt

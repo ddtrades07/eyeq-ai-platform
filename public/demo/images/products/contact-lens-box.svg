@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Demo contact lens box (fictional)">
+  <rect width="400" height="300" fill="#ecfeff"/>
+  <rect x="110" y="60" width="180" height="180" rx="12" fill="#ffffff" stroke="#06b6d4" stroke-width="3"/>
+  <circle cx="200" cy="150" r="48" fill="none" stroke="#0891b2" stroke-width="4"/>
+  <circle cx="200" cy="150" r="28" fill="#cffafe"/>
+  <text x="200" y="88" text-anchor="middle" fill="#0e7490" font-family="system-ui,sans-serif" font-size="13" font-weight="600">Demo CL 6pk</text>
+  <text x="200" y="280" text-anchor="middle" fill="#64748b" font-family="system-ui,sans-serif" font-size="12">DEMO contact lens box - generic</text>
+</svg>

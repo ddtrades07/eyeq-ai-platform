@@ -1,0 +1,7 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 400 300" role="img" aria-label="Demo sunglasses (fictional)">
+  <rect width="400" height="300" fill="#f1f5f9"/>
+  <ellipse cx="130" cy="150" rx="72" ry="56" fill="#0f172a" stroke="#334155" stroke-width="6"/>
+  <ellipse cx="270" cy="150" rx="72" ry="56" fill="#0f172a" stroke="#334155" stroke-width="6"/>
+  <path d="M58 150 Q130 118 200 150 Q270 118 342 150" fill="none" stroke="#334155" stroke-width="6"/>
+  <text x="200" y="280" text-anchor="middle" fill="#64748b" font-family="system-ui,sans-serif" font-size="12">DEMO sunglasses - generic product image</text>
+</svg>

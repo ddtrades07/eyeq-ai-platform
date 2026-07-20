@@ -1,0 +1,31 @@
+{
+  "name": "eyeq-remotion-demo",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Programmatic EyeQ product demo video (Remotion)",
+  "scripts": {
+    "preview": "remotion studio src/index.ts",
+    "render": "remotion render src/index.ts EyeQDemo ../out/eyeq-demo.mp4 --concurrency=8 --jpeg-quality=75",
+    "render:fast": "remotion render src/index.ts EyeQDemo ../out/eyeq-demo.mp4 --concurrency=8 --jpeg-quality=70 --scale=0.75",
+    "build": "remotion bundle src/index.ts",
+    "capture": "tsx scripts/capture-screenshots.ts",
+    "assets": "tsx scripts/generate-assets.ts",
+    "assets:images": "tsx scripts/generate-assets.ts images",
+    "assets:voice": "tsx scripts/generate-assets.ts voice",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@remotion/cli": "4.0.286",
+    "react": "18.3.1",
+    "react-dom": "18.3.1",
+    "remotion": "4.0.286"
+  },
+  "devDependencies": {
+    "@playwright/test": "^1.49.1",
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "playwright": "^1.49.1",
+    "tsx": "^4.19.2",
+    "typescript": "^5.7.2"
+  }
+}

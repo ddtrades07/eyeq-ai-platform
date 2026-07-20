@@ -1,0 +1,25 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Demo external eye photo (fictional)">
+  <defs>
+    <radialGradient id="iris" cx="50%" cy="50%" r="55%">
+      <stop offset="0%" stop-color="#5b3a1e"/>
+      <stop offset="60%" stop-color="#8a5a2c"/>
+      <stop offset="100%" stop-color="#3f2712"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="600" fill="#f0d9cf"/>
+  <!-- lids -->
+  <path d="M120 300 Q400 130 680 300 Q400 470 120 300 Z" fill="#ffffff" stroke="#d9b6a6" stroke-width="4"/>
+  <!-- conjunctival vessels (mild redness) -->
+  <g stroke="#d9736a" stroke-width="2" fill="none" opacity="0.6">
+    <path d="M150 300 Q220 280 300 296"/>
+    <path d="M150 315 Q230 330 310 312"/>
+    <path d="M650 300 Q580 282 500 298"/>
+    <path d="M650 314 Q575 330 495 314"/>
+  </g>
+  <circle cx="400" cy="300" r="120" fill="url(#iris)"/>
+  <circle cx="400" cy="300" r="115" fill="none" stroke="#2c1a0c" stroke-width="2" opacity="0.5"/>
+  <circle cx="400" cy="300" r="48" fill="#120a05"/>
+  <circle cx="372" cy="272" r="16" fill="#ffffff" opacity="0.85"/>
+  <path d="M120 300 Q400 470 680 300" fill="none" stroke="#c98f7d" stroke-width="3"/>
+  <text x="400" y="565" text-anchor="middle" fill="#6b4a3c" font-family="system-ui,sans-serif" font-size="17">DEMO external eye photo - fictional, not a real patient</text>
+</svg>

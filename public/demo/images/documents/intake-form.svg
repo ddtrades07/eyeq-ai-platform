@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 800" role="img" aria-label="Demo intake form (fictional)">
+  <rect width="640" height="800" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="48" y="64" fill="#0f172a" font-family="system-ui,sans-serif" font-size="24" font-weight="600">Patient intake form</text>
+  <text x="48" y="96" fill="#64748b" font-family="system-ui,sans-serif" font-size="14">EyeQ Vision Center - DEMO</text>
+  <line x1="48" y1="120" x2="592" y2="120" stroke="#e2e8f0"/>
+  <text x="48" y="160" fill="#334155" font-family="system-ui,sans-serif" font-size="14">Patient name: Maria Lopez</text>
+  <text x="48" y="190" fill="#334155" font-family="system-ui,sans-serif" font-size="14">Email: maria.lopez@example.com</text>
+  <text x="48" y="220" fill="#334155" font-family="system-ui,sans-serif" font-size="14">Phone: (555) 100-1009</text>
+  <rect x="48" y="260" width="544" height="28" rx="4" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <text x="56" y="279" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="12">Medical history (pending)</text>
+  <rect x="48" y="310" width="544" height="28" rx="4" fill="#f1f5f9" stroke="#cbd5e1"/>
+  <text x="56" y="329" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="12">Medication list (pending)</text>
+  <text x="48" y="760" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="12">DEMO intake form - fictional, not a real patient</text>
+</svg>

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-label="Demo photo ID (fictional)">
+  <rect width="640" height="400" rx="12" fill="#f8fafc" stroke="#cbd5e1" stroke-width="2"/>
+  <rect x="32" y="80" width="140" height="180" rx="8" fill="#e2e8f0"/>
+  <circle cx="102" cy="150" r="42" fill="#94a3b8"/>
+  <rect x="200" y="90" width="280" height="16" rx="4" fill="#cbd5e1"/>
+  <rect x="200" y="125" width="220" height="12" rx="4" fill="#e2e8f0"/>
+  <text x="200" y="170" fill="#334155" font-family="system-ui,sans-serif" font-size="20" font-weight="600">Michael Thompson</text>
+  <text x="200" y="200" fill="#64748b" font-family="system-ui,sans-serif" font-size="14">DOB: 03/12/1958</text>
+  <text x="200" y="225" fill="#64748b" font-family="system-ui,sans-serif" font-size="14">123 Demo Street, Example City, ST 00000</text>
+  <text x="200" y="360" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="12">DEMO photo ID - fictional, not a real person</text>
+</svg>

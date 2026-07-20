@@ -1,0 +1,65 @@
+name: CI
+
+on:
+  push:
+    branches: [main, master, develop]
+  pull_request:
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    timeout-minutes: 35
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Prisma validate
+        run: npx prisma validate
+
+      - name: Prisma generate
+        run: npx prisma generate
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Typecheck
+        run: npm run typecheck
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Build
+        env:
+          DATABASE_URL: postgresql://localhost:5432/eyeq-build
+          NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: build-placeholder
+          APP_ENV: development
+          DEMO_MODE: 'true'
+          AI_PROVIDER: mock
+          AI_ALLOW_PHI: 'false'
+        run: npm run build
+
+      - name: Install Playwright Chromium
+        run: npx playwright install --with-deps chromium
+
+      - name: Playwright public smoke
+        env:
+          DATABASE_URL: postgresql://localhost:5432/eyeq-build
+          NEXT_PUBLIC_SUPABASE_URL: https://example.supabase.co
+          NEXT_PUBLIC_SUPABASE_ANON_KEY: build-placeholder
+          APP_ENV: development
+          DEMO_MODE: 'true'
+          FEATURE_DEMO_MODE: 'true'
+          AI_PROVIDER: mock
+          AI_ALLOW_PHI: 'false'
+          CI: 'true'
+          PLAYWRIGHT_BASE_URL: http://127.0.0.1:3000
+        run: npx playwright test e2e/public.spec.ts --reporter=list

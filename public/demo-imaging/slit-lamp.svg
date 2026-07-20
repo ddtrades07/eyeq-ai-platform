@@ -1,0 +1,24 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Demo slit lamp anterior segment (fictional)">
+  <defs>
+    <radialGradient id="cornea" cx="50%" cy="50%" r="60%">
+      <stop offset="0%" stop-color="#2b7f79" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#0b1f24" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="slitiris" cx="50%" cy="50%" r="55%">
+      <stop offset="0%" stop-color="#1a5f74"/>
+      <stop offset="70%" stop-color="#123f4d"/>
+      <stop offset="100%" stop-color="#0a2530"/>
+    </radialGradient>
+  </defs>
+  <rect width="800" height="600" fill="#050a0d"/>
+  <ellipse cx="400" cy="300" rx="300" ry="200" fill="#0c1a20"/>
+  <circle cx="400" cy="300" r="180" fill="url(#slitiris)"/>
+  <circle cx="400" cy="300" r="180" fill="url(#cornea)"/>
+  <circle cx="400" cy="300" r="70" fill="#020608"/>
+  <!-- slit beam of light -->
+  <rect x="360" y="90" width="34" height="420" fill="#dff4ff" opacity="0.28" transform="rotate(8 400 300)"/>
+  <rect x="372" y="90" width="10" height="420" fill="#ffffff" opacity="0.5" transform="rotate(8 400 300)"/>
+  <!-- limbal ring -->
+  <circle cx="400" cy="300" r="182" fill="none" stroke="#1f4a55" stroke-width="4" opacity="0.6"/>
+  <text x="400" y="565" text-anchor="middle" fill="#8fb3bd" font-family="system-ui,sans-serif" font-size="17">DEMO slit lamp anterior segment - fictional, not a real patient</text>
+</svg>

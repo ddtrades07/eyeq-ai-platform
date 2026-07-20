@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 800 600" role="img" aria-label="Demo corneal topography (fictional)">
+  <rect width="800" height="600" fill="#0b0f14"/>
+  <g transform="translate(360,300)">
+    <circle r="240" fill="#1a3a6b"/>
+    <circle r="210" fill="#1e5aa8"/>
+    <circle r="180" fill="#1f8fbf"/>
+    <circle r="150" fill="#2fb26a"/>
+    <circle r="120" fill="#8ec63f"/>
+    <circle r="92" fill="#f2d024"/>
+    <circle r="64" fill="#f0932b"/>
+    <circle r="36" fill="#e0402b"/>
+    <g stroke="#0b0f14" stroke-width="1.5" fill="none" opacity="0.5">
+      <line x1="-240" y1="0" x2="240" y2="0"/>
+      <line x1="0" y1="-240" x2="0" y2="240"/>
+    </g>
+  </g>
+  <!-- dioptric scale legend -->
+  <g transform="translate(660,120)" font-family="system-ui,sans-serif" font-size="13" fill="#cbd5e0">
+    <rect x="0" y="0" width="18" height="20" fill="#e0402b"/><text x="24" y="15">48 D</text>
+    <rect x="0" y="24" width="18" height="20" fill="#f2d024"/><text x="24" y="39">44 D</text>
+    <rect x="0" y="48" width="18" height="20" fill="#8ec63f"/><text x="24" y="63">42 D</text>
+    <rect x="0" y="72" width="18" height="20" fill="#1f8fbf"/><text x="24" y="87">39 D</text>
+    <rect x="0" y="96" width="18" height="20" fill="#1e5aa8"/><text x="24" y="111">36 D</text>
+  </g>
+  <text x="400" y="570" text-anchor="middle" fill="#a0aec0" font-family="system-ui,sans-serif" font-size="17">DEMO corneal topography - fictional, not a real patient</text>
+</svg>

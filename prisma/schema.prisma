@@ -1,0 +1,2823 @@
+// EyeQ AI — Prisma schema
+// Multi-tenant, optometry-first SaaS data model.
+// Every clinical/operational row is scoped by `organizationId`.
+
+generator client {
+  provider        = "prisma-client-js"
+  previewFeatures = ["fullTextSearchPostgres"]
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+// =================================================================
+//                          ENUMERATIONS
+// =================================================================
+
+enum Role {
+  OWNER
+  ADMIN
+  MANAGER
+  OPTOMETRIST
+  MD
+  RESIDENT
+  TECHNICIAN
+  FRONT_DESK
+  OPTICAL
+  SCRIBE
+  BILLING
+  PATIENT
+}
+
+enum EncounterStatus {
+  SCHEDULED
+  CHECKED_IN
+  IN_PRETEST
+  WITH_PROVIDER
+  DOCUMENTATION
+  CHECKOUT
+  COMPLETED
+  CANCELLED
+}
+
+enum StaffTaskStatus {
+  OPEN
+  IN_PROGRESS
+  COMPLETED
+  CANCELLED
+}
+
+enum StaffTaskPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  CONFIRMED
+  CHECKED_IN
+  IN_PRETEST
+  WITH_DOCTOR
+  IN_OPTICAL
+  COMPLETED
+  NO_SHOW
+  CANCELLED
+}
+
+enum AppointmentType {
+  COMPREHENSIVE_EYE_EXAM
+  CONTACT_LENS_EXAM
+  MEDICAL_OFFICE_VISIT
+  DIABETIC_EYE_EXAM
+  DRY_EYE_FOLLOWUP
+  GLAUCOMA_FOLLOWUP
+  EMERGENCY_VISIT
+  OPTICAL_PICKUP
+  PEDIATRIC
+  CL_FIT_FOLLOWUP
+  WALK_IN
+}
+
+enum ImageType {
+  FUNDUS
+  OCT
+  OCTA
+  VISUAL_FIELD
+  SLIT_LAMP
+  TOPOGRAPHY
+  ANTERIOR_SEGMENT
+  EXTERNAL_PHOTO
+  MEIBOGRAPHY
+  OPTOS
+  OTHER
+}
+
+enum ImagingStatus {
+  AWAITING_AI
+  AI_REVIEWED
+  PROVIDER_SIGNED
+  ARCHIVED
+}
+
+enum ImagingStudyStatus {
+  UPLOADED
+  QUALITY_CHECKING
+  NOT_GRADABLE
+  READY_FOR_ANALYSIS
+  ANALYSIS_QUEUED
+  ANALYZING
+  ANALYSIS_COMPLETE
+  ANALYSIS_FAILED
+  AWAITING_PROVIDER_REVIEW
+  PROVIDER_REVIEWED
+  PATIENT_SUMMARY_APPROVED
+  ARCHIVED
+}
+
+enum ImagingLaterality {
+  OD
+  OS
+  OU
+  UNKNOWN
+}
+
+enum QualityGrade {
+  GRADABLE
+  GRADABLE_WITH_LIMITATIONS
+  NOT_GRADABLE
+}
+
+enum ImagingAnalysisStatus {
+  PENDING
+  QUEUED
+  RUNNING
+  COMPLETE
+  FAILED
+  SKIPPED_MANUAL
+  SKIPPED_NO_PROVIDER
+  SKIPPED_NOT_GRADABLE
+}
+
+enum ProviderReviewStatus {
+  PENDING
+  IN_REVIEW
+  AGREED
+  PARTIALLY_AGREED
+  DISAGREED
+  SIGNED
+}
+
+enum ModelValidationStatus {
+  UNVALIDATED
+  RESEARCH
+  CLINICAL_VALIDATION
+  FDA_CLEARED
+  MANUAL_ONLY
+}
+
+enum ImagingAuditAction {
+  IMAGE_UPLOADED
+  UPLOAD_FAILED
+  QUALITY_CHECKED
+  ANALYSIS_QUEUED
+  ANALYSIS_STARTED
+  ANALYSIS_COMPLETED
+  ANALYSIS_FAILED
+  PROVIDER_REVIEW_STARTED
+  PROVIDER_SIGNED
+  PATIENT_SUMMARY_APPROVED
+  FINDING_ACCEPTED
+  FINDING_REJECTED
+  MANUAL_REVIEW_ONLY
+}
+
+enum ClinicalNoteStatus {
+  DRAFT
+  AWAITING_SIGNOFF
+  SIGNED
+  AMENDED
+}
+
+enum PrescriptionType {
+  GLASSES
+  CONTACTS
+}
+
+enum CareGapType {
+  ANNUAL_EXAM_OVERDUE
+  DIABETIC_FOLLOWUP_OVERDUE
+  GLAUCOMA_FOLLOWUP_OVERDUE
+  DRY_EYE_FOLLOWUP_OVERDUE
+  CL_RX_EXPIRING
+  GLASSES_RX_EXPIRING
+  IMAGING_REVIEW_OVERDUE
+  NOTE_INCOMPLETE
+  NO_SHOW_NOT_RESCHEDULED
+  REFERRAL_FOLLOWUP_MISSING
+  POST_OP_FOLLOWUP_MISSING
+}
+
+enum CareGapStatus {
+  DUE
+  OVERDUE
+  CONTACTED
+  BOOKED
+  DISMISSED
+}
+
+enum MessageChannel {
+  PORTAL
+  SMS
+  EMAIL
+  CALL
+  INTERNAL_NOTE
+}
+
+enum MessageDirection {
+  INBOUND
+  OUTBOUND
+}
+
+enum MessageReadStatus {
+  UNREAD
+  READ
+}
+
+enum AuditAction {
+  CREATE
+  UPDATE
+  DELETE
+  READ
+  LOGIN
+  LOGOUT
+  SIGN_OFF
+  EXPORT
+  IMPORT
+  AI_INVOCATION
+  MFA_ENROLL
+  MFA_DISABLE
+  MFA_CHALLENGE
+  MFA_BYPASS_ATTEMPT
+  SECURITY_POLICY
+  VENDOR_CONFIG
+  PHI_MODE
+  REMINDER_SEND
+  ACCESS_DENIED
+  INCIDENT_CREATED
+  INCIDENT_REVIEW
+  PILOT_MODE
+  STAFF_ONBOARDING
+}
+
+enum PracticeMode {
+  NATIVE_EHR
+  CONNECTED_EHR
+}
+
+// Renamed from ConnectedEmrVendor → ConnectedEhrVendor; expanded with
+// the major hospital + optometry vendors used in real deployments.
+enum ConnectedEhrVendor {
+  NONE
+  EPIC
+  ORACLE_HEALTH_CERNER
+  ATHENAHEALTH
+  ECLINICALWORKS
+  NEXTGEN
+  DRCHRONO
+  REVOLUTION_EHR
+  EYEFINITY_OFFICEMATE
+  CRYSTAL_PM
+  COMPULINK
+  MAXIMEYES
+  ITRUST
+  CUSTOM_FHIR
+  OTHER
+}
+
+enum EhrConnectorMethod {
+  FHIR
+  SMART_ON_FHIR
+  HL7_V2
+  CSV_IMPORT
+  API_NATIVE
+  MANUAL_UPLOAD
+}
+
+enum EhrSyncDirection {
+  NONE
+  INBOUND
+  OUTBOUND
+  BIDIRECTIONAL
+}
+
+enum EhrConnectionStatus {
+  NOT_CONNECTED
+  SANDBOX_CONNECTED
+  PRODUCTION_PENDING
+  CONNECTED
+  SYNC_ERROR
+}
+
+enum InventoryCategory {
+  FRAMES
+  LENSES
+  CONTACT_LENSES
+  CL_TRIALS
+  DROPS_AND_OTC
+  DRY_EYE_PRODUCTS
+  DIAGNOSTIC_SUPPLIES
+  ACCESSORIES
+  OTHER
+}
+
+enum InventoryStatus {
+  ACTIVE
+  LOW_STOCK
+  OUT_OF_STOCK
+  DISCONTINUED
+}
+
+enum InventoryActivityType {
+  RECEIVED
+  SOLD
+  RETURNED
+  ADJUSTED
+  DAMAGED
+  TRANSFERRED
+  COUNTED
+}
+
+enum ReminderType {
+  APPOINTMENT_REMINDER
+  APPOINTMENT_CONFIRMATION
+  RECALL_REMINDER
+  NO_SHOW_RECOVERY
+  CL_RX_EXPIRATION
+  GLASSES_RX_EXPIRATION
+  DIABETIC_EXAM_REMINDER
+  DRY_EYE_FOLLOWUP
+  IMAGING_FOLLOWUP
+  ANNUAL_EXAM_REMINDER
+  POST_VISIT_INSTRUCTIONS
+  PORTAL_INVITATION
+  CUSTOM
+}
+
+enum ReminderChannel {
+  SMS
+  EMAIL
+  PORTAL
+  PHONE_CALL_SCRIPT
+}
+
+enum ReminderCampaignStatus {
+  DRAFT
+  PENDING_APPROVAL
+  APPROVED
+  SCHEDULED
+  SENDING
+  COMPLETED
+  CANCELLED
+  BLOCKED_VENDOR
+  BLOCKED_BAA
+}
+
+enum DeliveryStatus {
+  QUEUED
+  SENT
+  DELIVERED
+  FAILED
+  BOUNCED
+  OPT_OUT
+  BLOCKED_VENDOR
+  BLOCKED_BAA
+  BLOCKED_CONSENT
+  DEMO_SENT
+}
+
+enum VendorKind {
+  OPENAI
+  TWILIO
+  SENDGRID
+  STRIPE
+  GOOGLE_BUSINESS
+  STORAGE
+  DEEPGRAM
+  CLEARINGHOUSE
+  EHR
+}
+
+enum VendorReadinessStatus {
+  NOT_CONFIGURED
+  DEMO_ONLY
+  CONFIGURED_PRODUCTION
+  BAA_REQUIRED
+  BAA_COMPLETE
+  PERMISSION_ERROR
+}
+
+enum ScribeSessionStatus {
+  IDLE
+  RECORDING
+  PAUSED
+  STOPPED
+  TRANSCRIBING
+  READY
+  ARCHIVED
+}
+
+enum ScribeReviewStatus {
+  PROCESSING
+  READY_FOR_REVIEW
+  APPROVED
+  REJECTED
+}
+
+enum AssistantContextType {
+  PLATFORM
+  PATIENT_CHART
+  IMAGING
+  SCHEDULE
+  ADMIN
+}
+
+enum ScribeSpeaker {
+  PROVIDER
+  PATIENT
+  TECHNICIAN
+  OTHER
+}
+
+enum SupportedLocale {
+  EN
+  ES
+  HI
+  GU
+  AR
+  ZH
+  VI
+}
+
+// =================================================================
+//                     ORGANIZATIONS & LOCATIONS
+// =================================================================
+
+model Organization {
+  id                String              @id @default(cuid())
+  name              String
+  slug              String              @unique
+  practiceMode      PracticeMode        @default(NATIVE_EHR)
+  connectedEhr      ConnectedEhrVendor  @default(NONE)
+  timezone          String              @default("America/Los_Angeles")
+  defaultLocale     SupportedLocale     @default(EN)
+  primaryColor      String?
+  /// When true, staff must complete MFA (AAL2) before accessing PHI routes.
+  mfaRequiredForStaff Boolean           @default(false)
+  /// Explicit org opt-in to live PHI processing (still gated by env + BAAs).
+  livePhiEnabled    Boolean             @default(false)
+  /// Controlled live pilot for this org only (still requires readiness + livePhiEnabled).
+  controlledPilotEnabled Boolean        @default(false)
+  /// Set after ops verifies RLS SQL applied for this environment.
+  rlsVerifiedAt     DateTime?
+  /// Set when org confirms audit logging is monitored.
+  auditVerifiedAt   DateTime?
+  /// Admin-attested backup readiness (do not auto-claim).
+  backupLastAt      DateTime?
+  backupProvider    String?
+  backupStatus      String?             // unknown | configured | verified | failed
+  backupRetentionDays Int?
+  backupRestoreTestAt DateTime?
+  backupRestoreTestNotes String?        @db.Text
+  /// Admin-attested monitoring readiness.
+  monitoringVerifiedAt DateTime?
+  monitoringProvider String?
+  /// Admin-attested incident response review.
+  incidentResponseReviewedAt DateTime?
+  incidentResponseNotes String?         @db.Text
+  /// Staff training / pilot launch attestation.
+  staffTrainingCompletedAt DateTime?
+  pilotLaunchNotes  String?             @db.Text
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  locations         Location[]
+  users             User[]
+  providers         Provider[]
+  patients          Patient[]
+  appointments      Appointment[]
+  imagingCases      ImagingCase[]
+  clinicalNotes     ClinicalNote[]
+  prescriptions     Prescription[]
+  careGaps          CareGap[]
+  messageThreads    MessageThread[]
+  documents         Document[]
+  auditLogs         AuditLog[]
+  ehrIntegrations   EhrIntegration[]
+  diseaseTemplates  DiseaseTemplate[]
+  inventoryItems    InventoryItem[]
+  inventoryActivity InventoryActivity[]
+  reminderTemplates ReminderTemplate[]
+  reminderCampaigns ReminderCampaign[]
+  scribeSessions    AmbientScribeSession[]
+  assistantConversations AiAssistantConversation[]
+  communicationPrefs CommunicationPreference[]
+  deliveryLogs      MessageDeliveryLog[]
+  translations      TranslationString[]
+  financialReports  FinancialReport[]
+  patientInvoices   PatientInvoice[]
+  patientForms      PatientForm[]
+  modelRegistry     ModelRegistry[]
+  imagingAuditEvents ImagingAuditEvent[]
+  aiGatewayRequests AiGatewayRequest[]
+  aiProviderConfigs AiProviderConfig[]
+  aiModelRoutes     AiModelRoute[]
+  aiUsageRecords    AiUsageRecord[]
+  phiDetectionEvents PhiDetectionEvent[]
+  blockedAiRequests BlockedAiRequest[]
+  aiKnowledgeDocuments AiKnowledgeDocument[]
+  encounters        Encounter[]
+  staffTasks        StaffTask[]
+  backgroundJobs    BackgroundJob[]
+  examCharts        ExamChart[]
+  claims            Claim[]
+  visitWorkflows    VisitWorkflowTemplate[]
+  patientMerges     PatientMergeRecord[]
+  remittances       RemittanceAdvice[]
+  patientStatements PatientStatement[]
+  migrationProjects MigrationProject[]
+  opticalOrders     OpticalOrder[]
+  opticalLabs       OpticalLab[]
+  googleBusinessConnections GoogleBusinessConnection[]
+  googleReviews     GoogleReview[]
+  paymentLedgerEntries PaymentLedgerEntry[]
+  stripeWebhookEvents StripeWebhookEvent[]
+  appointmentRequests AppointmentRequest[]
+  patientProxyAccess PatientProxyAccess[]
+  vendorReadiness   VendorReadiness[]
+  staffOnboardings  StaffOnboarding[]
+  supportTickets    SupportTicket[]
+  subscription      OrgSubscription?
+
+  @@index([slug])
+}
+
+model Location {
+  id              String        @id @default(cuid())
+  organizationId  String
+  organization    Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name            String
+  shortName       String
+  addressLine1    String?
+  addressLine2    String?
+  city            String?
+  region          String?
+  postalCode      String?
+  country         String        @default("US")
+  phone           String?
+  rooms           Int           @default(1)
+  isPrimary       Boolean       @default(false)
+  active          Boolean       @default(true)
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  appointments    Appointment[]
+  providers       Provider[]
+  inventoryItems  InventoryItem[]
+  userAccess      UserLocationAccess[]
+  imagingCases    ImagingCase[]
+
+  encounters      Encounter[]
+  googleBusinessConnections GoogleBusinessConnection[]
+  googleReviews   GoogleReview[]
+
+  @@index([organizationId])
+  @@index([organizationId, active])
+}
+
+/// Staff user access to one or more practice locations (multi-office RBAC).
+model UserLocationAccess {
+  id             String   @id @default(cuid())
+  userId         String
+  user           User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  locationId     String
+  location       Location @relation(fields: [locationId], references: [id], onDelete: Cascade)
+  createdAt      DateTime @default(now())
+
+  @@unique([userId, locationId])
+  @@index([userId])
+  @@index([locationId])
+}
+
+// =================================================================
+//                              USERS
+//
+// Supabase Auth issues the auth user; we mirror the linkage here
+// via `supabaseUserId`. One Supabase user = one EyeQ user. Multi-
+// org membership is handled by OrganizationMembership.
+// =================================================================
+
+model User {
+  id              String                    @id @default(cuid())
+  supabaseUserId  String                    @unique
+  email           String                    @unique
+  firstName       String?
+  lastName        String?
+  avatarUrl       String?
+  phone           String?
+  defaultOrganizationId String?
+  organizationId  String?
+  organization    Organization?             @relation(fields: [organizationId], references: [id])
+  role            Role                      @default(PATIENT)
+  preferredLocale SupportedLocale           @default(EN)
+  isActive        Boolean                   @default(true)
+  lastSeenAt      DateTime?
+  mfaEnrolledAt   DateTime?
+  mfaLastVerifiedAt DateTime?
+  staffOnboarding StaffOnboarding?
+  createdAt       DateTime                  @default(now())
+  updatedAt       DateTime                  @updatedAt
+
+  memberships     OrganizationMembership[]
+  provider        Provider?
+  patient         Patient?                  @relation("PatientUser")
+  authoredNotes   ClinicalNote[]            @relation("AuthorNotes")
+  signedNotes     ClinicalNote[]            @relation("SignerNotes")
+  uploadedImaging ImagingCase[]             @relation("UploaderImaging")
+  signedImaging   ImagingCase[]             @relation("SignerImaging")
+  sentMessages    Message[]                 @relation("SenderMessages")
+  scribeSessions  AmbientScribeSession[]    @relation("ScribeProvider")
+  scribeReviews   AmbientScribeSession[]    @relation("ScribeReviewer")
+  assistantConversations AiAssistantConversation[] @relation("AssistantConversations")
+  auditLogs       AuditLog[]
+  locationAccess  UserLocationAccess[]
+  providerImagingReviews ProviderImagingReview[] @relation("ProviderImagingReviews")
+  imagingAuditEvents ImagingAuditEvent[] @relation("ImagingAuditUser")
+  aiGatewayRequests AiGatewayRequest[] @relation("AiGatewayRequests")
+  assignedTasks     StaffTask[] @relation("AssignedTasks")
+  createdTasks      StaffTask[] @relation("CreatedTasks")
+  reviewDrafts      GoogleReview[] @relation("ReviewDraftAuthor")
+  reviewPublishes   GoogleReview[] @relation("ReviewPublishAuthor")
+  signedPrescriptions Prescription[] @relation("PrescriptionSigner")
+  paymentLedgerEntries PaymentLedgerEntry[] @relation("PaymentLedgerActor")
+  appointmentRequestsHandled AppointmentRequest[] @relation("AppointmentRequestHandler")
+  guardianProxyAccess PatientProxyAccess[] @relation("GuardianProxyAccess")
+  supportTicketsCreated SupportTicket[] @relation("SupportTicketCreator")
+  supportTicketsAssigned SupportTicket[] @relation("SupportTicketAssignee")
+  supportTicketNotes SupportTicketNote[] @relation("SupportTicketNoteAuthor")
+
+  @@index([organizationId])
+  @@index([role])
+}
+
+model OrganizationMembership {
+  id              String        @id @default(cuid())
+  userId          String
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  organizationId  String
+  role            Role
+  isPrimary       Boolean       @default(false)
+  createdAt       DateTime      @default(now())
+
+  @@unique([userId, organizationId])
+  @@index([organizationId])
+}
+
+// =================================================================
+//                            PROVIDERS
+// =================================================================
+
+model Provider {
+  id              String        @id @default(cuid())
+  organizationId  String
+  organization    Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId          String        @unique
+  user            User          @relation(fields: [userId], references: [id], onDelete: Cascade)
+  credentials     String?
+  npi             String?
+  title           String?
+  locations       Location[]
+  appointments    Appointment[]
+  encounters      Encounter[]
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  @@index([organizationId])
+}
+
+// =================================================================
+//                             PATIENTS
+// =================================================================
+
+model Patient {
+  id                String          @id @default(cuid())
+  organizationId    String
+  organization      Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId            String?         @unique
+  user              User?           @relation("PatientUser", fields: [userId], references: [id])
+  externalId        String?         // EHR MRN when in Connected mode
+  firstName         String
+  lastName          String
+  dateOfBirth       DateTime
+  email             String?
+  phone             String?
+  addressLine1      String?
+  addressLine2      String?
+  city              String?
+  region            String?
+  postalCode        String?
+  country           String          @default("US")
+  insuranceCarrier  String?
+  insuranceMemberId String?
+  insuranceStatus   String?
+  preferredLanguage String          @default("en")
+  preferredLocale   SupportedLocale @default(EN)
+  hasDiabetes       Boolean         @default(false)
+  hasHypertension   Boolean         @default(false)
+  hasGlaucomaPersonal Boolean       @default(false)
+  hasGlaucomaFamily Boolean         @default(false)
+  isSmoker          Boolean         @default(false)
+  notes             String?
+  archivedAt        DateTime?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  appointments      Appointment[]
+  imagingCases      ImagingCase[]
+  clinicalNotes     ClinicalNote[]
+  prescriptions     Prescription[]
+  careGaps          CareGap[]
+  messageThreads    MessageThread[]
+  documents         Document[]
+  scribeSessions    AmbientScribeSession[]
+  invoices          PatientInvoice[]
+  forms             PatientForm[]
+  communicationPref CommunicationPreference?
+  encounters        Encounter[]
+  staffTasks        StaffTask[]
+  examCharts        ExamChart[]
+  claims            Claim[]
+  statements        PatientStatement[]
+  opticalOrders     OpticalOrder[]
+  appointmentRequests AppointmentRequest[]
+  proxyAccessAsPatient PatientProxyAccess[] @relation("ProxyPatient")
+  paymentLedgerEntries PaymentLedgerEntry[]
+  mergedIntoId      String?
+  mergedInto        Patient?          @relation("PatientMerge", fields: [mergedIntoId], references: [id])
+  mergedFrom        Patient[]         @relation("PatientMerge")
+
+  @@index([organizationId])
+  @@index([organizationId, archivedAt])
+  @@index([organizationId, lastName, firstName])
+  @@index([organizationId, externalId])
+  @@index([userId])
+  @@index([mergedIntoId])
+}
+
+// =================================================================
+//                          APPOINTMENTS
+// =================================================================
+
+model Appointment {
+  id                String              @id @default(cuid())
+  organizationId    String
+  organization      Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  locationId        String?
+  location          Location?           @relation(fields: [locationId], references: [id])
+  patientId         String
+  patient           Patient             @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  providerId        String?
+  provider          Provider?           @relation(fields: [providerId], references: [id])
+  type              AppointmentType
+  status            AppointmentStatus   @default(SCHEDULED)
+  startsAt          DateTime
+  endsAt            DateTime
+  durationMinutes   Int                 @default(45)
+  room              String?
+  reason            String?
+  notes             String?
+  intakeStatus      String              @default("NotStarted")
+  pretestComplete   Boolean             @default(false)
+  dilationNeeded    Boolean             @default(false)
+  dilationStartedAt DateTime?
+  imagingNeeded     String[]            @default([])
+  opticalHandoffPending Boolean         @default(false)
+  noShowRiskScore   Float?
+  complexity        String?
+  source            String              @default("native") // native | imported
+  cancelReason      String?
+  externalRef       String?             // EHR appointment ID
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  imagingCases      ImagingCase[]
+  clinicalNotes     ClinicalNote[]
+  scribeSessions    AmbientScribeSession[]
+  encounter         Encounter?
+  appointmentRequest AppointmentRequest?
+
+  @@index([organizationId, startsAt])
+  @@index([organizationId, status])
+  @@index([organizationId, locationId, startsAt])
+  @@index([organizationId, status, startsAt])
+  @@index([patientId, startsAt])
+  @@index([patientId])
+  @@index([providerId])
+  @@index([locationId])
+}
+
+model Encounter {
+  id                String            @id @default(cuid())
+  organizationId    String
+  organization      Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  locationId        String?
+  location          Location?         @relation(fields: [locationId], references: [id])
+  patientId         String
+  patient           Patient           @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  appointmentId     String            @unique
+  appointment       Appointment       @relation(fields: [appointmentId], references: [id], onDelete: Cascade)
+  providerId        String?
+  provider          Provider?         @relation(fields: [providerId], references: [id])
+  status            EncounterStatus   @default(SCHEDULED)
+  checkedInAt       DateTime?
+  pretestStartedAt  DateTime?
+  providerStartedAt DateTime?
+  documentationStartedAt DateTime?
+  completedAt       DateTime?
+  primaryNoteId     String?
+  createdById       String?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  tasks             StaffTask[]
+  examChart         ExamChart?
+
+  @@index([organizationId, status])
+  @@index([organizationId, locationId, status])
+  @@index([organizationId, status, updatedAt])
+  @@index([patientId])
+  @@index([appointmentId])
+}
+
+model StaffTask {
+  id              String            @id @default(cuid())
+  organizationId  String
+  organization    Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  locationId      String?
+  patientId       String?
+  patient         Patient?          @relation(fields: [patientId], references: [id], onDelete: SetNull)
+  encounterId     String?
+  encounter       Encounter?        @relation(fields: [encounterId], references: [id], onDelete: SetNull)
+  appointmentId   String?
+  assignedToId    String?
+  assignedTo      User?             @relation("AssignedTasks", fields: [assignedToId], references: [id])
+  createdById     String?
+  createdBy       User?             @relation("CreatedTasks", fields: [createdById], references: [id])
+  title           String
+  description     String?           @db.Text
+  status          StaffTaskStatus   @default(OPEN)
+  priority        StaffTaskPriority @default(NORMAL)
+  dueAt           DateTime?
+  completedAt     DateTime?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  @@index([organizationId, status])
+  @@index([assignedToId, status])
+  @@index([patientId])
+}
+
+// =================================================================
+//                          IMAGING CASES
+// =================================================================
+
+model ImagingCase {
+  id                String              @id @default(cuid())
+  organizationId    String
+  organization      Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  locationId        String?
+  location          Location?           @relation(fields: [locationId], references: [id])
+  patientId         String
+  patient           Patient             @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  appointmentId     String?
+  appointment       Appointment?        @relation(fields: [appointmentId], references: [id])
+  uploaderId        String
+  uploader          User                @relation("UploaderImaging", fields: [uploaderId], references: [id])
+  imageType         ImageType
+  confirmedModality ImageType?
+  laterality        ImagingLaterality   @default(UNKNOWN)
+  bodyRegion        String?
+  storagePath       String
+  fileName          String?
+  fileSizeBytes     Int?
+  mimeType          String?
+  checksum          String?
+  thumbnailPath     String?
+  previewPath       String?
+  capturedAt        DateTime            @default(now())
+  status            ImagingStatus       @default(AWAITING_AI)
+  studyStatus       ImagingStudyStatus  @default(UPLOADED)
+  aiQuality         String?
+  aiAnatomyDetected String[]            @default([])
+  aiFlags           String[]            @default([])
+  aiUrgency         String?
+  aiConfidence      String?
+  aiNotes           String[]            @default([])
+  aiInvokedAt       DateTime?
+  aiProvider        String?
+  analysisMode      String?
+  providerNote      String?             @db.Text
+  patientSummary    String?             @db.Text
+  patientSummaryApprovedAt DateTime?
+  signedById        String?
+  signedBy          User?               @relation("SignerImaging", fields: [signedById], references: [id])
+  signedAt          DateTime?
+  trend             String?
+  needsFollowUp     Boolean             @default(false)
+  followUpNote      String?             @db.Text
+  archivedAt        DateTime?
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  assets            ImagingAsset[]
+  qualityAssessments ImageQualityAssessment[]
+  analyses          ImagingAnalysis[]
+  providerReviews   ProviderImagingReview[]
+  imagingAuditEvents ImagingAuditEvent[]
+
+  @@index([organizationId, capturedAt])
+  @@index([organizationId, studyStatus])
+  @@index([organizationId, archivedAt, studyStatus])
+  @@index([organizationId, archivedAt, capturedAt])
+  @@index([organizationId, locationId, capturedAt])
+  @@index([patientId, capturedAt])
+  @@index([appointmentId])
+  @@index([locationId])
+  @@index([status])
+}
+
+model ImagingAsset {
+  id               String      @id @default(cuid())
+  imagingCaseId    String
+  imagingCase      ImagingCase @relation(fields: [imagingCaseId], references: [id], onDelete: Cascade)
+  storagePath      String
+  originalFilename String?
+  mimeType         String?
+  fileSizeBytes    Int?
+  checksum         String?
+  width            Int?
+  height           Int?
+  pageCount        Int?
+  thumbnailPath    String?
+  previewPath      String?
+  isOriginal       Boolean     @default(true)
+  metadata         Json?
+  uploadedAt       DateTime    @default(now())
+
+  qualityAssessments ImageQualityAssessment[]
+
+  @@index([imagingCaseId])
+  @@index([checksum])
+}
+
+model ImageQualityAssessment {
+  id                  String       @id @default(cuid())
+  imagingCaseId       String
+  imagingCase         ImagingCase  @relation(fields: [imagingCaseId], references: [id], onDelete: Cascade)
+  imagingAssetId      String?
+  imagingAsset        ImagingAsset? @relation(fields: [imagingAssetId], references: [id])
+  grade               QualityGrade
+  overallScore        Int
+  focusScore          Int?
+  illuminationScore   Int?
+  contrastScore       Int?
+  fieldOfViewScore    Int?
+  centeringScore      Int?
+  artifactScore       Int?
+  segmentationQuality Int?
+  qualityLimitations  String[]     @default([])
+  retakeRecommended   Boolean      @default(false)
+  createdAt           DateTime     @default(now())
+
+  @@index([imagingCaseId])
+}
+
+model ImagingAnalysis {
+  id                    String                @id @default(cuid())
+  imagingCaseId         String
+  imagingCase           ImagingCase           @relation(fields: [imagingCaseId], references: [id], onDelete: Cascade)
+  analysisProvider      String
+  modelName             String?
+  modelVersion          String?
+  supportedIntendedUse  String?
+  analysisStatus        ImagingAnalysisStatus @default(PENDING)
+  startedAt             DateTime?
+  completedAt           DateTime?
+  failedAt              DateTime?
+  failureReason         String?
+  processingTimeMs      Int?
+  outOfDistribution     Boolean               @default(false)
+  requiresManualReview  Boolean               @default(false)
+  isDevelopmentMock     Boolean               @default(false)
+  rawProviderResponse   Json?
+  createdAt             DateTime              @default(now())
+
+  findings              ImagingFinding[]
+
+  @@index([imagingCaseId])
+  @@index([analysisStatus])
+}
+
+model ImagingFinding {
+  id                  String          @id @default(cuid())
+  imagingAnalysisId   String
+  imagingAnalysis     ImagingAnalysis @relation(fields: [imagingAnalysisId], references: [id], onDelete: Cascade)
+  findingCode         String?
+  findingLabel        String
+  anatomicalLocation  String?
+  laterality          ImagingLaterality?
+  evidenceDescription String?
+  confidenceCategory  String
+  probability         Float?
+  severityCategory    String?
+  actionCategory      String?
+  limitations         String[]        @default([])
+  supportedByModel    Boolean         @default(true)
+  createdAt           DateTime        @default(now())
+
+  @@index([imagingAnalysisId])
+}
+
+model ProviderImagingReview {
+  id                    String               @id @default(cuid())
+  imagingCaseId         String
+  imagingCase           ImagingCase          @relation(fields: [imagingCaseId], references: [id], onDelete: Cascade)
+  providerId            String
+  provider              User                 @relation("ProviderImagingReviews", fields: [providerId], references: [id])
+  reviewStatus          ProviderReviewStatus @default(PENDING)
+  agreesWithAI          Boolean?
+  acceptedFindingIds    String[]             @default([])
+  rejectedFindingIds    String[]             @default([])
+  editedFindings        Json?
+  providerInterpretation String?             @db.Text
+  followUpPlan          String?              @db.Text
+  referralPlan          String?              @db.Text
+  patientSummary        String?              @db.Text
+  signedAt              DateTime?
+  createdAt             DateTime             @default(now())
+  updatedAt             DateTime             @updatedAt
+
+  @@index([imagingCaseId])
+  @@index([providerId])
+}
+
+model ModelRegistry {
+  id                            String                @id @default(cuid())
+  organizationId                String?
+  organization                  Organization?         @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  providerName                  String
+  modelName                     String
+  modelVersion                  String
+  supportedModalities           ImageType[]
+  supportedFindings             String[]              @default([])
+  intendedUse                   String?
+  validationStatus              ModelValidationStatus @default(UNVALIDATED)
+  enabled                       Boolean               @default(false)
+  endpointConfigurationReference String?
+  createdAt                     DateTime              @default(now())
+  updatedAt                     DateTime              @updatedAt
+
+  @@index([organizationId])
+  @@index([enabled])
+}
+
+model ImagingAuditEvent {
+  id              String             @id @default(cuid())
+  organizationId  String
+  organization    Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  locationId      String?
+  patientId       String?
+  imagingCaseId   String?
+  imagingCase     ImagingCase?       @relation(fields: [imagingCaseId], references: [id], onDelete: SetNull)
+  userId          String?
+  user            User?              @relation("ImagingAuditUser", fields: [userId], references: [id])
+  action          ImagingAuditAction
+  details         Json?
+  requestId       String?
+  createdAt       DateTime           @default(now())
+
+  @@index([organizationId, createdAt])
+  @@index([imagingCaseId])
+  @@index([patientId])
+}
+
+// =================================================================
+//                         CLINICAL NOTES
+// =================================================================
+
+model ClinicalNote {
+  id                String              @id @default(cuid())
+  organizationId    String
+  organization      Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  patientId         String
+  patient           Patient             @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  appointmentId     String?
+  appointment       Appointment?        @relation(fields: [appointmentId], references: [id])
+  authorId          String
+  author            User                @relation("AuthorNotes", fields: [authorId], references: [id])
+  signedById        String?
+  signedBy          User?               @relation("SignerNotes", fields: [signedById], references: [id])
+  type              String
+  chiefComplaint    String?
+  subjective        String?
+  objective         String?
+  assessment        String?
+  plan              String?
+  status            ClinicalNoteStatus  @default(DRAFT)
+  signedAt          DateTime?
+  amendedFromId     String?             @unique
+  legacySummary     String?
+  diseaseTemplateId String?
+  diseaseTemplate   DiseaseTemplate?    @relation(fields: [diseaseTemplateId], references: [id])
+  createdAt         DateTime            @default(now())
+  updatedAt         DateTime            @updatedAt
+
+  @@index([organizationId, status])
+  @@index([organizationId, status, updatedAt])
+  @@index([patientId, createdAt])
+  @@index([appointmentId])
+}
+
+// =================================================================
+//                          PRESCRIPTIONS
+// =================================================================
+
+model Prescription {
+  id                String            @id @default(cuid())
+  organizationId    String
+  organization      Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  patientId         String
+  patient           Patient           @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  type              PrescriptionType
+  status            PrescriptionStatus @default(DRAFT)
+  issuedAt          DateTime          @default(now())
+  expiresAt         DateTime
+  signedAt          DateTime?
+  signedById        String?
+  signedBy          User?             @relation("PrescriptionSigner", fields: [signedById], references: [id])
+  providerName      String?
+  odSphere          String?
+  odCyl             String?
+  odAxis            String?
+  odAdd             String?
+  osSphere          String?
+  osCyl             String?
+  osAxis            String?
+  osAdd             String?
+  pd                String?
+  modality          String?
+  odBrand           String?
+  odBc              String?
+  odDia             String?
+  odPower           String?
+  osBrand           String?
+  osBc              String?
+  osDia             String?
+  osPower           String?
+  notes             String?
+  archivedAt        DateTime?
+  createdAt         DateTime          @default(now())
+  updatedAt         DateTime          @updatedAt
+
+  @@index([organizationId, expiresAt])
+  @@index([patientId, type])
+}
+
+// =================================================================
+//                       CARE GAPS / RECALL TASKS
+// =================================================================
+
+model CareGap {
+  id                String          @id @default(cuid())
+  organizationId    String
+  organization      Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  patientId         String
+  patient           Patient         @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  type              CareGapType
+  status            CareGapStatus   @default(DUE)
+  priority          Int             @default(2)
+  dueDate           DateTime?
+  lastContactedAt   DateTime?
+  reason            String?
+  suggestedAction   String?
+  assignedRole      Role?
+  resolvedAt        DateTime?
+  resolvedById      String?
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  @@index([organizationId, status, dueDate])
+  @@index([patientId])
+  @@index([organizationId, type])
+}
+
+// =================================================================
+//                            MESSAGING
+// =================================================================
+
+model MessageThread {
+  id              String          @id @default(cuid())
+  organizationId  String
+  organization    Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  patientId       String?
+  patient         Patient?        @relation(fields: [patientId], references: [id])
+  subject         String
+  category        String          @default("general")
+  isInternal      Boolean         @default(false)
+  closedAt        DateTime?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  messages        Message[]
+
+  @@index([organizationId, updatedAt])
+  @@index([patientId])
+}
+
+model Message {
+  id              String              @id @default(cuid())
+  threadId        String
+  thread          MessageThread       @relation(fields: [threadId], references: [id], onDelete: Cascade)
+  senderId        String?
+  sender          User?               @relation("SenderMessages", fields: [senderId], references: [id])
+  senderRoleAtSend Role?
+  channel         MessageChannel      @default(PORTAL)
+  direction       MessageDirection
+  body            String              @db.Text
+  readStatus      MessageReadStatus   @default(UNREAD)
+  readAt          DateTime?
+  createdAt       DateTime            @default(now())
+
+  @@index([threadId, createdAt])
+  @@index([threadId, readStatus])
+  @@index([readStatus])
+}
+
+// =================================================================
+//                            DOCUMENTS
+// =================================================================
+
+model Document {
+  id              String          @id @default(cuid())
+  organizationId  String
+  organization    Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  patientId       String?
+  patient         Patient?        @relation(fields: [patientId], references: [id])
+  uploadedById    String?
+  kind            String
+  storagePath     String
+  fileName        String
+  mimeType        String?
+  sizeBytes       Int?
+  createdAt       DateTime        @default(now())
+
+  @@index([organizationId])
+  @@index([patientId])
+}
+
+// =================================================================
+//                          AUDIT LOG
+// =================================================================
+
+model AuditLog {
+  id              String          @id @default(cuid())
+  organizationId  String?
+  organization    Organization?   @relation(fields: [organizationId], references: [id])
+  userId          String?
+  user            User?           @relation(fields: [userId], references: [id])
+  patientId       String?
+  action          AuditAction
+  resourceType    String
+  resourceId      String?
+  success         Boolean         @default(true)
+  previousStatus  String?
+  newStatus       String?
+  ipAddress       String?
+  userAgent       String?
+  metadata        Json?
+  createdAt       DateTime        @default(now())
+
+  @@index([organizationId, createdAt])
+  @@index([userId, createdAt])
+  @@index([patientId, createdAt])
+  @@index([resourceType, resourceId])
+  @@index([action, createdAt])
+}
+
+// =================================================================
+//                      EHR INTEGRATION CENTER
+//
+// Each row represents one configured connection between a practice and
+// an external EHR. Real production deployments will store OAuth tokens
+// in a vault — they are *not* stored on this model.
+// =================================================================
+
+model EhrIntegration {
+  id                  String                @id @default(cuid())
+  organizationId      String
+  organization        Organization          @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  vendor              ConnectedEhrVendor
+  displayName         String
+  connectorMethod     EhrConnectorMethod    @default(FHIR)
+  status              EhrConnectionStatus   @default(NOT_CONNECTED)
+  syncDirection       EhrSyncDirection      @default(NONE)
+  // Capability matrix (true = this integration supports the resource).
+  patientSync         Boolean               @default(false)
+  appointmentSync     Boolean               @default(false)
+  noteExport          Boolean               @default(false)
+  prescriptionSync    Boolean               @default(false)
+  imagingMetadataSync Boolean               @default(false)
+  // Connection bookkeeping. Tokens belong in a vault — never here.
+  baseUrl             String?
+  scopes              String[]              @default([])
+  sandboxOnly         Boolean               @default(true)
+  setupChecklist      Json?                 // [{label, done, owner}]
+  lastSyncAt          DateTime?
+  lastErrorAt         DateTime?
+  lastErrorMessage    String?
+  notes               String?
+  createdAt           DateTime              @default(now())
+  updatedAt           DateTime              @updatedAt
+
+  syncLogs            EhrSyncLog[]
+
+  @@index([organizationId, vendor])
+}
+
+model EhrSyncLog {
+  id              String          @id @default(cuid())
+  integrationId   String
+  integration     EhrIntegration  @relation(fields: [integrationId], references: [id], onDelete: Cascade)
+  startedAt       DateTime        @default(now())
+  finishedAt      DateTime?
+  resourceType    String          // "Patient" | "Appointment" | etc.
+  direction       EhrSyncDirection
+  recordsTotal    Int             @default(0)
+  recordsOk       Int             @default(0)
+  recordsFailed   Int             @default(0)
+  status          String          @default("pending") // pending | ok | partial | error
+  errorMessage    String?
+  payload         Json?
+
+  @@index([integrationId, startedAt])
+}
+
+// =================================================================
+//                  DISEASE DOCUMENTATION TEMPLATES
+//
+// Each row is a clinician-curated documentation skeleton that powers
+// the "insert template" experience in the chart. AI never authors the
+// final note — these are scaffolding for the provider.
+// =================================================================
+
+model DiseaseTemplate {
+  id                String          @id @default(cuid())
+  organizationId    String?         // null = system / starter template
+  organization      Organization?   @relation(fields: [organizationId], references: [id])
+  slug              String
+  name              String
+  category          String          // "Anterior segment" | "Posterior segment" | etc.
+  // Sections are intentionally Json so practices can shape their own templates.
+  hpiPrompts        String[]        @default([])
+  examElements      String[]        @default([])
+  assessmentOptions String[]        @default([])
+  planOptions       String[]        @default([])
+  educationPoints   String[]        @default([])
+  codingSuggestions String[]        @default([])
+  referralCriteria  String[]        @default([])
+  followUpOptions   String[]        @default([])
+  notes             String?
+  isSystem          Boolean         @default(false)
+  isActive          Boolean         @default(true)
+  createdAt         DateTime        @default(now())
+  updatedAt         DateTime        @updatedAt
+
+  clinicalNotes     ClinicalNote[]
+
+  @@unique([organizationId, slug])
+  @@index([category])
+}
+
+// =================================================================
+//                            INVENTORY
+// =================================================================
+
+model InventoryItem {
+  id              String              @id @default(cuid())
+  organizationId  String
+  organization    Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  locationId      String?
+  location        Location?           @relation(fields: [locationId], references: [id])
+  category        InventoryCategory
+  name            String
+  brand           String?
+  sku             String?
+  description     String?
+  vendor          String?
+  costCents       Int                 @default(0)
+  retailCents     Int                 @default(0)
+  quantityOnHand  Int                 @default(0)
+  reorderAt       Int                 @default(0)
+  reorderQuantity Int                 @default(0)
+  status          InventoryStatus     @default(ACTIVE)
+  archivedAt      DateTime?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  activity        InventoryActivity[]
+
+  @@index([organizationId, category])
+  @@index([organizationId, status])
+  @@unique([organizationId, sku])
+}
+
+model InventoryActivity {
+  id              String                @id @default(cuid())
+  organizationId  String
+  organization    Organization          @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  itemId          String
+  item            InventoryItem         @relation(fields: [itemId], references: [id], onDelete: Cascade)
+  type            InventoryActivityType
+  quantityDelta   Int
+  reason          String?
+  performedById   String?
+  createdAt       DateTime              @default(now())
+
+  @@index([organizationId, createdAt])
+  @@index([itemId, createdAt])
+}
+
+// =================================================================
+//                          AMBIENT SCRIBE
+// =================================================================
+
+model AmbientScribeSession {
+  id              String              @id @default(cuid())
+  organizationId  String
+  organization    Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  patientId       String?
+  patient         Patient?            @relation(fields: [patientId], references: [id])
+  appointmentId   String?
+  appointment     Appointment?        @relation(fields: [appointmentId], references: [id])
+  providerId      String
+  provider        User                @relation("ScribeProvider", fields: [providerId], references: [id])
+  status          ScribeSessionStatus @default(IDLE)
+  consentRecorded Boolean             @default(false)
+  consentBy       String?             // "patient verbal" | "form signed" | etc.
+  startedAt       DateTime?
+  stoppedAt       DateTime?
+  durationSeconds Int                 @default(0)
+  generatedSoap   String?             @db.Text
+  generatedPlan   String?             @db.Text
+  generatedReferral String?           @db.Text
+  generatedCoding String[]            @default([])
+  chiefComplaint  String?             @db.Text
+  hpi             String?             @db.Text
+  examSummary     String?             @db.Text
+  assessmentText  String?             @db.Text
+  planText        String?             @db.Text
+  patientInstructions String?         @db.Text
+  followUpRecommendation String?      @db.Text
+  aiConfidenceScore Float?
+  reviewStatus    ScribeReviewStatus  @default(PROCESSING)
+  reviewedById    String?
+  reviewedBy      User?               @relation("ScribeReviewer", fields: [reviewedById], references: [id])
+  reviewedAt      DateTime?
+  reviewComment   String?             @db.Text
+  savedNoteId     String?             @unique
+  audioBucket     String?
+  audioPath       String?
+  notes           String?
+  archivedAt      DateTime?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  segments        TranscriptSegment[]
+
+  @@index([organizationId, providerId])
+  @@index([organizationId, reviewStatus])
+  @@index([organizationId, reviewStatus, archivedAt])
+  @@index([patientId])
+}
+
+// =================================================================
+//                    PLATFORM AI ASSISTANT
+// =================================================================
+
+model AiAssistantConversation {
+  id              String              @id @default(cuid())
+  organizationId  String
+  organization    Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId          String
+  user            User                @relation("AssistantConversations", fields: [userId], references: [id], onDelete: Cascade)
+  patientId       String?
+  appointmentId   String?
+  title           String              @default("New conversation")
+  contextType     AssistantContextType @default(PLATFORM)
+  archivedAt      DateTime?
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  messages        AiAssistantMessage[]
+
+  @@index([organizationId, userId, updatedAt])
+  @@index([patientId])
+}
+
+model AiAssistantMessage {
+  id              String              @id @default(cuid())
+  conversationId  String
+  conversation    AiAssistantConversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  role            String              // user | assistant | system
+  text            String              @db.Text
+  contextType     AssistantContextType @default(PLATFORM)
+  createdAt       DateTime            @default(now())
+
+  @@index([conversationId, createdAt])
+}
+
+model TranscriptSegment {
+  id              String          @id @default(cuid())
+  sessionId       String
+  session         AmbientScribeSession @relation(fields: [sessionId], references: [id], onDelete: Cascade)
+  speaker         ScribeSpeaker   @default(OTHER)
+  startMs         Int             @default(0)
+  endMs           Int             @default(0)
+  text            String          @db.Text
+  confidence      Float?
+  createdAt       DateTime        @default(now())
+
+  @@index([sessionId, startMs])
+}
+
+// =================================================================
+//                  PATIENT COMMUNICATION AUTOMATION
+// =================================================================
+
+model ReminderTemplate {
+  id              String              @id @default(cuid())
+  organizationId  String
+  organization    Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  type            ReminderType
+  channel         ReminderChannel
+  locale          SupportedLocale     @default(EN)
+  name            String
+  subject         String?
+  body            String              @db.Text
+  variables       String[]            @default([])
+  isActive        Boolean             @default(true)
+  createdAt       DateTime            @default(now())
+  updatedAt       DateTime            @updatedAt
+
+  campaigns       ReminderCampaign[]
+
+  @@index([organizationId, type, channel, locale])
+}
+
+model ReminderCampaign {
+  id              String                  @id @default(cuid())
+  organizationId  String
+  organization    Organization            @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  templateId      String?
+  template        ReminderTemplate?       @relation(fields: [templateId], references: [id])
+  name            String
+  type            ReminderType
+  channel         ReminderChannel
+  status          ReminderCampaignStatus  @default(DRAFT)
+  scheduledFor    DateTime?
+  audienceFilter  Json?
+  approvedById    String?
+  approvedAt      DateTime?
+  notes           String?
+  createdAt       DateTime                @default(now())
+  updatedAt       DateTime                @updatedAt
+
+  deliveries      MessageDeliveryLog[]
+
+  @@index([organizationId, status])
+}
+
+model CommunicationPreference {
+  id              String      @id @default(cuid())
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  patientId       String      @unique
+  patient         Patient     @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  smsOptIn        Boolean     @default(false)
+  emailOptIn      Boolean     @default(false)
+  portalOptIn     Boolean     @default(true)
+  callOptIn       Boolean     @default(true)
+  preferredChannel ReminderChannel @default(PORTAL)
+  optOutAt        DateTime?
+  notes           String?
+  updatedAt       DateTime    @updatedAt
+
+  @@index([organizationId])
+}
+
+model MessageDeliveryLog {
+  id              String          @id @default(cuid())
+  organizationId  String
+  organization    Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  campaignId      String?
+  campaign        ReminderCampaign? @relation(fields: [campaignId], references: [id])
+  patientId       String?
+  channel         ReminderChannel
+  status          DeliveryStatus  @default(QUEUED)
+  vendor          String?         // "twilio-mock" | "ses-mock" | etc.
+  vendorMessageId String?
+  errorMessage    String?
+  scheduledFor    DateTime?
+  sentAt          DateTime?
+  deliveredAt     DateTime?
+  failedAt        DateTime?
+  metadata        Json?
+  createdAt       DateTime        @default(now())
+
+  @@index([organizationId, status])
+  @@index([campaignId])
+  @@index([patientId])
+}
+
+// =================================================================
+//                          INTERNATIONALIZATION
+//
+// We ship a TypeScript dictionary for compile-time safety; this table
+// lets practices override individual strings without redeploying.
+// =================================================================
+
+model TranslationString {
+  id              String          @id @default(cuid())
+  organizationId  String?         // null = platform default
+  organization    Organization?   @relation(fields: [organizationId], references: [id])
+  locale          SupportedLocale
+  namespace       String          // "ui" | "patient_education" | "reminders"
+  key             String
+  value           String          @db.Text
+  reviewed        Boolean         @default(false)
+  updatedAt       DateTime        @updatedAt
+
+  @@unique([organizationId, locale, namespace, key])
+  @@index([locale, namespace])
+}
+
+// =================================================================
+//                 PATIENT BILLING AND INTAKE FORMS
+// =================================================================
+
+enum InvoiceStatus {
+  DRAFT
+  OPEN
+  PAID
+  VOID
+}
+
+enum PatientFormStatus {
+  PENDING
+  COMPLETED
+}
+
+model PatientInvoice {
+  id              String          @id @default(cuid())
+  organizationId  String
+  organization    Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  patientId       String
+  patient         Patient         @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  appointmentId   String?
+  description     String
+  totalCents      Int
+  paidCents       Int             @default(0)
+  status          InvoiceStatus   @default(OPEN)
+  dueDate         DateTime?
+  issuedAt        DateTime        @default(now())
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  claims          Claim[]
+  ledgerEntries   PaymentLedgerEntry[]
+
+  @@index([organizationId, status])
+  @@index([patientId, status])
+}
+
+model PatientForm {
+  id              String            @id @default(cuid())
+  organizationId  String
+  organization    Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  patientId       String
+  patient         Patient           @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  title           String
+  description     String?           @db.Text
+  formType        String            @default("intake")
+  status          PatientFormStatus @default(PENDING)
+  responses       Json?
+  completedAt     DateTime?
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime          @updatedAt
+
+  @@index([organizationId, status])
+  @@index([patientId, status])
+}
+
+// =================================================================
+//                       FINANCIAL REPORTS
+//
+// Snapshots produced by the FinancialReport service. Reports are
+// owner / admin scope only; permissions are enforced at the action
+// layer. We persist snapshots so historical trends are stable even
+// when underlying rows change.
+// =================================================================
+
+model FinancialReport {
+  id              String          @id @default(cuid())
+  organizationId  String
+  organization    Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  kind            String          // "operations" | "retention" | "inventory" | etc.
+  periodStart     DateTime
+  periodEnd       DateTime
+  generatedById   String?
+  generatedAt     DateTime        @default(now())
+  payload         Json
+  notes           String?
+
+  @@index([organizationId, kind, periodStart])
+}
+
+// =================================================================
+//                    AI GATEWAY INFRASTRUCTURE
+// =================================================================
+
+enum AiRequestType {
+  ASSISTANT_CHAT
+  CHART_SUMMARY
+  SCRIBE_TRANSCRIPTION
+  SCRIBE_NOTE_GENERATION
+  IMAGING_ANALYSIS
+  PATIENT_INSTRUCTIONS
+  REFERRAL_DRAFT
+  REVIEW_REPLY_DRAFT
+  PLATFORM_HELP
+  EMBEDDING
+  KNOWLEDGE_RETRIEVAL
+}
+
+enum AiGatewayStatus {
+  QUEUED
+  PROCESSING
+  VALIDATING
+  COMPLETED
+  BLOCKED
+  FAILED
+  CANCELED
+}
+
+enum PhiRiskLevel {
+  SAFE
+  POSSIBLE_PHI
+  CONFIRMED_PHI
+  RESTRICTED
+  BLOCKED
+}
+
+enum AiProviderVendor {
+  OPENAI
+  ANTHROPIC
+  LOCAL
+  EXTERNAL_IMAGING
+  EXTERNAL_SPEECH
+  NONE
+}
+
+model AiGatewayRequest {
+  id                  String          @id @default(cuid())
+  organizationId      String
+  organization        Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  locationId          String?
+  userId              String
+  user                User            @relation("AiGatewayRequests", fields: [userId], references: [id], onDelete: Cascade)
+  patientId           String?
+  appointmentId       String?
+  requestType         AiRequestType
+  requestedAction     String?
+  currentPage         String?
+  role                Role
+  message             String?         @db.Text
+  redactedMessage     String?         @db.Text
+  phiRiskLevel        PhiRiskLevel    @default(SAFE)
+  selectedModel       String?
+  routedProvider      AiProviderVendor?
+  routedModel         String?
+  status              AiGatewayStatus @default(QUEUED)
+  providerReviewRequired Boolean      @default(true)
+  idempotencyKey      String?
+  processingTimeMs    Int?
+  estimatedCostCents  Int?
+  errorMessage        String?         @db.Text
+  metadata            Json?
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+
+  response            AiGatewayResponse?
+  phiEvents           PhiDetectionEvent[]
+
+  @@unique([organizationId, idempotencyKey])
+  @@index([organizationId, createdAt])
+  @@index([userId, createdAt])
+  @@index([patientId])
+  @@index([status])
+}
+
+model AiGatewayResponse {
+  id                    String          @id @default(cuid())
+  requestId             String          @unique
+  request               AiGatewayRequest @relation(fields: [requestId], references: [id], onDelete: Cascade)
+  status                AiGatewayStatus @default(COMPLETED)
+  modelUsed             String?
+  taskType              AiRequestType
+  structuredOutput      Json?
+  humanReadableOutput   String?         @db.Text
+  confidence            Float?
+  limitations           String?         @db.Text
+  supportingSources     Json?
+  providerReviewRequired Boolean        @default(true)
+  safetyFlags           String[]        @default([])
+  promptVersion         String?
+  createdAt             DateTime        @default(now())
+
+  @@index([requestId])
+}
+
+model AiProviderConfig {
+  id                  String          @id @default(cuid())
+  organizationId      String?
+  organization        Organization?   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  vendor              AiProviderVendor
+  isPrimary           Boolean         @default(false)
+  isFallback          Boolean         @default(false)
+  modelName           String?
+  baaConfirmed        Boolean         @default(false)
+  hipaaMode           Boolean         @default(true)
+  allowPhiTransmission Boolean        @default(false)
+  enabled             Boolean         @default(true)
+  dailyCostLimitCents Int?
+  monthlyCostLimitCents Int?
+  rateLimitPerMinute  Int?
+  config              Json?
+  createdAt           DateTime        @default(now())
+  updatedAt           DateTime        @updatedAt
+
+  @@index([organizationId, vendor])
+}
+
+model AiModelRoute {
+  id              String          @id @default(cuid())
+  organizationId  String?
+  organization    Organization?   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  requestType     AiRequestType
+  primaryVendor   AiProviderVendor
+  primaryModel    String?
+  fallbackVendor  AiProviderVendor?
+  fallbackModel   String?
+  enabled         Boolean         @default(true)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@unique([organizationId, requestType])
+}
+
+model AiUsageRecord {
+  id              String          @id @default(cuid())
+  organizationId  String
+  organization    Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId          String?
+  requestId       String?
+  requestType     AiRequestType
+  vendor          AiProviderVendor
+  modelName       String?
+  inputTokens     Int?
+  outputTokens    Int?
+  costCents       Int?
+  latencyMs       Int?
+  success         Boolean         @default(true)
+  createdAt       DateTime        @default(now())
+
+  @@index([organizationId, createdAt])
+  @@index([requestType, createdAt])
+}
+
+model PhiDetectionEvent {
+  id              String          @id @default(cuid())
+  organizationId  String
+  organization    Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  requestId       String?
+  request         AiGatewayRequest? @relation(fields: [requestId], references: [id], onDelete: SetNull)
+  userId          String?
+  riskLevel       PhiRiskLevel
+  detectionMethod String
+  fieldTypes      String[]        @default([])
+  redacted        Boolean         @default(false)
+  blocked         Boolean         @default(false)
+  details         Json?
+  createdAt       DateTime        @default(now())
+
+  @@index([organizationId, createdAt])
+  @@index([requestId])
+}
+
+model BlockedAiRequest {
+  id              String          @id @default(cuid())
+  organizationId  String
+  organization    Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId          String?
+  requestType     AiRequestType
+  reason          String          @db.Text
+  phiRiskLevel    PhiRiskLevel?
+  createdAt       DateTime        @default(now())
+
+  @@index([organizationId, createdAt])
+}
+
+model AiKnowledgeDocument {
+  id              String          @id @default(cuid())
+  organizationId  String?
+  organization    Organization?   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  title           String
+  category        String
+  status          String          @default("draft")
+  version         Int             @default(1)
+  practiceScope   Boolean         @default(true)
+  roleAccess      String[]        @default([])
+  effectiveDate   DateTime?
+  expiresAt       DateTime?
+  approvedById    String?
+  uploadedById    String?
+  tags            String[]        @default([])
+  storagePath     String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  chunks          AiKnowledgeChunk[]
+
+  @@index([organizationId, status])
+  @@index([category])
+}
+
+model AiKnowledgeChunk {
+  id              String          @id @default(cuid())
+  documentId      String
+  document        AiKnowledgeDocument @relation(fields: [documentId], references: [id], onDelete: Cascade)
+  chunkIndex      Int
+  content         String          @db.Text
+  tokenCount      Int?
+  embeddingId     String?
+  embedding       Json?
+  createdAt       DateTime        @default(now())
+
+  @@index([documentId, chunkIndex])
+}
+
+// =================================================================
+//              EXAM CHART, BACKGROUND JOBS, CLAIMS
+// =================================================================
+
+enum ExamChartStatus {
+  DRAFT
+  IN_PROGRESS
+  READY_FOR_REVIEW
+  SIGNED
+}
+
+enum BackgroundJobStatus {
+  QUEUED
+  PROCESSING
+  COMPLETED
+  FAILED
+}
+
+enum ClaimStatus {
+  DRAFT
+  SUBMITTED
+  ACCEPTED
+  REJECTED
+  PAID
+  VOID
+}
+
+model ExamChart {
+  id              String          @id @default(cuid())
+  organizationId  String
+  organization    Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  encounterId     String          @unique
+  encounter       Encounter       @relation(fields: [encounterId], references: [id], onDelete: Cascade)
+  patientId       String
+  patient         Patient         @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  providerId      String?
+  status          ExamChartStatus @default(DRAFT)
+  sectionData     Json            @default("{}")
+  version         Int             @default(1)
+  signedAt        DateTime?
+  signedById      String?
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  @@index([organizationId, patientId])
+  @@index([encounterId])
+}
+
+model BackgroundJob {
+  id              String              @id @default(cuid())
+  organizationId  String
+  organization    Organization        @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  type            String
+  status          BackgroundJobStatus @default(QUEUED)
+  payload         Json?
+  result          Json?
+  errorMessage    String?             @db.Text
+  patientId       String?
+  createdById     String?
+  attempts        Int                 @default(0)
+  maxAttempts     Int                 @default(3)
+  scheduledFor    DateTime?
+  startedAt       DateTime?
+  completedAt     DateTime?
+  createdAt       DateTime            @default(now())
+
+  @@index([organizationId, status])
+  @@index([status, scheduledFor])
+  @@index([type, status])
+}
+
+model Claim {
+  id              String        @id @default(cuid())
+  organizationId  String
+  organization    Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  patientId       String
+  patient         Patient       @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  invoiceId       String?
+  invoice         PatientInvoice? @relation(fields: [invoiceId], references: [id])
+  status          ClaimStatus   @default(DRAFT)
+  payerName       String?
+  memberId        String?
+  totalCents      Int           @default(0)
+  externalId      String?
+  submittedAt     DateTime?
+  paidAt          DateTime?
+  notes           String?       @db.Text
+  createdAt       DateTime      @default(now())
+  updatedAt       DateTime      @updatedAt
+
+  lines           ClaimLine[]
+
+  @@index([organizationId, status])
+  @@index([patientId])
+}
+
+model ClaimLine {
+  id              String   @id @default(cuid())
+  claimId         String
+  claim           Claim    @relation(fields: [claimId], references: [id], onDelete: Cascade)
+  cptCode         String
+  modifier        String?
+  description     String?
+  chargeCents     Int
+  units           Int      @default(1)
+  diagnosisCodes  String[] @default([])
+  createdAt       DateTime @default(now())
+
+  @@index([claimId])
+}
+
+model VisitWorkflowTemplate {
+  id               String          @id @default(cuid())
+  organizationId   String
+  organization     Organization    @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  appointmentType  AppointmentType
+  name             String
+  durationMinutes  Int             @default(30)
+  pretestSteps     String[]        @default([])
+  imagingSteps     String[]        @default([])
+  carePathwaySteps String[]        @default([])
+  createdAt        DateTime        @default(now())
+  updatedAt        DateTime        @updatedAt
+
+  @@unique([organizationId, appointmentType])
+  @@index([organizationId])
+}
+
+// =================================================================
+//                     PATIENT MERGE (§6)
+// =================================================================
+
+model PatientMergeRecord {
+  id                 String       @id @default(cuid())
+  organizationId     String
+  organization       Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  survivingPatientId String
+  mergedPatientId    String
+  fieldSelections    Json
+  mergedSnapshot     Json
+  movedCounts        Json
+  mergedById         String
+  reversedAt         DateTime?
+  reversedById       String?
+  createdAt          DateTime     @default(now())
+
+  @@index([organizationId, createdAt])
+  @@index([survivingPatientId])
+  @@index([mergedPatientId])
+}
+
+// =================================================================
+//                 ERA / EOB / STATEMENTS (§25, §27)
+// =================================================================
+
+enum RemittanceStatus {
+  RECEIVED
+  PARSED
+  POSTED
+  RECONCILED
+}
+
+enum RemittanceSource {
+  ERA_835
+  MANUAL_EOB
+}
+
+model RemittanceAdvice {
+  id             String           @id @default(cuid())
+  organizationId String
+  organization   Organization     @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  source         RemittanceSource @default(MANUAL_EOB)
+  payerName      String
+  checkNumber    String?
+  paymentMethod  String?
+  totalPaidCents Int              @default(0)
+  receivedAt     DateTime         @default(now())
+  status         RemittanceStatus @default(RECEIVED)
+  rawReference   String?          @db.Text
+  postedById     String?
+  postedAt       DateTime?
+  notes          String?          @db.Text
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime         @updatedAt
+
+  lines          RemittanceLine[]
+
+  @@index([organizationId, status])
+  @@index([organizationId, receivedAt])
+}
+
+model RemittanceLine {
+  id                 String           @id @default(cuid())
+  remittanceId       String
+  remittance         RemittanceAdvice @relation(fields: [remittanceId], references: [id], onDelete: Cascade)
+  claimId            String?
+  cptCode            String?
+  billedCents        Int              @default(0)
+  allowedCents       Int              @default(0)
+  paidCents          Int              @default(0)
+  adjustmentCents    Int              @default(0)
+  deductibleCents    Int              @default(0)
+  coinsuranceCents   Int              @default(0)
+  copayCents         Int              @default(0)
+  patientRespCents   Int              @default(0)
+  denialCode         String?
+  remarkCode         String?
+  createdAt          DateTime         @default(now())
+
+  @@index([remittanceId])
+  @@index([claimId])
+}
+
+enum StatementDelivery {
+  PORTAL
+  PAPER
+  EMAIL
+}
+
+enum StatementStatus {
+  DRAFT
+  SENT
+  PAID
+  VOID
+}
+
+model PatientStatement {
+  id             String            @id @default(cuid())
+  organizationId String
+  organization   Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  patientId      String
+  patient        Patient           @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  balanceCents   Int               @default(0)
+  statementDate  DateTime          @default(now())
+  deliveryMethod StatementDelivery @default(PORTAL)
+  deliveryStatus String            @default("pending")
+  status         StatementStatus   @default(DRAFT)
+  followUpDate   DateTime?
+  notes          String?           @db.Text
+  createdById    String?
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  @@index([organizationId, status])
+  @@index([patientId, statementDate])
+}
+
+// =================================================================
+//                 DATA MIGRATION CENTER (§38-47)
+// =================================================================
+
+enum MigrationProjectStatus {
+  DRAFT
+  DISCOVERY
+  MAPPING
+  VALIDATION
+  TRIAL
+  RECONCILIATION
+  FINAL
+  COMPLETE
+  CANCELLED
+}
+
+enum MigrationRecordStatus {
+  RAW
+  PARSED
+  MAPPED
+  VALIDATED
+  ERROR
+  IMPORTED
+  SKIPPED
+}
+
+enum MigrationValidationSeverity {
+  BLOCKING
+  REVIEW
+  WARNING
+  INFO
+}
+
+model MigrationProject {
+  id             String                 @id @default(cuid())
+  organizationId String
+  organization   Organization           @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name           String
+  sourceSystem   String
+  status         MigrationProjectStatus @default(DRAFT)
+  notes          String?                @db.Text
+  createdById    String
+  approvedById   String?
+  approvedAt     DateTime?
+  goLiveDate     DateTime?
+  createdAt      DateTime               @default(now())
+  updatedAt      DateTime               @updatedAt
+
+  batches        MigrationBatch[]
+  mappings       MigrationFieldMapping[]
+  stagingRecords MigrationStagingRecord[]
+
+  @@index([organizationId, status])
+}
+
+model MigrationBatch {
+  id             String           @id @default(cuid())
+  projectId      String
+  project        MigrationProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  organizationId String
+  fileName       String
+  domain         String
+  format         String           @default("csv")
+  rowCount       Int              @default(0)
+  checksum       String?
+  isTrial        Boolean          @default(true)
+  uploadedById   String?
+  createdAt      DateTime         @default(now())
+
+  @@index([projectId, domain])
+}
+
+model MigrationFieldMapping {
+  id           String           @id @default(cuid())
+  projectId    String
+  project      MigrationProject @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  domain       String
+  sourceField  String
+  targetField  String
+  dataType     String           @default("string")
+  transform    String?
+  defaultValue String?
+  required     Boolean          @default(false)
+  ignore       Boolean          @default(false)
+  createdAt    DateTime         @default(now())
+  updatedAt    DateTime         @updatedAt
+
+  @@unique([projectId, domain, sourceField])
+  @@index([projectId, domain])
+}
+
+model MigrationStagingRecord {
+  id                  String                @id @default(cuid())
+  projectId           String
+  project             MigrationProject      @relation(fields: [projectId], references: [id], onDelete: Cascade)
+  organizationId      String
+  domain              String
+  sourceSystem        String
+  sourceTable         String?
+  sourceRecordId      String
+  rawValue            Json
+  parsedValue         Json?
+  mappedValue         Json?
+  status              MigrationRecordStatus @default(RAW)
+  validationSeverity  MigrationValidationSeverity?
+  error               String?               @db.Text
+  warning             String?               @db.Text
+  destinationRecordId String?
+  importBatchId       String?
+  mappingVersion      String?
+  importedById        String?
+  importedAt          DateTime?
+  createdAt           DateTime              @default(now())
+
+  @@index([projectId, domain, status])
+  @@index([projectId, sourceRecordId])
+}
+
+// =================================================================
+//              OPTICAL POS + LAB ORDERS (§28, §31)
+// =================================================================
+
+enum OpticalOrderType {
+  SPECTACLES
+  CONTACT_LENS
+  ACCESSORY
+}
+
+enum OpticalOrderStatus {
+  QUOTE
+  ORDERED
+  AT_LAB
+  IN_PRODUCTION
+  SHIPPED
+  RECEIVED
+  QUALITY_CHECK
+  READY_FOR_PICKUP
+  DISPENSED
+  CANCELLED
+  RETURNED
+  REMAKE
+}
+
+enum OpticalItemKind {
+  FRAME
+  LENS
+  CONTACT_LENS
+  ACCESSORY
+  SERVICE
+}
+
+model OpticalLab {
+  id             String        @id @default(cuid())
+  organizationId String
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  name           String
+  accountNumber  String?
+  turnaroundDays Int?
+  shippingMethod String?
+  phone          String?
+  active         Boolean       @default(true)
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
+
+  orders         OpticalOrder[]
+
+  @@index([organizationId, active])
+}
+
+model OpticalOrder {
+  id                     String                    @id @default(cuid())
+  organizationId         String
+  organization           Organization              @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  locationId             String?
+  patientId              String
+  patient                Patient                   @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  prescriptionId         String?
+  type                   OpticalOrderType          @default(SPECTACLES)
+  status                 OpticalOrderStatus        @default(QUOTE)
+  labId                  String?
+  lab                    OpticalLab?               @relation(fields: [labId], references: [id])
+  labOrderNumber         String?
+  trackingNumber         String?
+  remakeReason           String?
+  warrantyMonths         Int?
+  measurements           Json?
+  subtotalCents          Int                       @default(0)
+  insuranceAllowanceCents Int                      @default(0)
+  discountCents          Int                       @default(0)
+  patientRespCents       Int                       @default(0)
+  depositCents           Int                       @default(0)
+  balanceCents           Int                       @default(0)
+  notes                  String?                   @db.Text
+  createdById            String?
+  orderedAt              DateTime?
+  receivedAt             DateTime?
+  dispensedAt            DateTime?
+  createdAt              DateTime                  @default(now())
+  updatedAt              DateTime                  @updatedAt
+
+  items                  OpticalOrderItem[]
+  statusEvents           OpticalOrderStatusEvent[]
+
+  @@index([organizationId, status])
+  @@index([patientId])
+  @@index([organizationId, locationId])
+}
+
+model OpticalOrderItem {
+  id             String          @id @default(cuid())
+  orderId        String
+  order          OpticalOrder    @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  inventoryItemId String?
+  kind           OpticalItemKind
+  description    String
+  quantity       Int             @default(1)
+  unitPriceCents Int             @default(0)
+  createdAt      DateTime        @default(now())
+
+  @@index([orderId])
+}
+
+model OpticalOrderStatusEvent {
+  id            String             @id @default(cuid())
+  orderId       String
+  order         OpticalOrder       @relation(fields: [orderId], references: [id], onDelete: Cascade)
+  status        OpticalOrderStatus
+  note          String?
+  performedById String?
+  createdAt     DateTime           @default(now())
+
+  @@index([orderId, createdAt])
+}
+
+// =================================================================
+//                    GOOGLE BUSINESS / REPUTATION
+// =================================================================
+
+enum GoogleReviewReplyStatus {
+  PENDING_REPLY
+  DRAFT
+  PUBLISHED
+  DEMO_PUBLISHED
+  SKIPPED
+}
+
+enum PaymentLedgerEntryType {
+  CHARGE
+  PAYMENT
+  REFUND
+  ADJUSTMENT
+  WRITE_OFF
+}
+
+enum PaymentLedgerSource {
+  MANUAL
+  STRIPE
+  DEMO
+  REMITTANCE
+}
+
+enum AppointmentRequestStatus {
+  PENDING
+  APPROVED
+  DECLINED
+  CONVERTED
+  CANCELLED
+}
+
+enum PrescriptionStatus {
+  DRAFT
+  ACTIVE
+  ARCHIVED
+}
+
+model GoogleBusinessConnection {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  locationId     String?
+  location       Location?    @relation(fields: [locationId], references: [id], onDelete: SetNull)
+  googlePlaceId  String?
+  placeName      String?
+  demoMode       Boolean      @default(false)
+  lastSyncedAt   DateTime?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
+
+  reviews        GoogleReview[]
+
+  @@index([organizationId])
+  @@index([locationId])
+}
+
+model GoogleReview {
+  id                 String                   @id @default(cuid())
+  organizationId     String
+  organization       Organization             @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  connectionId       String
+  connection         GoogleBusinessConnection @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  locationId         String?
+  location           Location?                @relation(fields: [locationId], references: [id], onDelete: SetNull)
+  externalReviewId   String
+  reviewerName       String
+  starRating         Int
+  comment            String?                  @db.Text
+  reviewedAt         DateTime
+  replyStatus        GoogleReviewReplyStatus  @default(PENDING_REPLY)
+  draftReply         String?                  @db.Text
+  draftGeneratedAt   DateTime?
+  draftGeneratedById String?
+  draftGeneratedBy   User?                    @relation("ReviewDraftAuthor", fields: [draftGeneratedById], references: [id], onDelete: SetNull)
+  publishedReply     String?                  @db.Text
+  publishedAt        DateTime?
+  publishedById      String?
+  publishedBy        User?                    @relation("ReviewPublishAuthor", fields: [publishedById], references: [id], onDelete: SetNull)
+  aiGatewayRequestId String?
+  createdAt          DateTime                 @default(now())
+  updatedAt          DateTime                 @updatedAt
+
+  @@unique([connectionId, externalReviewId])
+  @@index([organizationId, replyStatus])
+  @@index([organizationId, reviewedAt])
+}
+
+// =================================================================
+//                 PAYMENT LEDGER / STRIPE IDEMPOTENCY
+// =================================================================
+
+model PaymentLedgerEntry {
+  id               String                 @id @default(cuid())
+  organizationId   String
+  organization     Organization           @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  patientId        String?
+  patient          Patient?               @relation(fields: [patientId], references: [id], onDelete: SetNull)
+  invoiceId        String?
+  invoice          PatientInvoice?        @relation(fields: [invoiceId], references: [id], onDelete: SetNull)
+  type             PaymentLedgerEntryType
+  source           PaymentLedgerSource    @default(MANUAL)
+  amountCents      Int
+  currency         String                 @default("usd")
+  idempotencyKey   String?
+  externalRef      String?
+  description      String?
+  metadata         Json?
+  createdById      String?
+  createdBy        User?                  @relation("PaymentLedgerActor", fields: [createdById], references: [id], onDelete: SetNull)
+  createdAt        DateTime               @default(now())
+
+  @@unique([organizationId, idempotencyKey])
+  @@index([organizationId, createdAt])
+  @@index([invoiceId])
+  @@index([patientId])
+  @@index([externalRef])
+}
+
+model StripeWebhookEvent {
+  id             String       @id @default(cuid())
+  organizationId String?
+  organization   Organization? @relation(fields: [organizationId], references: [id], onDelete: SetNull)
+  eventId        String       @unique
+  eventType      String
+  payloadHash    String?
+  processedAt    DateTime     @default(now())
+  invoiceId      String?
+  metadata       Json?
+
+  @@index([eventType, processedAt])
+}
+
+// =================================================================
+//              ONLINE APPOINTMENT REQUEST WORKFLOW
+// =================================================================
+
+model AppointmentRequest {
+  id               String                    @id @default(cuid())
+  organizationId   String
+  organization     Organization              @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  patientId        String?
+  patient          Patient?                  @relation(fields: [patientId], references: [id], onDelete: SetNull)
+  locationId       String?
+  preferredType    AppointmentType           @default(COMPREHENSIVE_EYE_EXAM)
+  preferredStartsAt DateTime?
+  preferredEndsAt  DateTime?
+  requesterName    String
+  requesterEmail   String?
+  requesterPhone   String?
+  notes            String?                   @db.Text
+  status           AppointmentRequestStatus  @default(PENDING)
+  declineReason    String?
+  handledById      String?
+  handledBy        User?                     @relation("AppointmentRequestHandler", fields: [handledById], references: [id], onDelete: SetNull)
+  handledAt        DateTime?
+  appointmentId    String?                   @unique
+  appointment      Appointment?              @relation(fields: [appointmentId], references: [id], onDelete: SetNull)
+  createdAt        DateTime                  @default(now())
+  updatedAt        DateTime                  @updatedAt
+
+  @@index([organizationId, status])
+  @@index([patientId])
+}
+
+// =================================================================
+//           GUARDIAN / PROXY PORTAL ACCESS (SCHEMA PLANNING)
+// =================================================================
+// Not exposed in UI yet. Required before proxy portal can share PHI.
+
+model PatientProxyAccess {
+  id              String       @id @default(cuid())
+  organizationId  String
+  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  patientId       String
+  patient         Patient      @relation("ProxyPatient", fields: [patientId], references: [id], onDelete: Cascade)
+  guardianUserId  String
+  guardianUser    User         @relation("GuardianProxyAccess", fields: [guardianUserId], references: [id], onDelete: Cascade)
+  relationship    String
+  accessLevel     String       @default("read") // read | limited | full
+  expiresAt       DateTime?
+  consentRecordId String?
+  consentNotes    String?      @db.Text
+  revokedAt       DateTime?
+  createdAt       DateTime     @default(now())
+  updatedAt       DateTime     @updatedAt
+
+  @@unique([patientId, guardianUserId])
+  @@index([organizationId])
+  @@index([guardianUserId])
+}
+
+// =================================================================
+//                    VENDOR / BAA READINESS TRACKING
+// =================================================================
+
+model VendorReadiness {
+  id               String                 @id @default(cuid())
+  organizationId   String
+  organization     Organization           @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  vendor           VendorKind
+  status           VendorReadinessStatus  @default(NOT_CONFIGURED)
+  baaCompletedAt   DateTime?
+  baaCompletedById String?
+  lastTestAt       DateTime?
+  lastTestOk       Boolean?
+  lastError        String?                @db.Text
+  notes            String?                @db.Text
+  /// Never store raw secrets. Optional last-4 / hint only.
+  configHint       String?
+  updatedAt        DateTime               @updatedAt
+  createdAt        DateTime               @default(now())
+
+  @@unique([organizationId, vendor])
+  @@index([organizationId, status])
+}
+
+// =================================================================
+//                      STAFF ONBOARDING CHECKLIST
+// =================================================================
+
+model StaffOnboarding {
+  id                    String       @id @default(cuid())
+  organizationId        String
+  organization          Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  userId                String       @unique
+  user                  User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+  inviteAcceptedAt      DateTime?
+  passwordSetAt       DateTime?
+  mfaEnrolledAt         DateTime?
+  roleConfirmedAt       DateTime?
+  locationAccessConfirmedAt DateTime?
+  permissionsReviewedAt DateTime?
+  phiNoticeAcceptedAt   DateTime?
+  workflowIntroCompletedAt DateTime?
+  completedAt           DateTime?
+  notes                 String?      @db.Text
+  createdAt             DateTime     @default(now())
+  updatedAt             DateTime     @updatedAt
+
+  @@index([organizationId, completedAt])
+}
+
+// =================================================================
+//                         SUPPORT TICKETS
+// =================================================================
+
+enum SupportTicketCategory {
+  LOGIN
+  MFA
+  SCHEDULING
+  PATIENT_CHART
+  IMAGING
+  AI
+  MESSAGING
+  REMINDERS
+  PATIENT_PORTAL
+  BILLING
+  GOOGLE_REVIEWS
+  MIGRATION
+  BUG
+  FEATURE_REQUEST
+  OTHER
+}
+
+enum SupportTicketPriority {
+  LOW
+  NORMAL
+  HIGH
+  URGENT
+}
+
+enum SupportTicketStatus {
+  OPEN
+  IN_PROGRESS
+  WAITING_ON_CUSTOMER
+  RESOLVED
+  CLOSED
+}
+
+model SupportTicket {
+  id               String                 @id @default(cuid())
+  organizationId   String
+  organization     Organization           @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  createdById      String
+  createdBy        User                   @relation("SupportTicketCreator", fields: [createdById], references: [id], onDelete: Cascade)
+  assignedToId     String?
+  assignedTo       User?                  @relation("SupportTicketAssignee", fields: [assignedToId], references: [id], onDelete: SetNull)
+  category         SupportTicketCategory
+  priority         SupportTicketPriority  @default(NORMAL)
+  status           SupportTicketStatus    @default(OPEN)
+  subject          String
+  description      String                 @db.Text
+  /// Submitter attested that the ticket body may include PHI.
+  mayContainPhi    Boolean                @default(false)
+  /// Platform admin flagged a security / PHI concern.
+  securityConcern  Boolean                @default(false)
+  relatedPatientId String?
+  resolution       String?                @db.Text
+  resolvedAt       DateTime?
+  closedAt         DateTime?
+  createdAt        DateTime               @default(now())
+  updatedAt        DateTime               @updatedAt
+  notes            SupportTicketNote[]
+
+  @@index([organizationId, status])
+  @@index([organizationId, createdAt])
+  @@index([assignedToId])
+}
+
+model SupportTicketNote {
+  id          String        @id @default(cuid())
+  ticketId    String
+  ticket      SupportTicket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+  authorId    String
+  author      User          @relation("SupportTicketNoteAuthor", fields: [authorId], references: [id], onDelete: Cascade)
+  body        String        @db.Text
+  /// Internal notes are not shown to the submitting practice staff.
+  isInternal  Boolean       @default(true)
+  createdAt   DateTime      @default(now())
+
+  @@index([ticketId, createdAt])
+}
+
+// =================================================================
+//                    SAAS SUBSCRIPTION / USAGE
+// =================================================================
+
+enum SaasPlan {
+  PILOT
+  PRACTICE
+  GROWTH
+  ENTERPRISE
+}
+
+enum SaasBillingStatus {
+  TRIALING
+  ACTIVE
+  PAST_DUE
+  CANCELLED
+  MANUAL
+}
+
+/// Org-level SaaS plan + usage counters. Billing issues alert admins only —
+/// they must not hard-block clinical access.
+model OrgSubscription {
+  id                 String            @id @default(cuid())
+  organizationId     String            @unique
+  organization       Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  plan               SaasPlan          @default(PILOT)
+  billingStatus      SaasBillingStatus @default(MANUAL)
+  providerSeatLimit  Int               @default(5)
+  locationSeatLimit  Int               @default(2)
+  aiActionsUsed      Int               @default(0)
+  aiActionsLimit     Int?
+  scribeMinutesUsed  Int               @default(0)
+  scribeMinutesLimit Int?
+  smsRemindersUsed   Int               @default(0)
+  smsRemindersLimit  Int?
+  storageMbUsed      Int               @default(0)
+  storageMbLimit     Int?
+  nextInvoiceAt      DateTime?
+  adminAlertNote     String?           @db.Text
+  createdAt          DateTime          @default(now())
+  updatedAt          DateTime          @updatedAt
+}
+

@@ -1,0 +1,11 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 800" role="img" aria-label="Demo referral letter (fictional)">
+  <rect width="640" height="800" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="48" y="64" fill="#0f172a" font-family="system-ui,sans-serif" font-size="20" font-weight="600">Referral letter</text>
+  <text x="48" y="100" fill="#64748b" font-family="system-ui,sans-serif" font-size="13">EyeQ Vision Center � DEMO</text>
+  <text x="48" y="160" fill="#334155" font-family="system-ui,sans-serif" font-size="14">Re: Michael Thompson</text>
+  <text x="48" y="200" fill="#475569" font-family="system-ui,sans-serif" font-size="13">Reason: Glaucoma suspect monitoring</text>
+  <text x="48" y="240" fill="#475569" font-family="system-ui,sans-serif" font-size="13">Please evaluate for ongoing glaucoma surveillance.</text>
+  <text x="48" y="300" fill="#475569" font-family="system-ui,sans-serif" font-size="13">Recent OCT RNFL OD shows superior thinning vs baseline.</text>
+  <text x="48" y="360" fill="#334155" font-family="system-ui,sans-serif" font-size="13">Dr. Maya Shah, OD</text>
+  <text x="48" y="760" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="12">DEMO referral - fictional, not a real patient</text>
+</svg>

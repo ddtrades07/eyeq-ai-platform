@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 800" role="img" aria-label="Demo patient statement (fictional)">
+  <rect width="640" height="800" fill="#ffffff" stroke="#e2e8f0"/>
+  <text x="48" y="64" fill="#0f172a" font-family="system-ui,sans-serif" font-size="22" font-weight="600">Patient statement</text>
+  <text x="48" y="96" fill="#64748b" font-family="system-ui,sans-serif" font-size="13">EyeQ Vision Center � DEMO</text>
+  <text x="48" y="150" fill="#334155" font-family="system-ui,sans-serif" font-size="14">Daniel Kim</text>
+  <text x="48" y="180" fill="#64748b" font-family="system-ui,sans-serif" font-size="13">Statement date: Jul 8, 2026</text>
+  <line x1="48" y1="210" x2="592" y2="210" stroke="#e2e8f0"/>
+  <text x="48" y="250" fill="#334155" font-family="system-ui,sans-serif" font-size="13">Optical balance</text>
+  <text x="520" y="250" fill="#334155" font-family="system-ui,sans-serif" font-size="13" text-anchor="end">$170.00</text>
+  <text x="48" y="290" fill="#0f172a" font-family="system-ui,sans-serif" font-size="14" font-weight="600">Amount due</text>
+  <text x="520" y="290" fill="#0f172a" font-family="system-ui,sans-serif" font-size="14" font-weight="600" text-anchor="end">$170.00</text>
+  <text x="48" y="760" fill="#94a3b8" font-family="system-ui,sans-serif" font-size="12">DEMO statement - fictional, not a real patient</text>
+</svg>

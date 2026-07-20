@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 400" role="img" aria-label="Demo insurance card (fictional)">
+  <rect width="640" height="400" rx="16" fill="#1e3a5f"/>
+  <rect x="24" y="24" width="592" height="352" rx="12" fill="#2563eb" opacity="0.15"/>
+  <text x="48" y="72" fill="#bfdbfe" font-family="system-ui,sans-serif" font-size="22" font-weight="600">Demo Health Plan</text>
+  <text x="48" y="108" fill="#93c5fd" font-family="system-ui,sans-serif" font-size="14">Member ID: DEMO-88421-01</text>
+  <text x="48" y="160" fill="#ffffff" font-family="system-ui,sans-serif" font-size="18">Michael Thompson</text>
+  <text x="48" y="190" fill="#dbeafe" font-family="system-ui,sans-serif" font-size="14">Group: EYEQ-DEMO-2026</text>
+  <text x="48" y="220" fill="#dbeafe" font-family="system-ui,sans-serif" font-size="14">Payer phone: (555) 200-4000</text>
+  <text x="48" y="360" fill="#93c5fd" font-family="system-ui,sans-serif" font-size="12">DEMO insurance card - fictional, not a real payer</text>
+</svg>

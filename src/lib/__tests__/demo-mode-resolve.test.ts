@@ -50,3 +50,25 @@ describe('resolveDemoModeEnabled', () => {
     expect(resolveDemoModeEnabled()).toBe(true);
   });
 });
+
+describe('publicLiveDemoHref', () => {
+  const original = process.env.NEXT_PUBLIC_DEMO_URL;
+
+  afterEach(() => {
+    if (original === undefined) delete process.env.NEXT_PUBLIC_DEMO_URL;
+    else process.env.NEXT_PUBLIC_DEMO_URL = original;
+    vi.resetModules();
+  });
+
+  it('returns /demo by default', async () => {
+    delete process.env.NEXT_PUBLIC_DEMO_URL;
+    const { publicLiveDemoHref } = await import('@/lib/demo/public-demo-href');
+    expect(publicLiveDemoHref()).toBe('/demo');
+  });
+
+  it('points at NEXT_PUBLIC_DEMO_URL/demo when set', async () => {
+    process.env.NEXT_PUBLIC_DEMO_URL = 'https://demo.example.com/';
+    const { publicLiveDemoHref } = await import('@/lib/demo/public-demo-href');
+    expect(publicLiveDemoHref()).toBe('https://demo.example.com/demo');
+  });
+});

@@ -20,16 +20,16 @@ export const metadata = {
 };
 
 export default async function DemoLandingPage() {
-  if (!serverEnv.demoModeEnabled) {
-    redirect('/login');
-  }
-
   const user = await getCurrentUser();
   if (user) {
     if (user.organizationSlug === DEMO_ORG_SLUG) {
       redirect(isStaffRole(user.role) ? '/provider/demo-walkthrough' : '/patient/home');
     }
     redirect(isStaffRole(user.role) ? '/provider/dashboard' : '/patient/home');
+  }
+
+  if (!serverEnv.demoModeEnabled) {
+    return <DemoUnavailable />;
   }
 
   const primaryKeys = new Set(DEMO_PRIMARY_ENTRIES.map((e) => e.key));
@@ -186,6 +186,48 @@ export default async function DemoLandingPage() {
               </CardContent>
             </Card>
           ))}
+        </div>
+      </main>
+    </div>
+  );
+}
+
+/** Public /demo stays reachable; entry is blocked when this host is not a demo environment. */
+function DemoUnavailable() {
+  return (
+    <div className="min-h-screen bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(245,188,66,0.12),transparent),linear-gradient(to_bottom,#fffbeb,var(--background))]">
+      <header className="border-b bg-background/80 backdrop-blur">
+        <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 lg:px-8">
+          <Link href="/" className="text-sm font-semibold tracking-tight">
+            EyeQ AI
+          </Link>
+          <Link href="/login" className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
+            Practice sign in
+          </Link>
+        </div>
+      </header>
+      <main className="mx-auto max-w-xl px-5 py-16 lg:px-8">
+        <Badge variant="outline" className="border-amber-300 text-amber-900">
+          Live Demo · Not available on this host
+        </Badge>
+        <h1 className="mt-4 text-3xl font-semibold tracking-tight">
+          Guided demo is not enabled here
+        </h1>
+        <p className="mt-3 text-muted-foreground leading-relaxed">
+          This deployment is not running in demo mode. The public Live Demo uses a separate
+          synthetic-data environment (<code className="text-xs">APP_ENV=demo</code> with{' '}
+          <code className="text-xs">DEMO_MODE=true</code>) so production PHI hosts stay fail-closed.
+        </p>
+        <p className="mt-3 text-sm text-muted-foreground">
+          Ask your EyeQ contact for the demo link, or request an introduction below.
+        </p>
+        <div className="mt-8 flex flex-wrap gap-3">
+          <Link href="/contact" className={cn(buttonVariants())}>
+            Request an introduction
+          </Link>
+          <Link href="/" className={cn(buttonVariants({ variant: 'outline' }))}>
+            Back to home
+          </Link>
         </div>
       </main>
     </div>

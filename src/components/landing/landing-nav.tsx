@@ -2,7 +2,7 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { Eye, Menu, X } from 'lucide-react';
+import { Eye, Menu, Sparkles, X } from 'lucide-react';
 import { Button, buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
@@ -14,7 +14,7 @@ const NAV_LINKS = [
   { href: '#trust', label: 'Trust & Privacy' },
 ] as const;
 
-export function LandingNav() {
+export function LandingNav({ liveDemoHref = '/demo' }: { liveDemoHref?: string }) {
   const [open, setOpen] = React.useState(false);
 
   React.useEffect(() => {
@@ -52,6 +52,16 @@ export function LandingNav() {
         </nav>
 
         <div className="hidden items-center gap-2 lg:flex">
+          <Link
+            href={liveDemoHref}
+            className={cn(
+              buttonVariants({ size: 'sm' }),
+              'bg-landing-teal text-white hover:bg-landing-teal/90',
+            )}
+          >
+            <Sparkles className="h-3.5 w-3.5" aria-hidden />
+            Live Demo
+          </Link>
           <Link href="/login?next=/portal" className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }), 'text-landing-navy')}>
             Patient Portal
           </Link>
@@ -94,6 +104,12 @@ export function LandingNav() {
             ))}
           </ul>
           <div className="mt-4 flex flex-col gap-2 border-t border-landing-border/60 pt-4">
+            <Button asChild className="w-full bg-landing-teal hover:bg-landing-teal/90">
+              <Link href={liveDemoHref} onClick={() => setOpen(false)}>
+                <Sparkles className="h-4 w-4" aria-hidden />
+                Live Demo
+              </Link>
+            </Button>
             <Button asChild variant="outline" className="w-full border-landing-border">
               <Link href="/login?next=/portal" onClick={() => setOpen(false)}>
                 Patient Portal

@@ -3,7 +3,8 @@ import { redirect } from 'next/navigation';
 import { LandingPageContent } from '@/components/landing/landing-page';
 import { getCurrentUser } from '@/lib/auth/session';
 import { isStaffRole } from '@/lib/auth/rbac';
-import { serverEnv, publicEnv } from '@/lib/env';
+import { publicEnv } from '@/lib/env';
+import { publicLiveDemoHref } from '@/lib/demo/public-demo-href';
 import { Fraunces } from 'next/font/google';
 
 const fraunces = Fraunces({
@@ -58,7 +59,7 @@ export default async function LandingPage() {
           }),
         }}
       />
-      <LandingPageContent demoModeEnabled={serverEnv.demoModeEnabled} />
+      <LandingPageContent liveDemoHref={publicLiveDemoHref()} />
     </div>
   );
 }

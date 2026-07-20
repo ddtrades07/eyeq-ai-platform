@@ -12,7 +12,8 @@ Missing production-required vars should fail clearly — do not silently mock su
 | `DATABASE_URL` | Yes | Postgres connection |
 | `DIRECT_URL` | Recommended | Prisma migrations / shadow |
 | `APP_ENV` | Yes | `development` \| `demo` \| `staging` \| `production` |
-| `DEMO_MODE` / `FEATURE_DEMO_MODE` | No | Must be `false` in PHI production |
+| `DEMO_MODE` / `FEATURE_DEMO_MODE` | No | `true` on sales/demo hosts; must be `false` in PHI production. Unset + `APP_ENV=demo` enables demo. |
+| `NEXT_PUBLIC_DEMO_URL` | No | Optional absolute demo host for marketing Live Demo CTAs |
 | `ALLOW_SEED_DATA` | No | Never true in production |
 | `NEXT_PUBLIC_APP_URL` | Yes | Public app origin |
 | `NEXT_PUBLIC_SUPABASE_URL` | Yes | Auth |

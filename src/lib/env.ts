@@ -9,6 +9,21 @@ function optional(name: string, fallback = ''): string {
   return process.env[name] ?? fallback;
 }
 
+/**
+ * Demo mode for the synthetic Live Demo tenant.
+ * - Explicit DEMO_MODE / FEATURE_DEMO_MODE wins
+ * - APP_ENV=demo enables demo when flags are unset (Vercel sales hosts)
+ * - Local development defaults on; production NODE_ENV defaults off
+ * Never enable on APP_ENV=production PHI hosts (validateEnvironment errors if forced).
+ */
+export function resolveDemoModeEnabled(): boolean {
+  const explicit = process.env.DEMO_MODE ?? process.env.FEATURE_DEMO_MODE;
+  if (explicit === 'true') return true;
+  if (explicit === 'false') return false;
+  if (process.env.APP_ENV?.toLowerCase() === 'demo') return true;
+  return process.env.NODE_ENV === 'development';
+}
+
 export function requireServerEnv(name: string): string {
   const v = process.env[name];
   if (!v) {
@@ -50,7 +65,7 @@ export const serverEnv = {
   aiMaxRetries: Number(optional('AI_MAX_RETRIES', '1')),
   aiEmergencyShutdown: optional('AI_EMERGENCY_SHUTDOWN', 'false') === 'true',
   appEnv: optional('APP_ENV', process.env.NODE_ENV === 'production' ? 'production' : 'development'),
-  demoModeEnabled: optional('DEMO_MODE', optional('FEATURE_DEMO_MODE', process.env.NODE_ENV === 'development' ? 'true' : 'false')) === 'true',
+  demoModeEnabled: resolveDemoModeEnabled(),
   allowSeedData: optional('ALLOW_SEED_DATA', 'false') === 'true',
   allowSimulatedClaims: optional('ALLOW_SIMULATED_CLAIMS', 'false') === 'true',
   allowSimulatedPayments: optional('ALLOW_SIMULATED_PAYMENTS', 'false') === 'true',
@@ -92,6 +107,8 @@ export const serverEnv = {
 export const publicEnv = {
   appUrl: optional('NEXT_PUBLIC_APP_URL', 'http://localhost:3000'),
   appName: optional('NEXT_PUBLIC_APP_NAME', 'EyeQ AI'),
+  /** Optional absolute demo host for marketing CTAs (e.g. https://demo.example.com). */
+  demoUrl: optional('NEXT_PUBLIC_DEMO_URL'),
   supabaseUrl: optional('NEXT_PUBLIC_SUPABASE_URL'),
   supabaseAnonKey: optional('NEXT_PUBLIC_SUPABASE_ANON_KEY'),
   aiProvider: optional('NEXT_PUBLIC_AI_PROVIDER', 'mock'),

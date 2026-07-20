@@ -20,10 +20,10 @@ import { LandingNav } from './landing-nav';
 import { ConnectionVisual } from './connection-visual';
 import { FadeIn } from './fade-in';
 
-export function LandingPageContent({ demoModeEnabled = false }: { demoModeEnabled?: boolean }) {
+export function LandingPageContent({ liveDemoHref = '/demo' }: { liveDemoHref?: string }) {
   return (
     <div className="landing-page min-h-screen bg-landing-bg text-landing-navy">
-      <LandingNav />
+      <LandingNav liveDemoHref={liveDemoHref} />
 
       {/* Hero */}
       <section className="relative overflow-hidden">
@@ -42,25 +42,21 @@ export function LandingPageContent({ demoModeEnabled = false }: { demoModeEnable
               follow-up into one thoughtful home built around better eye care.
             </p>
             <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
-              {demoModeEnabled ? (
-                <Link
-                  href="/demo"
-                  className={cn(
-                    buttonVariants({ size: 'lg' }),
-                    'bg-landing-teal text-white shadow-md hover:bg-landing-teal/90',
-                  )}
-                >
-                  <Sparkles className="h-4 w-4" aria-hidden />
-                  Live Demo
-                </Link>
-              ) : null}
+              <Link
+                href={liveDemoHref}
+                className={cn(
+                  buttonVariants({ size: 'lg' }),
+                  'bg-landing-teal text-white shadow-md hover:bg-landing-teal/90',
+                )}
+              >
+                <Sparkles className="h-4 w-4" aria-hidden />
+                Live Demo
+              </Link>
               <Link
                 href="#for-practices"
                 className={cn(
-                  buttonVariants({ size: 'lg', variant: demoModeEnabled ? 'outline' : 'default' }),
-                  demoModeEnabled
-                    ? 'border-landing-border bg-white/80 text-landing-navy'
-                    : 'bg-landing-navy text-white shadow-md hover:bg-landing-navy/90',
+                  buttonVariants({ size: 'lg', variant: 'outline' }),
+                  'border-landing-border bg-white/80 text-landing-navy',
                 )}
               >
                 I&apos;m an Eye Care Professional
@@ -94,9 +90,7 @@ export function LandingPageContent({ demoModeEnabled = false }: { demoModeEnable
           <PathwayCard
             title="For Eye Care Practices"
             links={[
-              ...(demoModeEnabled
-                ? [{ href: '/demo', label: 'Live Demo' }]
-                : []),
+              { href: liveDemoHref, label: 'Live Demo' },
               { href: '#for-practices', label: 'Explore EyeQ' },
               { href: '/login', label: 'Practice sign in' },
               { href: '/contact', label: 'Request an introduction' },
@@ -230,32 +224,30 @@ export function LandingPageContent({ demoModeEnabled = false }: { demoModeEnable
               subtitle="EyeQ helps reduce the time spent searching through disconnected systems, repeating documentation, and tracking unfinished follow-up so the care team can focus more fully on the person in front of them."
             />
           </FadeIn>
-          {demoModeEnabled ? (
-            <FadeIn delay={60}>
-              <div
-                id="demo"
-                className="mt-8 flex flex-col items-start gap-4 rounded-2xl border border-landing-teal/30 bg-landing-teal/5 p-6 sm:flex-row sm:items-center sm:justify-between"
-              >
-                <div>
-                  <p className="text-sm font-semibold text-landing-navy">Pitch-ready demo</p>
-                  <p className="mt-1 max-w-xl text-sm text-landing-muted">
-                    Walk through a sample practice with glaucoma timelines, diabetic exams, dry eye
-                    continuity, recalls, and imaging — then reset between meetings.
-                  </p>
-                </div>
-                <Link
-                  href="/demo"
-                  className={cn(
-                    buttonVariants({ size: 'lg' }),
-                    'shrink-0 bg-landing-teal text-white hover:bg-landing-teal/90',
-                  )}
-                >
-                  <Sparkles className="h-4 w-4" aria-hidden />
-                  Live Demo
-                </Link>
+          <FadeIn delay={60}>
+            <div
+              id="demo"
+              className="mt-8 flex flex-col items-start gap-4 rounded-2xl border border-landing-teal/30 bg-landing-teal/5 p-6 sm:flex-row sm:items-center sm:justify-between"
+            >
+              <div>
+                <p className="text-sm font-semibold text-landing-navy">Pitch-ready demo</p>
+                <p className="mt-1 max-w-xl text-sm text-landing-muted">
+                  Walk through a sample practice with glaucoma timelines, diabetic exams, dry eye
+                  continuity, recalls, and imaging — synthetic data only, no live PHI.
+                </p>
               </div>
-            </FadeIn>
-          ) : null}
+              <Link
+                href={liveDemoHref}
+                className={cn(
+                  buttonVariants({ size: 'lg' }),
+                  'shrink-0 bg-landing-teal text-white hover:bg-landing-teal/90',
+                )}
+              >
+                <Sparkles className="h-4 w-4" aria-hidden />
+                Live Demo
+              </Link>
+            </div>
+          </FadeIn>
           <div className="mt-12 grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
             <Capability label="Practice Brain" description="See what your day needs at a glance." />
             <Capability label="Appointment preparation" description="Know what each visit may need before the patient arrives." />
@@ -401,14 +393,21 @@ export function LandingPageContent({ demoModeEnabled = false }: { demoModeEnable
               EyeQ is being built to make every step feel more connected.
             </p>
             <div className="mt-10 flex flex-col items-center justify-center gap-3 sm:flex-row">
-              <Link href="#for-practices" className={cn(buttonVariants({ size: 'lg' }), 'bg-white text-landing-navy hover:bg-white/90')}>
-                Explore EyeQ for Practices
+              <Link
+                href={liveDemoHref}
+                className={cn(buttonVariants({ size: 'lg' }), 'bg-white text-landing-navy hover:bg-white/90')}
+              >
+                <Sparkles className="h-4 w-4" aria-hidden />
+                Live Demo
               </Link>
               <Link
-                href="/login?next=/portal"
-                className={cn(buttonVariants({ size: 'lg', variant: 'outline' }), 'border-white/40 bg-transparent text-white hover:bg-white/10')}
+                href="#for-practices"
+                className={cn(
+                  buttonVariants({ size: 'lg', variant: 'outline' }),
+                  'border-white/40 bg-transparent text-white hover:bg-white/10',
+                )}
               >
-                Enter the Patient Portal
+                Explore EyeQ for Practices
               </Link>
               <Link href="/contact" className={cn(buttonVariants({ size: 'lg', variant: 'ghost' }), 'text-white hover:bg-white/10')}>
                 Talk With Our Team
@@ -422,6 +421,9 @@ export function LandingPageContent({ demoModeEnabled = false }: { demoModeEnable
         <div className="mx-auto flex max-w-6xl flex-col items-center justify-between gap-6 px-5 text-sm text-landing-muted sm:flex-row lg:px-8">
           <p>© {new Date().getFullYear()} EyeQ AI. Imaging review support only, not a diagnosis.</p>
           <nav className="flex flex-wrap justify-center gap-4" aria-label="Footer">
+            <Link href={liveDemoHref} className="hover:text-landing-navy">
+              Live Demo
+            </Link>
             <Link href="/login" className="hover:text-landing-navy">
               Practice Sign In
             </Link>

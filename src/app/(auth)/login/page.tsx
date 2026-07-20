@@ -4,7 +4,7 @@ import { LoginForm } from './login-form';
 import { buttonVariants } from '@/components/ui/button';
 import { getCurrentUser } from '@/lib/auth/session';
 import { isStaffRole } from '@/lib/auth/rbac';
-import { serverEnv } from '@/lib/env';
+import { publicLiveDemoHref } from '@/lib/demo/public-demo-href';
 import { cn } from '@/lib/utils';
 
 export const metadata = { title: 'Sign in' };
@@ -20,6 +20,8 @@ export default async function LoginPage({
     redirect(params.next || (isStaffRole(user.role) ? '/provider/dashboard' : '/patient/home'));
   }
 
+  const liveDemoHref = publicLiveDemoHref();
+
   return (
     <div className="rounded-xl border bg-card p-8 shadow-sm">
       <h1 className="text-2xl font-semibold tracking-tight">Sign in</h1>
@@ -27,41 +29,33 @@ export default async function LoginPage({
         Welcome back to EyeQ AI.
       </p>
 
-      {serverEnv.demoModeEnabled ? (
-        <div className="mt-6 rounded-lg border border-primary/30 bg-primary/[0.04] p-4">
-          <p className="text-sm font-medium text-foreground">
-            Pitching EyeQ AI to a client?
-          </p>
-          <p className="mt-1 text-xs text-muted-foreground">
-            Open the Live Demo intro, pick a role, and follow the guided walkthrough with
-            synthetic patients only.
-          </p>
-          <div className="mt-3">
-            <Link href="/demo" className={cn(buttonVariants(), 'w-full')}>
-              Live Demo
-            </Link>
-          </div>
-        </div>
-      ) : null}
-
-      {serverEnv.demoModeEnabled ? (
-        <div className="my-6 flex items-center gap-3 text-xs uppercase tracking-wider text-muted-foreground">
-          <span className="h-px flex-1 bg-border" />
-          or sign in
-          <span className="h-px flex-1 bg-border" />
-        </div>
-      ) : (
-        <div className="mt-6" />
-      )}
-
-      <LoginForm nextPath={params.next} />
-      {serverEnv.demoModeEnabled ? (
-        <div className="mt-4 text-center text-sm">
-          <Link href="/demo" className="font-medium text-primary hover:underline">
-            Explore every role in the EyeQ demo
+      <div className="mt-6 rounded-lg border border-primary/30 bg-primary/[0.04] p-4">
+        <p className="text-sm font-medium text-foreground">
+          Pitching EyeQ AI to a client?
+        </p>
+        <p className="mt-1 text-xs text-muted-foreground">
+          Open the Live Demo intro, pick a role, and follow the guided walkthrough with
+          synthetic patients only. No password needed — Start Demo signs you in automatically.
+        </p>
+        <div className="mt-3">
+          <Link href={liveDemoHref} className={cn(buttonVariants(), 'w-full')}>
+            Live Demo
           </Link>
         </div>
-      ) : null}
+      </div>
+
+      <div className="my-6 flex items-center gap-3 text-xs uppercase tracking-wider text-muted-foreground">
+        <span className="h-px flex-1 bg-border" />
+        or sign in
+        <span className="h-px flex-1 bg-border" />
+      </div>
+
+      <LoginForm nextPath={params.next} />
+      <div className="mt-4 text-center text-sm">
+        <Link href={liveDemoHref} className="font-medium text-primary hover:underline">
+          Explore every role in the EyeQ demo
+        </Link>
+      </div>
       <div className="mt-6 space-y-2 text-sm text-muted-foreground">
         <p>
           Don&apos;t have a practice yet?{' '}

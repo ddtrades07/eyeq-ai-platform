@@ -27,7 +27,7 @@ export function DemoRoleEnterButton({
         toast.error(r.error);
         return;
       }
-      toast.success('Demo ready');
+      toast.success('Demo ready. Opening guided experience…');
       router.push(r.redirect);
       router.refresh();
     });

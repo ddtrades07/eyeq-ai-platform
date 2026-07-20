@@ -27,11 +27,17 @@ import {
   ReminderChannel,
   ReminderType,
   GoogleReviewReplyStatus,
+  GoogleQuestionReplyStatus,
   Role,
   ScribeReviewStatus,
   ScribeSessionStatus,
   ScribeSpeaker,
   SupportedLocale,
+  SupportTicketCategory,
+  SupportTicketPriority,
+  SupportTicketStatus,
+  EyeHealthOrgReviewStatus,
+  EyeHealthRecommendationContext,
 } from '@prisma/client';
 import { demoImagingStoragePath } from './imaging-placeholders';
 import { syncEncounterForAppointment } from '@/lib/encounters/sync';
@@ -170,7 +176,15 @@ async function clearDemoData(organizationId: string): Promise<void> {
   await db.ehrSyncLog.deleteMany({ where: { integration: { organizationId } } });
   await db.ehrIntegration.deleteMany({ where: { organizationId } });
   await db.googleReview.deleteMany({ where: { organizationId } });
+  await db.googleBusinessQuestion.deleteMany({ where: { organizationId } });
   await db.googleBusinessConnection.deleteMany({ where: { organizationId } });
+  await db.eyeHealthRecommendation.deleteMany({ where: { organizationId } });
+  await db.eyeHealthSavedArticle.deleteMany({ where: { organizationId } });
+  await db.eyeHealthOrgArticleState.deleteMany({ where: { organizationId } });
+  await db.supportTicketNote.deleteMany({
+    where: { ticket: { organizationId } },
+  });
+  await db.supportTicket.deleteMany({ where: { organizationId } });
   await db.backgroundJob.deleteMany({ where: { organizationId } });
   await db.message.deleteMany({ where: { thread: { organizationId } } });
   await db.messageThread.deleteMany({ where: { organizationId } });
@@ -423,10 +437,19 @@ async function populateDemoData(organizationId: string, ownerId: string): Promis
       patientIdx: 2,
       type: AppointmentType.DRY_EYE_FOLLOWUP,
       when: atHour(today, 11),
+      status: AppointmentStatus.WITH_DOCTOR,
+      providerId: odProvider.id,
+      locationId: mainLoc.id,
+      reason: 'Dry eye follow-up, ready for provider',
+    },
+    {
+      patientIdx: 9,
+      type: AppointmentType.WALK_IN,
+      when: atHour(today, 11, 30),
       status: AppointmentStatus.SCHEDULED,
       providerId: odProvider.id,
       locationId: mainLoc.id,
-      reason: 'Dry eye follow-up, still symptomatic',
+      reason: 'Walk-in red eye concern',
     },
     {
       patientIdx: 3,
@@ -449,11 +472,11 @@ async function populateDemoData(organizationId: string, ownerId: string): Promis
     {
       patientIdx: 5,
       type: AppointmentType.MEDICAL_OFFICE_VISIT,
-      when: atHour(today, 15),
-      status: AppointmentStatus.SCHEDULED,
+      when: atHour(today, 8),
+      status: AppointmentStatus.COMPLETED,
       providerId: mdProvider.id,
       locationId: mainLoc.id,
-      reason: 'Cataract evaluation referral',
+      reason: 'Completed morning cataract check',
     },
     {
       patientIdx: 6,
@@ -1106,6 +1129,18 @@ async function populateDemoData(organizationId: string, ownerId: string): Promis
       assessment: 'Mild NPDR, both eyes.',
       plan: 'Dilated retinal exam annually. Coordinate with PCP regarding A1C.',
       signed: true,
+    },
+    // Michael Thompson — unsigned draft for today's visit (provider sign-off required)
+    {
+      patientIdx: 0,
+      daysAgo: 0,
+      type: 'SOAP',
+      chiefComplaint: 'glaucoma follow-up, IOP check',
+      subjective: 'Reports good drop adherence. No new flashes or floaters.',
+      objective: 'Awaiting today\'s IOP and OCT comparison.',
+      assessment: 'Draft only. Provider review required before sign-off.',
+      plan: 'Draft plan pending exam completion.',
+      signed: false,
     },
   ];
 
@@ -2002,42 +2037,66 @@ async function populateDemoData(organizationId: string, ownerId: string): Promis
     },
   });
 
-  const demoGoogleReviews = [
+  const demoGoogleReviews: Array<{
+    externalReviewId: string;
+    reviewerName: string;
+    starRating: number;
+    comment: string;
+    reviewedAt: Date;
+    replyStatus: GoogleReviewReplyStatus;
+    draftReply?: string;
+    publishedReply?: string;
+    publishedAt?: Date;
+    publishedById?: string;
+  }> = [
     {
-      externalReviewId: 'demo-review-001',
+      externalReviewId: 'demo-review-5star-thanks',
       reviewerName: 'Sarah M.',
       starRating: 5,
       comment:
-        'Dr. Chen and the team were fantastic. Short wait, thorough exam, and they explained my glaucoma monitoring plan clearly.',
+        'Dr. Chen and the team were fantastic. Short wait, thorough exam, and they explained my monitoring plan clearly.',
       reviewedAt: addDays(today, -2),
+      replyStatus: GoogleReviewReplyStatus.PENDING_REPLY,
     },
     {
-      externalReviewId: 'demo-review-002',
-      reviewerName: 'James K.',
-      starRating: 5,
-      comment: 'Best eye exam I have had in years. The OCT imaging walkthrough was really helpful.',
-      reviewedAt: addDays(today, -5),
+      externalReviewId: 'demo-review-3star-neutral',
+      reviewerName: 'Robert L.',
+      starRating: 3,
+      comment: 'Good doctors but I waited 25 minutes past my appointment time.',
+      reviewedAt: addDays(today, -4),
+      replyStatus: GoogleReviewReplyStatus.PENDING_REPLY,
     },
     {
-      externalReviewId: 'demo-review-003',
+      externalReviewId: 'demo-review-1star-escalation',
+      reviewerName: 'Angela T.',
+      starRating: 1,
+      comment: 'Felt rushed at checkout and billing questions were not answered clearly.',
+      reviewedAt: addDays(today, -6),
+      replyStatus: GoogleReviewReplyStatus.PENDING_REPLY,
+    },
+    {
+      externalReviewId: 'demo-review-draft-awaiting',
       reviewerName: 'Priya N.',
       starRating: 4,
       comment: 'Friendly staff and clean office. Parking was a little tight but overall a great visit.',
       reviewedAt: addDays(today, -9),
+      replyStatus: GoogleReviewReplyStatus.DRAFT,
+      draftReply:
+        'Thank you for visiting EyeQ Vision Center, Priya. We are glad the team made you feel welcome. We continue improving parking guidance for downtown visits.',
     },
     {
-      externalReviewId: 'demo-review-004',
-      reviewerName: 'Robert L.',
-      starRating: 3,
-      comment: 'Good doctors but I waited 25 minutes past my appointment time.',
-      reviewedAt: addDays(today, -14),
-    },
-    {
-      externalReviewId: 'demo-review-005',
-      reviewerName: 'Angela T.',
-      starRating: 2,
-      comment: 'Felt rushed at checkout and billing questions were not answered clearly.',
-      reviewedAt: addDays(today, -21),
+      externalReviewId: 'demo-review-demo-published',
+      reviewerName: 'James K.',
+      starRating: 5,
+      comment: 'Best eye exam I have had in years. The OCT imaging walkthrough was really helpful.',
+      reviewedAt: addDays(today, -12),
+      replyStatus: GoogleReviewReplyStatus.DEMO_PUBLISHED,
+      draftReply:
+        'Thank you, James! We are glad the imaging walkthrough helped. We look forward to seeing you at your next visit.',
+      publishedReply:
+        'Thank you, James! We are glad the imaging walkthrough helped. We look forward to seeing you at your next visit.',
+      publishedAt: addDays(today, -11),
+      publishedById: ownerId,
     },
   ];
 
@@ -2052,8 +2111,142 @@ async function populateDemoData(organizationId: string, ownerId: string): Promis
         starRating: row.starRating,
         comment: row.comment,
         reviewedAt: row.reviewedAt,
-        replyStatus: GoogleReviewReplyStatus.PENDING_REPLY,
+        replyStatus: row.replyStatus,
+        draftReply: row.draftReply ?? null,
+        publishedReply: row.publishedReply ?? null,
+        publishedAt: row.publishedAt ?? null,
+        publishedById: row.publishedById ?? null,
       },
     });
   }
+
+  const demoGoogleQuestions = [
+    {
+      externalQuestionId: 'demo-q-appointments',
+      authorName: 'Chris P.',
+      questionText: 'Do you have evening appointment availability for comprehensive eye exams?',
+      askedAt: addDays(today, -3),
+      replyStatus: GoogleQuestionReplyStatus.UNANSWERED,
+    },
+    {
+      externalQuestionId: 'demo-q-insurance',
+      authorName: 'Morgan L.',
+      questionText: 'Which vision insurance plans do you accept?',
+      askedAt: addDays(today, -5),
+      replyStatus: GoogleQuestionReplyStatus.UNANSWERED,
+    },
+    {
+      externalQuestionId: 'demo-q-cl-exams',
+      authorName: 'Taylor R.',
+      questionText: 'Do you offer contact lens exams and fittings for first-time wearers?',
+      askedAt: addDays(today, -7),
+      replyStatus: GoogleQuestionReplyStatus.UNANSWERED,
+    },
+    {
+      externalQuestionId: 'demo-q-answered',
+      authorName: 'Alex W.',
+      questionText: 'Is parking available near the downtown office?',
+      askedAt: addDays(today, -10),
+      replyStatus: GoogleQuestionReplyStatus.DEMO_PUBLISHED,
+      publishedReply:
+        'Yes. Street parking and a nearby garage are available. Our front desk can share the easiest options when you arrive.',
+      publishedAt: addDays(today, -9),
+    },
+  ] as const;
+
+  for (const row of demoGoogleQuestions) {
+    await db.googleBusinessQuestion.create({
+      data: {
+        organizationId,
+        connectionId: gbpConnection.id,
+        locationId: mainLoc.id,
+        externalQuestionId: row.externalQuestionId,
+        authorName: row.authorName,
+        questionText: row.questionText,
+        askedAt: row.askedAt,
+        replyStatus: row.replyStatus,
+        publishedReply: 'publishedReply' in row ? row.publishedReply : null,
+        publishedAt: 'publishedAt' in row ? row.publishedAt : null,
+      },
+    });
+  }
+
+  // Keep a staff task pointer for the walkthrough checklist.
+  await db.staffTask.create({
+    data: {
+      organizationId,
+      assignedToId: ownerId,
+      createdById: ownerId,
+      title: 'Respond to Google question (demo)',
+      description:
+        'Open Reputation → Google Questions. Answer appointment / insurance / CL questions. Publishing stays DEMO_PUBLISHED unless Google Business is connected.',
+      status: 'OPEN',
+      priority: 'NORMAL',
+      dueAt: atHour(today, 17),
+    },
+  });
+
+  // Support ticket for audit / support walkthrough step
+  await db.supportTicket.create({
+    data: {
+      organizationId,
+      createdById: ownerId,
+      assignedToId: ownerId,
+      category: SupportTicketCategory.OTHER,
+      priority: SupportTicketPriority.NORMAL,
+      status: SupportTicketStatus.OPEN,
+      subject: 'Demo: billing export clarification',
+      description:
+        'Synthetic support ticket for the Live Demo. No real patient PHI. Used to show internal support tracking.',
+      mayContainPhi: false,
+    },
+  });
+
+  // Eye Health Library — practice approval overlays + patient recommendations (demo)
+  const demoEducationSlugs = [
+    'dry-eye',
+    'glaucoma-overview',
+    'diabetic-eye-exam',
+    'contact-lens-care',
+    'floaters-and-flashes',
+  ] as const;
+  for (const slug of demoEducationSlugs) {
+    await db.eyeHealthOrgArticleState.create({
+      data: {
+        organizationId,
+        slug,
+        reviewStatus: EyeHealthOrgReviewStatus.PRACTICE_APPROVED,
+        lastReviewedAt: today,
+        reviewedById: ownerId,
+      },
+    });
+  }
+  await db.eyeHealthRecommendation.createMany({
+    data: [
+      {
+        organizationId,
+        patientId: patients[0].id,
+        slug: 'glaucoma-overview',
+        recommendedById: odUser.id,
+        context: EyeHealthRecommendationContext.RELATED_TO_VISIT,
+        note: 'Your provider shared this article because it may relate to your visit.',
+      },
+      {
+        organizationId,
+        patientId: patients[0].id,
+        slug: 'eye-pressure-and-oct-rnfl',
+        recommendedById: odUser.id,
+        context: EyeHealthRecommendationContext.PROVIDER_RECOMMENDED,
+        note: 'Your provider shared this article because it may relate to your visit.',
+      },
+      {
+        organizationId,
+        patientId: patients[1].id,
+        slug: 'diabetic-eye-exam',
+        recommendedById: ownerId,
+        context: EyeHealthRecommendationContext.RELATED_TO_VISIT,
+        note: 'Your provider shared this article because it may relate to your visit.',
+      },
+    ],
+  });
 }

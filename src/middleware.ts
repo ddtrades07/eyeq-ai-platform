@@ -29,7 +29,7 @@ const LEGACY_STAFF_ROUTES = new Set([
   'dashboard', 'appointments', 'patients', 'pre-charting', 'ambient-scribe',
   'timeline-intelligence', 'imaging', 'imaging-timeline', 'disease-templates',
   'care-gaps', 'copilots', 'messages', 'scheduling', 'reminders',
-  'education-center', 'inventory', 'financial-reports', 'admin-insights',
+  'education-center', 'eye-health-library', 'inventory', 'financial-reports', 'admin-insights',
   'practice-setup', 'team', 'workflow-builder', 'ehr-integrations',
   'installation-readiness', 'settings', 'billing', 'audit-logs', 'tasks',
   'reputation',
@@ -39,7 +39,7 @@ function legacyRedirectTarget(pathname: string): string | null {
   if (pathname === '/portal') return '/patient/home';
   if (pathname.startsWith('/portal/')) {
     const rest = pathname.slice('/portal'.length);
-    return rest === '/learn' ? '/patient/education' : `/patient${rest}`;
+    return rest === '/learn' ? '/patient/eye-health-library' : `/patient${rest}`;
   }
   const firstSegment = pathname.split('/')[1];
   if (firstSegment && LEGACY_STAFF_ROUTES.has(firstSegment)) {

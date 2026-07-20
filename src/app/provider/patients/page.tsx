@@ -28,37 +28,53 @@ export default async function PatientsPage({
   const params = await searchParams;
   const q = (params.q ?? '').trim();
 
-  const patients = await db.patient.findMany({
-    where: {
-      organizationId: user.organizationId,
-      archivedAt: null,
-      ...(q
-        ? {
-            OR: [
-              { firstName: { contains: q, mode: 'insensitive' } },
-              { lastName: { contains: q, mode: 'insensitive' } },
-              { email: { contains: q, mode: 'insensitive' } },
-              { phone: { contains: q } },
-            ],
-          }
-        : {}),
-    },
-    orderBy: [{ lastName: 'asc' }, { firstName: 'asc' }],
-    take: 200,
-  });
-
   const canCreate = hasPermission(user.role, 'patients:create');
   const canReviewDuplicates = hasPermission(user.role, 'patients:update');
   const canMerge = hasPermission(user.role, 'patients:merge');
 
-  const mergeCandidates = canMerge
-    ? await db.patient.findMany({
-        where: { organizationId: user.organizationId, archivedAt: null },
-        orderBy: [{ lastName: 'asc' }, { firstName: 'asc' }],
-        take: 300,
-        select: { id: true, firstName: true, lastName: true },
-      })
-    : [];
+  const [patients, mergeCandidates] = await Promise.all([
+    db.patient.findMany({
+      where: {
+        organizationId: user.organizationId,
+        archivedAt: null,
+        ...(q
+          ? {
+              OR: [
+                { firstName: { contains: q, mode: 'insensitive' } },
+                { lastName: { contains: q, mode: 'insensitive' } },
+                { email: { contains: q, mode: 'insensitive' } },
+                { phone: { contains: q } },
+              ],
+            }
+          : {}),
+      },
+      orderBy: [{ lastName: 'asc' }, { firstName: 'asc' }],
+      take: 200,
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        dateOfBirth: true,
+        email: true,
+        phone: true,
+        insuranceCarrier: true,
+        hasDiabetes: true,
+        hasHypertension: true,
+        hasGlaucomaPersonal: true,
+        hasGlaucomaFamily: true,
+        isSmoker: true,
+        createdAt: true,
+      },
+    }),
+    canMerge
+      ? db.patient.findMany({
+          where: { organizationId: user.organizationId, archivedAt: null },
+          orderBy: [{ lastName: 'asc' }, { firstName: 'asc' }],
+          take: 300,
+          select: { id: true, firstName: true, lastName: true },
+        })
+      : Promise.resolve([] as { id: string; firstName: string; lastName: string }[]),
+  ]);
 
   return (
     <div className="space-y-6">

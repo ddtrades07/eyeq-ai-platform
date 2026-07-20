@@ -16,6 +16,7 @@ export const DICTIONARIES = {
     'nav.section.business': 'Business',
     'nav.section.admin': 'Admin',
     'nav.section.configuration': 'Configuration',
+    'nav.section.reputation': 'Reputation',
 
     'nav.dashboard': 'Dashboard',
     'nav.appointments': 'Schedule',
@@ -35,6 +36,10 @@ export const DICTIONARIES = {
     'nav.practiceOnboarding': 'Practice onboarding',
     'nav.reports': 'Reports',
     'nav.reputation': 'Reputation',
+    'nav.googleReviews': 'Google Reviews',
+    'nav.googleQuestions': 'Google Questions',
+    'nav.replyDrafts': 'Reply Drafts',
+    'nav.reviewAnalytics': 'Review Analytics',
 
     'nav.timelineIntelligence': 'Timeline Intelligence',
     'nav.imaging': 'Imaging',
@@ -46,7 +51,7 @@ export const DICTIONARIES = {
     'nav.portal': 'Patient Portal',
     'nav.scheduling': 'Online Booking',
     'nav.messages': 'Messages',
-    'nav.education': 'Patient education library',
+    'nav.education': 'Eye Health Library',
     'nav.reminders': 'Reminders',
 
     'nav.inventory': 'Inventory',
@@ -85,7 +90,6 @@ export const DICTIONARIES = {
     'nav.statements': 'Statements',
     'nav.migration': 'Data Migration',
     'nav.optical': 'Optical',
-    'nav.googleReviews': 'Google Reviews',
 
     'common.signOut': 'Sign out',
     'common.save': 'Save',

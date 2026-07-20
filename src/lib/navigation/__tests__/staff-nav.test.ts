@@ -44,6 +44,28 @@ describe('staff navigation', () => {
     expect(od).toContain('/provider/patient-flow');
     expect(od).toContain('/provider/copilots');
   });
+
+  it('shows Reputation section for Owner with Google Reviews sublinks', () => {
+    const owner = getStaffNavSections(Role.OWNER);
+    const reputation = owner.find((s) => s.label === 'nav.section.reputation');
+    expect(reputation).toBeTruthy();
+    const hrefs = reputation!.items.map((i) => i.href);
+    expect(hrefs).toContain('/provider/reputation');
+    expect(hrefs).toContain('/provider/reputation/questions');
+    expect(hrefs).toContain('/provider/reputation/drafts');
+    expect(hrefs).toContain('/provider/reputation/analytics');
+  });
+
+  it('hides Reputation section from Optometrist without reputation:read', () => {
+    const od = getStaffNavSections(Role.OPTOMETRIST);
+    expect(od.some((s) => s.label === 'nav.section.reputation')).toBe(false);
+    expect(hasPermission(Role.OPTOMETRIST, 'reputation:read')).toBe(false);
+  });
+
+  it('includes Reputation in Owner mobile nav priority', () => {
+    const mobile = getStaffMobileNavItems(Role.OWNER).map((i) => i.href);
+    expect(mobile).toContain('/provider/reputation');
+  });
 });
 
 describe('owner clinical isolation', () => {

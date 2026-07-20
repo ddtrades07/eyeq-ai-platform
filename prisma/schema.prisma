@@ -534,6 +534,7 @@ model Organization {
   opticalLabs       OpticalLab[]
   googleBusinessConnections GoogleBusinessConnection[]
   googleReviews     GoogleReview[]
+  googleQuestions   GoogleBusinessQuestion[]
   paymentLedgerEntries PaymentLedgerEntry[]
   stripeWebhookEvents StripeWebhookEvent[]
   appointmentRequests AppointmentRequest[]
@@ -542,6 +543,9 @@ model Organization {
   staffOnboardings  StaffOnboarding[]
   supportTickets    SupportTicket[]
   subscription      OrgSubscription?
+  eyeHealthOrgStates EyeHealthOrgArticleState[]
+  eyeHealthRecommendations EyeHealthRecommendation[]
+  eyeHealthSavedArticles EyeHealthSavedArticle[]
 
   @@index([slug])
 }
@@ -574,6 +578,7 @@ model Location {
   encounters      Encounter[]
   googleBusinessConnections GoogleBusinessConnection[]
   googleReviews   GoogleReview[]
+  googleQuestions GoogleBusinessQuestion[]
 
   @@index([organizationId])
   @@index([organizationId, active])
@@ -649,6 +654,9 @@ model User {
   supportTicketsCreated SupportTicket[] @relation("SupportTicketCreator")
   supportTicketsAssigned SupportTicket[] @relation("SupportTicketAssignee")
   supportTicketNotes SupportTicketNote[] @relation("SupportTicketNoteAuthor")
+  eyeHealthReviews EyeHealthOrgArticleState[] @relation("EyeHealthReviewer")
+  eyeHealthRecommendations EyeHealthRecommendation[] @relation("EyeHealthRecommender")
+  eyeHealthSavedArticles EyeHealthSavedArticle[] @relation("EyeHealthSaver")
 
   @@index([organizationId])
   @@index([role])
@@ -746,6 +754,8 @@ model Patient {
   appointmentRequests AppointmentRequest[]
   proxyAccessAsPatient PatientProxyAccess[] @relation("ProxyPatient")
   paymentLedgerEntries PaymentLedgerEntry[]
+  eyeHealthRecommendations EyeHealthRecommendation[]
+  eyeHealthSavedArticles EyeHealthSavedArticle[]
   mergedIntoId      String?
   mergedInto        Patient?          @relation("PatientMerge", fields: [mergedIntoId], references: [id])
   mergedFrom        Patient[]         @relation("PatientMerge")
@@ -804,6 +814,7 @@ model Appointment {
   @@index([organizationId, status])
   @@index([organizationId, locationId, startsAt])
   @@index([organizationId, status, startsAt])
+  @@index([organizationId, providerId, startsAt])
   @@index([patientId, startsAt])
   @@index([patientId])
   @@index([providerId])
@@ -1225,6 +1236,7 @@ model MessageThread {
   messages        Message[]
 
   @@index([organizationId, updatedAt])
+  @@index([organizationId, closedAt, updatedAt])
   @@index([patientId])
 }
 
@@ -2492,6 +2504,14 @@ enum PrescriptionStatus {
   ARCHIVED
 }
 
+enum GoogleQuestionReplyStatus {
+  UNANSWERED
+  DRAFT
+  PUBLISHED
+  DEMO_PUBLISHED
+  SKIPPED
+}
+
 model GoogleBusinessConnection {
   id             String       @id @default(cuid())
   organizationId String
@@ -2506,6 +2526,7 @@ model GoogleBusinessConnection {
   updatedAt      DateTime     @updatedAt
 
   reviews        GoogleReview[]
+  questions      GoogleBusinessQuestion[]
 
   @@index([organizationId])
   @@index([locationId])
@@ -2540,6 +2561,30 @@ model GoogleReview {
   @@unique([connectionId, externalReviewId])
   @@index([organizationId, replyStatus])
   @@index([organizationId, reviewedAt])
+}
+
+model GoogleBusinessQuestion {
+  id                   String                    @id @default(cuid())
+  organizationId       String
+  organization         Organization              @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  connectionId         String
+  connection           GoogleBusinessConnection  @relation(fields: [connectionId], references: [id], onDelete: Cascade)
+  locationId           String?
+  location             Location?                 @relation(fields: [locationId], references: [id], onDelete: SetNull)
+  externalQuestionId   String
+  authorName           String?
+  questionText         String                    @db.Text
+  askedAt              DateTime
+  replyStatus          GoogleQuestionReplyStatus @default(UNANSWERED)
+  draftReply           String?                   @db.Text
+  publishedReply       String?                   @db.Text
+  publishedAt          DateTime?
+  createdAt            DateTime                  @default(now())
+  updatedAt            DateTime                  @updatedAt
+
+  @@unique([connectionId, externalQuestionId])
+  @@index([organizationId, replyStatus])
+  @@index([organizationId, askedAt])
 }
 
 // =================================================================
@@ -2819,5 +2864,79 @@ model OrgSubscription {
   adminAlertNote     String?           @db.Text
   createdAt          DateTime          @default(now())
   updatedAt          DateTime          @updatedAt
+}
+
+// =================================================================
+//                      EYE HEALTH LIBRARY
+// =================================================================
+
+enum EyeHealthOrgReviewStatus {
+  DRAFT
+  PROVIDER_REVIEWED
+  PRACTICE_APPROVED
+  ARCHIVED
+  HIDDEN
+}
+
+enum EyeHealthRecommendationContext {
+  PROVIDER_RECOMMENDED
+  RELATED_TO_VISIT
+  DISCUSSION_TOPIC
+}
+
+/// Practice-level approval/visibility overlay for catalog article slugs.
+model EyeHealthOrgArticleState {
+  id             String                  @id @default(cuid())
+  organizationId String
+  organization   Organization            @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  slug           String
+  reviewStatus   EyeHealthOrgReviewStatus @default(DRAFT)
+  hidden         Boolean                 @default(false)
+  lastReviewedAt DateTime?
+  reviewedById   String?
+  reviewedBy     User?                   @relation("EyeHealthReviewer", fields: [reviewedById], references: [id], onDelete: SetNull)
+  createdAt      DateTime                @default(now())
+  updatedAt      DateTime                @updatedAt
+
+  @@unique([organizationId, slug])
+  @@index([organizationId, reviewStatus])
+  @@index([organizationId, hidden])
+}
+
+/// Provider-shared education for a specific patient (org-scoped).
+model EyeHealthRecommendation {
+  id             String                         @id @default(cuid())
+  organizationId String
+  organization   Organization                   @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  patientId      String
+  patient        Patient                        @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  slug           String
+  recommendedById String
+  recommendedBy  User                           @relation("EyeHealthRecommender", fields: [recommendedById], references: [id], onDelete: Cascade)
+  encounterId    String?
+  appointmentId  String?
+  context        EyeHealthRecommendationContext @default(PROVIDER_RECOMMENDED)
+  note           String?                        @db.Text
+  createdAt      DateTime                       @default(now())
+
+  @@index([organizationId, patientId, createdAt])
+  @@index([organizationId, slug])
+  @@index([patientId, slug])
+}
+
+/// Patient-saved articles in the portal.
+model EyeHealthSavedArticle {
+  id             String       @id @default(cuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  patientId      String
+  patient        Patient      @relation(fields: [patientId], references: [id], onDelete: Cascade)
+  userId         String
+  user           User         @relation("EyeHealthSaver", fields: [userId], references: [id], onDelete: Cascade)
+  slug           String
+  createdAt      DateTime     @default(now())
+
+  @@unique([patientId, slug])
+  @@index([organizationId, userId])
 }
 

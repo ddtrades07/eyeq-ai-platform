@@ -9,7 +9,7 @@ export function RecordingDemoBanner() {
       <Sparkles className="h-3.5 w-3.5" />
       <span className="font-semibold tracking-wide">Demo environment</span>
       <span className="hidden text-amber-900/80 sm:inline">
-        · Synthetic data · Not a live clinic · AI drafts require provider review
+        · Demo mode · Synthetic data · No live PHI · AI drafts require provider review · Not a diagnosis
       </span>
     </div>
   );

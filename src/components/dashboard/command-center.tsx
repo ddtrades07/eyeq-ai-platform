@@ -49,7 +49,7 @@ function FocusList({
   emptyAction?: string;
   aiSafety?: boolean;
 }) {
-  const visible = items.filter((i) => (i.count ?? 0) > 0);
+  const visible = items.filter((i) => i.alwaysShow || (i.count ?? 0) > 0);
   if (!visible.length) {
     return (
       <EmptyState
@@ -86,9 +86,11 @@ function FocusList({
               <p className="truncate text-xs text-muted-foreground">{item.detail}</p>
             </div>
             <div className="flex items-center gap-2">
-              <span className="text-sm font-semibold tabular-nums text-foreground">
-                {item.count ?? 0}
-              </span>
+              {typeof item.count === 'number' ? (
+                <span className="text-sm font-semibold tabular-nums text-foreground">
+                  {item.count}
+                </span>
+              ) : null}
               <ArrowRight className="h-3.5 w-3.5 text-muted-foreground" />
             </div>
           </Link>
@@ -307,14 +309,20 @@ export function CommandCenterDashboard({
               <Star className="h-4 w-4 text-primary" /> Reputation
             </GlassCardTitle>
           </GlassCardHeader>
-          <GlassCardContent>
+          <GlassCardContent className="space-y-3">
             <FocusList
               items={data.reputation}
               emptyTitle="No reviews waiting"
               emptyDescription="Connect Google Business or sync reviews to manage replies here. Never auto-posts."
               emptyHref="/provider/reputation"
-              emptyAction="Open reputation"
+              emptyAction="Open Reputation Inbox"
             />
+            <Link
+              href="/provider/reputation"
+              className={buttonVariants({ size: 'sm', variant: 'outline' })}
+            >
+              Open Reputation Inbox
+            </Link>
           </GlassCardContent>
         </GlassCard>
 

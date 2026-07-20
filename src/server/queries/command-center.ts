@@ -11,7 +11,7 @@ import { db } from '@/lib/db';
 import { appointmentLocationFilter } from '@/lib/location/scope';
 import { evaluatePilotLaunch } from '@/lib/production/pilot-launch';
 import { withPerfLog } from '@/lib/perf/log';
-import { cachedDashboardCounts } from '@/lib/cache/safe-cache';
+import { cachedDashboardCounts, cachedPilotLaunchSummary } from '@/lib/cache/safe-cache';
 
 function dayBounds(d = new Date()) {
   const start = new Date(d);
@@ -35,6 +35,8 @@ export type FocusItem = {
   detail: string;
   href: string;
   count?: number;
+  /** When true, show even if count is 0 / omitted (status rows). */
+  alwaysShow?: boolean;
 };
 
 export type CommandCenterData = {
@@ -252,6 +254,15 @@ async function loadCommandCenterUncached(
     db.googleReview.count({
       where: { organizationId, replyStatus: 'PENDING_REPLY' },
     }),
+    db.googleReview.count({
+      where: { organizationId, replyStatus: 'DRAFT' },
+    }),
+    db.googleBusinessQuestion.count({
+      where: { organizationId, replyStatus: 'UNANSWERED' },
+    }),
+    db.googleBusinessConnection.count({
+      where: { organizationId, demoMode: true },
+    }),
     db.blockedAiRequest.count({
       where: { organizationId, createdAt: { gte: start } },
     }),
@@ -275,9 +286,12 @@ async function loadCommandCenterUncached(
   const reviewsPending = settled(6);
   const reviewsNegative = settled(7);
   const unansweredReviews = settled(8);
-  const blockedAi = settled(9);
-  const scribeReady = settled(10);
-  const prechartNotes = settled(11);
+  const draftsAwaiting = settled(9);
+  const unansweredQuestions = settled(10);
+  const demoGbpConnections = settled(11);
+  const blockedAi = settled(12);
+  const scribeReady = settled(13);
+  const prechartNotes = settled(14);
 
   const flowHref = (status?: string) =>
     status
@@ -454,24 +468,24 @@ async function loadCommandCenterUncached(
   const reputation: FocusItem[] = [
     {
       id: 'new_reviews',
-      label: 'Reviews needing attention',
+      label: 'New reviews needing attention',
       detail: 'Pending or draft reply',
       href: '/provider/reputation',
       count: reviewsPending,
     },
     {
-      id: 'ai_drafts',
-      label: 'AI reply drafts',
-      detail: 'Approve before publish · never auto-post',
-      href: '/provider/reputation',
-      count: reviewsPending,
-    },
-    {
-      id: 'unanswered',
-      label: 'Unanswered reviews',
-      detail: 'No reply yet',
+      id: 'needing_reply',
+      label: 'Needing reply',
+      detail: 'No draft yet',
       href: '/provider/reputation',
       count: unansweredReviews,
+    },
+    {
+      id: 'unanswered_questions',
+      label: 'Unanswered Google questions',
+      detail: 'Public Q&A inbox',
+      href: '/provider/reputation/questions',
+      count: unansweredQuestions,
     },
     {
       id: 'negative',
@@ -480,34 +494,27 @@ async function loadCommandCenterUncached(
       href: '/provider/reputation',
       count: reviewsNegative,
     },
+    {
+      id: 'drafts_awaiting',
+      label: 'Drafts awaiting approval',
+      detail: 'Approve before publish · never auto-post',
+      href: '/provider/reputation/drafts',
+      count: draftsAwaiting,
+    },
+    {
+      id: 'demo_mode_status',
+      label: demoGbpConnections > 0 ? 'Demo mode reputation' : 'Reputation connection',
+      detail:
+        demoGbpConnections > 0
+          ? 'Synthetic data · DEMO_PUBLISHED only'
+          : 'Connect Google Business for live publishing',
+      href: '/provider/reputation',
+      alwaysShow: true,
+    },
   ];
 
-  let launch: CommandCenterData['launch'];
-  if (opts?.includeLaunch) {
-    try {
-      const pilot = await evaluatePilotLaunch(organizationId);
-      launch = {
-        statusLabel:
-          pilot.status === 'controlled_pilot_ready'
-            ? 'Controlled pilot ready'
-            : pilot.status === 'live_production_ready'
-              ? 'Live production ready'
-              : pilot.status === 'internal_demo_only'
-                ? 'Internal demo only'
-                : 'Not ready',
-        livePhiEnabled: pilot.livePhiEnabled,
-        controlledPilotEnabled: pilot.controlledPilotEnabled,
-        items: pilot.items.slice(0, 8).map((i) => ({
-          id: i.id,
-          label: i.label,
-          done: i.done,
-        })),
-        href: '/provider/settings/pilot-launch',
-      };
-    } catch {
-      launch = undefined;
-    }
-  }
+  // Launch is merged in getCommandCenterData via a separate short-TTL cache.
+  void opts;
 
   return {
     flow,
@@ -516,7 +523,7 @@ async function loadCommandCenterUncached(
     patientExperience,
     practiceHealth,
     reputation,
-    launch,
+    launch: undefined,
     nextPatient: nextAppt
       ? {
           id: nextAppt.id,
@@ -555,13 +562,41 @@ export async function getCommandCenterData(
       meta: { locationId: locationId ?? 'all', includeLaunch: Boolean(opts?.includeLaunch) },
     },
     async () => {
-      // Launch readiness is admin-only and more volatile — skip shared cache when included.
-      if (opts?.includeLaunch) {
-        return loadCommandCenterUncached(organizationId, locationId, opts);
-      }
-      return cachedDashboardCounts(organizationId, locationId ?? 'all', () =>
-        loadCommandCenterUncached(organizationId, locationId, opts),
+      // Always cache critical + secondary counts (no PHI). Launch merges separately for admins.
+      const base = await cachedDashboardCounts(organizationId, locationId ?? 'all', () =>
+        loadCommandCenterUncached(organizationId, locationId, { includeLaunch: false }),
       );
+
+      if (!opts?.includeLaunch) return base;
+
+      try {
+        const pilot = await cachedPilotLaunchSummary(organizationId, () =>
+          evaluatePilotLaunch(organizationId),
+        );
+        return {
+          ...base,
+          launch: {
+            statusLabel:
+              pilot.status === 'controlled_pilot_ready'
+                ? 'Controlled pilot ready'
+                : pilot.status === 'live_production_ready'
+                  ? 'Live production ready'
+                  : pilot.status === 'internal_demo_only'
+                    ? 'Internal demo only'
+                    : 'Not ready',
+            livePhiEnabled: pilot.livePhiEnabled,
+            controlledPilotEnabled: pilot.controlledPilotEnabled,
+            items: pilot.items.slice(0, 8).map((i) => ({
+              id: i.id,
+              label: i.label,
+              done: i.done,
+            })),
+            href: '/provider/settings/pilot-launch',
+          },
+        };
+      } catch {
+        return base;
+      }
     },
   );
 }

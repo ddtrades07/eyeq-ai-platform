@@ -16,7 +16,7 @@ import { CopilotContextSetter } from '@/components/copilot/copilot-context-sette
 import { TrackRecentPatient } from '@/components/patients/track-recent-patient';
 import { PatientCommunicationCard } from '@/components/patients/communication-consent-card';
 import { NewScribeSessionButton } from '@/components/scribe/new-session-button';
-import { NewClinicalNoteDialog, NoteActions } from '@/components/notes/clinical-note-dialogs';
+import { NewClinicalNoteDialog } from '@/components/notes/clinical-note-dialogs';
 import {
   NewPrescriptionDialog,
   PrescriptionActions,
@@ -26,6 +26,7 @@ import { requirePermission, assertSameOrg } from '@/lib/auth/require';
 import { hasPermission, canApproveAIOutput } from '@/lib/auth/rbac';
 import { computePatientIntelligence } from '@/lib/intelligence/patient';
 import { calculateAge, formatDate, formatDateTime, formatFullName } from '@/lib/utils';
+import { PatientNotesTab } from '@/components/patients/patient-notes-tab';
 import { getPatientChartOverview } from '@/server/queries/patient-chart';
 
 export default async function PatientDetailPage({
@@ -132,6 +133,13 @@ export default async function PatientDetailPage({
               <Button asChild variant="outline" size="sm">
                 <Link href="/provider/messages">
                   <MessageSquare className="mr-1 h-4 w-4" /> Send message
+                </Link>
+              </Button>
+            ) : null}
+            {hasPermission(user.role, 'templates:read') ? (
+              <Button asChild variant="outline" size="sm">
+                <Link href="/provider/eye-health-library">
+                  Eye Health Library
                 </Link>
               </Button>
             ) : null}
@@ -368,77 +376,14 @@ export default async function PatientDetailPage({
         </TabsContent>
 
         <TabsContent value="notes">
-          <div className="mb-3 flex flex-wrap items-center justify-between gap-2">
-            <p className="text-xs text-muted-foreground">
-              Draft → review → provider sign-off. Nothing auto-signs.
-            </p>
-            {canWriteNotes ? (
-              <NewClinicalNoteDialog
-                patientId={patient.id}
-                appointmentId={todayAppt?.id}
-              />
-            ) : null}
-          </div>
-          {patient.clinicalNotes.length === 0 ? (
-            <EmptyState icon={FileText} title="No clinical notes yet" />
-          ) : (
-            <div className="space-y-3">
-              {patient.clinicalNotes.map((n) => (
-                <Card key={n.id}>
-                  <CardHeader className="pb-2">
-                    <div className="flex flex-wrap items-start justify-between gap-2">
-                      <div>
-                        <CardTitle className="text-base">
-                          {n.type}{' '}
-                          <span className="ml-2 text-xs text-muted-foreground">
-                            {formatDateTime(n.createdAt)}
-                          </span>
-                        </CardTitle>
-                        <Badge
-                          variant={
-                            n.status === 'SIGNED'
-                              ? 'success'
-                              : n.status === 'AWAITING_SIGNOFF'
-                                ? 'info'
-                                : 'warning'
-                          }
-                        >
-                          {n.status}
-                        </Badge>
-                      </div>
-                      <NoteActions
-                        noteId={n.id}
-                        status={n.status}
-                        canWrite={canWriteNotes}
-                        canSign={canSignNotes}
-                        initial={{
-                          type: n.type,
-                          chiefComplaint: n.chiefComplaint ?? '',
-                          subjective: n.subjective ?? '',
-                          objective: n.objective ?? '',
-                          assessment: n.assessment ?? '',
-                          plan: n.plan ?? '',
-                        }}
-                      />
-                    </div>
-                  </CardHeader>
-                  <CardContent className="space-y-2 text-sm">
-                    {n.chiefComplaint ? <KV k="Chief complaint" v={n.chiefComplaint} /> : null}
-                    {n.subjective ? <KV k="Subjective" v={n.subjective} /> : null}
-                    {n.objective ? <KV k="Objective" v={n.objective} /> : null}
-                    {n.assessment ? <KV k="Assessment" v={n.assessment} /> : null}
-                    {n.plan ? <KV k="Plan" v={n.plan} /> : null}
-                    {n.legacySummary ? <KV k="Additional" v={n.legacySummary} /> : null}
-                    {n.appointmentId ? (
-                      <p className="text-xs text-muted-foreground">
-                        Linked to appointment · see Appointments tab for exam chart
-                      </p>
-                    ) : null}
-                  </CardContent>
-                </Card>
-              ))}
-            </div>
-          )}
+          <PatientNotesTab
+            organizationId={user.organizationId}
+            patientId={patient.id}
+            appointmentId={todayAppt?.id}
+            canWriteNotes={canWriteNotes}
+            canSignNotes={canSignNotes}
+            mode="all"
+          />
         </TabsContent>
 
         <TabsContent value="scribe">
@@ -631,8 +576,9 @@ export default async function PatientDetailPage({
                         {t.isInternal ? ' · internal note' : ''}
                       </div>
                       {t.messages[0] ? (
-                        <p className="mt-1 text-muted-foreground line-clamp-2">
-                          {t.messages[0].body}
+                        <p className="mt-1 text-xs text-muted-foreground">
+                          Latest activity {formatDateTime(t.messages[0].createdAt)}
+                          {t.messages[0].readStatus === 'UNREAD' ? ' · unread' : ''}
                         </p>
                       ) : null}
                     </li>
@@ -665,30 +611,13 @@ export default async function PatientDetailPage({
         </TabsContent>
 
         <TabsContent value="visits">
-          {patient.clinicalNotes.filter((n) => n.status === 'SIGNED').length === 0 ? (
-            <EmptyState
-              icon={Pill}
-              title="No signed visit summaries"
-              description="Signed clinical notes appear here as patient-facing visit summaries."
-            />
-          ) : (
-            <div className="space-y-3">
-              {patient.clinicalNotes
-                .filter((n) => n.status === 'SIGNED')
-                .map((n) => (
-                  <Card key={n.id}>
-                    <CardHeader>
-                      <CardTitle className="text-base">{n.type}</CardTitle>
-                      <p className="text-xs text-muted-foreground">{formatDateTime(n.signedAt ?? n.createdAt)}</p>
-                    </CardHeader>
-                    <CardContent className="space-y-2 text-sm">
-                      {n.plan ? <KV k="Plan" v={n.plan} /> : null}
-                      {n.assessment ? <KV k="Assessment" v={n.assessment} /> : null}
-                    </CardContent>
-                  </Card>
-                ))}
-            </div>
-          )}
+          <PatientNotesTab
+            organizationId={user.organizationId}
+            patientId={patient.id}
+            canWriteNotes={false}
+            canSignNotes={false}
+            mode="signed"
+          />
         </TabsContent>
       </Tabs>
     </div>

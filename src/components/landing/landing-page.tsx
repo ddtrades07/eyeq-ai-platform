@@ -14,12 +14,11 @@ import {
   Stethoscope,
   Users,
 } from 'lucide-react';
-import { Button, buttonVariants } from '@/components/ui/button';
+import { buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { LandingNav } from './landing-nav';
 import { ConnectionVisual } from './connection-visual';
 import { FadeIn } from './fade-in';
-import { DemoModeButton } from '@/components/demo/demo-mode-button';
 
 export function LandingPageContent({ demoModeEnabled = false }: { demoModeEnabled?: boolean }) {
   return (
@@ -44,11 +43,16 @@ export function LandingPageContent({ demoModeEnabled = false }: { demoModeEnable
             </p>
             <div className="mt-10 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
               {demoModeEnabled ? (
-                <DemoModeButton
-                  size="lg"
-                  label="Try the live demo"
-                  className="bg-landing-teal text-white shadow-md hover:bg-landing-teal/90"
-                />
+                <Link
+                  href="/demo"
+                  className={cn(
+                    buttonVariants({ size: 'lg' }),
+                    'bg-landing-teal text-white shadow-md hover:bg-landing-teal/90',
+                  )}
+                >
+                  <Sparkles className="h-4 w-4" aria-hidden />
+                  Live Demo
+                </Link>
               ) : null}
               <Link
                 href="#for-practices"
@@ -91,7 +95,7 @@ export function LandingPageContent({ demoModeEnabled = false }: { demoModeEnable
             title="For Eye Care Practices"
             links={[
               ...(demoModeEnabled
-                ? [{ href: '#demo', label: 'Try the live demo' }]
+                ? [{ href: '/demo', label: 'Live Demo' }]
                 : []),
               { href: '#for-practices', label: 'Explore EyeQ' },
               { href: '/login', label: 'Practice sign in' },
@@ -239,12 +243,16 @@ export function LandingPageContent({ demoModeEnabled = false }: { demoModeEnable
                     continuity, recalls, and imaging — then reset between meetings.
                   </p>
                 </div>
-                <DemoModeButton
-                  size="lg"
-                  variant="default"
-                  label="Open demo practice"
-                  className="shrink-0 bg-landing-teal text-white hover:bg-landing-teal/90"
-                />
+                <Link
+                  href="/demo"
+                  className={cn(
+                    buttonVariants({ size: 'lg' }),
+                    'shrink-0 bg-landing-teal text-white hover:bg-landing-teal/90',
+                  )}
+                >
+                  <Sparkles className="h-4 w-4" aria-hidden />
+                  Live Demo
+                </Link>
               </div>
             </FadeIn>
           ) : null}

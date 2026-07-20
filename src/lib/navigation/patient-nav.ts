@@ -29,6 +29,6 @@ export const PATIENT_NAV: PatientNavItem[] = [
   { href: '/patient/visits', label: 'Visit summaries', icon: FileText },
   { href: '/patient/forms', label: 'Forms', icon: ClipboardCheck },
   { href: '/patient/billing', label: 'Billing', icon: Receipt },
-  { href: '/patient/education', label: 'Eye health library', icon: BookOpen },
+  { href: '/patient/eye-health-library', label: 'Eye health library', icon: BookOpen },
   { href: '/patient/profile', label: 'Profile', icon: UserRound },
 ];

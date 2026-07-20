@@ -15,6 +15,7 @@ import { unstable_cache } from 'next/cache';
 const DASHBOARD_TTL_SECONDS = 20;
 const NOTIFICATION_TTL_SECONDS = 15;
 const ORG_SETTINGS_TTL_SECONDS = 60;
+const PILOT_LAUNCH_TTL_SECONDS = 30;
 
 export function cachedDashboardCounts<T>(
   organizationId: string,
@@ -47,6 +48,30 @@ export function cachedOrgDisplaySettings<T>(
   const cached = unstable_cache(loader, ['org-display', organizationId], {
     revalidate: ORG_SETTINGS_TTL_SECONDS,
     tags: [`org:${organizationId}:settings`],
+  });
+  return cached();
+}
+
+/** Practice Eye Health Library visibility overlays (no article PHI). */
+export function cachedEyeHealthOrgStates<T>(
+  organizationId: string,
+  loader: () => Promise<T>,
+): Promise<T> {
+  const cached = unstable_cache(loader, ['eye-health-org-states', organizationId], {
+    revalidate: ORG_SETTINGS_TTL_SECONDS,
+    tags: [`org:${organizationId}:settings`, `org:${organizationId}:eye-health`],
+  });
+  return cached();
+}
+
+/** Admin launch checklist summary only (no PHI). Org-scoped. */
+export function cachedPilotLaunchSummary<T>(
+  organizationId: string,
+  loader: () => Promise<T>,
+): Promise<T> {
+  const cached = unstable_cache(loader, ['pilot-launch-summary', organizationId], {
+    revalidate: PILOT_LAUNCH_TTL_SECONDS,
+    tags: [`org:${organizationId}:dashboard`, `org:${organizationId}:settings`],
   });
   return cached();
 }

@@ -66,8 +66,15 @@ export async function DemoPitchTour({ organizationId }: { organizationId: string
 
   const stops: PitchStop[] = [
     {
+      title: 'Live Demo walkthrough',
+      description: 'Open the guided 15-step optometry demo that matches the public Live Demo button.',
+      href: '/provider/demo-walkthrough',
+      icon: Workflow,
+      badge: 'Start here',
+    },
+    {
       title: "Today's schedule",
-      description: 'Seven visits on the board — glaucoma, diabetic, dry eye, pediatric, and more.',
+      description: 'Visits on the board — glaucoma, diabetic, dry eye, pediatric, walk-in, and more.',
       href: '/provider/appointments',
       icon: Activity,
     },

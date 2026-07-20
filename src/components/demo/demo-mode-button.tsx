@@ -9,16 +9,19 @@ import { enterDemoMode } from '@/server/actions/demo';
 import { cn } from '@/lib/utils';
 
 /**
- * One-click entry point into demo mode. Provisions the demo tenant
- * if needed, signs the visitor in, and lands on the dashboard.
+ * One-click entry into demo mode as practice owner.
+ * Prefer routing public CTAs to /demo so visitors choose a role first.
+ * This button remains for internal one-click owner entry.
  */
 export function DemoModeButton({
   size = 'default',
   variant = 'default',
-  label = 'Try the live demo',
+  label = 'Live Demo',
   icon: Icon = Sparkles,
   className,
   fullWidth = false,
+  /** When true, go to /demo intro instead of auto-signing in as owner */
+  introOnly = false,
 }: {
   size?: 'sm' | 'default' | 'lg';
   variant?: 'default' | 'outline' | 'ghost' | 'secondary';
@@ -26,18 +29,23 @@ export function DemoModeButton({
   icon?: LucideIcon;
   className?: string;
   fullWidth?: boolean;
+  introOnly?: boolean;
 }) {
   const router = useRouter();
   const [pending, startTransition] = React.useTransition();
 
   function onClick() {
+    if (introOnly) {
+      router.push('/demo');
+      return;
+    }
     startTransition(async () => {
       const r = await enterDemoMode();
       if (!r.ok) {
         toast.error(r.error);
         return;
       }
-      toast.success('Demo ready, landing you in the practice…');
+      toast.success('Demo ready. Opening the guided walkthrough…');
       router.push(r.redirect);
       router.refresh();
     });

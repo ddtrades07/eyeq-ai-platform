@@ -44,9 +44,6 @@ export default async function ImagingPage() {
         studyStatus: true,
         status: true,
         aiUrgency: true,
-        aiConfidence: true,
-        aiFlags: true,
-        aiNotes: true,
         capturedAt: true,
         needsFollowUp: true,
         patient: { select: { id: true, firstName: true, lastName: true } },
@@ -115,17 +112,9 @@ export default async function ImagingPage() {
                 </p>
               </CardHeader>
               <CardContent className="space-y-3 text-sm">
-                {c.aiNotes.length ? (
-                  <ul className="space-y-1">
-                    {c.aiNotes.map((n, i) => (
-                      <li key={i}>• {n}</li>
-                    ))}
-                  </ul>
-                ) : (
-                  <p className="text-muted-foreground">
-                    AI analysis pending. Run analysis for provider-review observations (not a diagnosis).
-                  </p>
-                )}
+                <p className="text-muted-foreground">
+                  Open the viewer for full study details and AI image analysis for provider review.
+                </p>
                 <div className="flex flex-wrap items-center gap-2">
                   <Link
                     href={`/provider/imaging/${c.id}`}

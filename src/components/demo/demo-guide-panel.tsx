@@ -66,7 +66,7 @@ export function DemoGuidePanel({
   if (!hydrated) return null;
 
   const step: DemoGuideStep = DEMO_GUIDE_STEPS[stepIndex]!;
-  const href = resolveGuideHref(step.href, michaelPatientId);
+  const href = resolveGuideHref(step.href, { michaelPatientId });
   const pathMatches =
     pathname === href || (href !== '/' && pathname.startsWith(href.split('?')[0]!));
 
@@ -128,11 +128,13 @@ export function DemoGuidePanel({
             <span className="font-medium text-foreground">Action:</span> {step.action}
           </p>
           <p>
-            <span className="font-medium text-foreground">Shows:</span> {step.demonstrates}
+            <span className="font-medium text-foreground">Say:</span>{' '}
+            {step.talkingPoint ?? step.demonstrates}
           </p>
         </div>
         <p className="text-[11px] text-muted-foreground">
-          Use the role switcher in the top bar when the step calls for a different role.
+          Full guide: <Link href="/provider/demo-walkthrough" className="underline">/provider/demo-walkthrough</Link>
+          . Use the role switcher when a step needs a different persona.
         </p>
         <div className="flex flex-wrap gap-2">
           <Button type="button" size="sm" variant="outline" asChild>

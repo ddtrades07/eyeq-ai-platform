@@ -5,10 +5,16 @@
 ## What works
 
 - Reviews inbox UI (`/provider/reputation`)
+- Questions inbox UI (`/provider/reputation/questions`)
+- Reply drafts queue (`/provider/reputation/drafts`)
+- Review analytics (`/provider/reputation/analytics`)
+- Owner sidebar **Reputation** section (Google Reviews, Questions, Reply Drafts, Analytics)
+- Dashboard Reputation card + Open Reputation Inbox
 - AI / template draft replies (approve before publish)
 - Sync of reviews (live API or demo seed)
 - Escalation-friendly star ratings + internal draft workflow
 - RBAC: `reputation:read` / `reputation:manage`
+- Soft locked panel for roles without permission
 
 ## Connection states
 
@@ -29,14 +35,15 @@
 
 ## Demo-only
 
-- Seeded demo reviews
+- Seeded demo reviews (5-star, 3-star, negative, DRAFT, DEMO_PUBLISHED)
+- Seeded Google questions (appointments, insurance, CL exams, one answered)
 - Demo sync list when unconfigured / demoMode
 - Demo-published replies
 
 ## Partially operational
 
 - AI draft reply (gateway or template fallback)
-- Questions inbox (UI scaffold may expand)
+- Live Google Questions publish adapter (demo stores answers as DEMO_PUBLISHED)
 
 ## Requires vendor keys
 
@@ -51,10 +58,9 @@
 
 ## Future roadmap
 
-- Google Questions inbox + reply
+- Live OAuth publish adapter for reviews and questions
 - Internal notes / escalation flags on negative reviews
-- Live OAuth publish adapter
-- Sentiment analytics
+- Sentiment analytics depth
 
 ## Honest advertising ban
 

@@ -137,7 +137,7 @@ export async function resetDemoModeAction(): Promise<DemoActionResult> {
       metadata: { event: 'demo_reset' },
     });
     revalidatePath('/', 'layout');
-    return { ok: true, redirect: '/provider/dashboard' };
+    return { ok: true, redirect: '/provider/demo-walkthrough' };
   } catch (err) {
     const message = err instanceof Error ? err.message : 'Demo reset failed.';
     console.error('[demo] resetDemoMode failed', err);

@@ -1,10 +1,11 @@
 import Link from 'next/link';
 import { redirect } from 'next/navigation';
 import { LoginForm } from './login-form';
-import { DemoModeButton } from '@/components/demo/demo-mode-button';
+import { buttonVariants } from '@/components/ui/button';
 import { getCurrentUser } from '@/lib/auth/session';
 import { isStaffRole } from '@/lib/auth/rbac';
 import { serverEnv } from '@/lib/env';
+import { cn } from '@/lib/utils';
 
 export const metadata = { title: 'Sign in' };
 
@@ -32,11 +33,13 @@ export default async function LoginPage({
             Pitching EyeQ AI to a client?
           </p>
           <p className="mt-1 text-xs text-muted-foreground">
-            Skip the login and explore core workflows with sample patients,
-            imaging, recalls, and provider-reviewed AI drafts.
+            Open the Live Demo intro, pick a role, and follow the guided walkthrough with
+            synthetic patients only.
           </p>
           <div className="mt-3">
-            <DemoModeButton fullWidth label="Try the live demo" />
+            <Link href="/demo" className={cn(buttonVariants(), 'w-full')}>
+              Live Demo
+            </Link>
           </div>
         </div>
       ) : null}

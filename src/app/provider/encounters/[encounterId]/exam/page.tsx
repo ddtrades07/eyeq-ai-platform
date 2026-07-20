@@ -6,9 +6,9 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { requirePermission, assertSameOrg } from '@/lib/auth/require';
 import { db } from '@/lib/db';
 import { formatFullName } from '@/lib/utils';
-import { ExamChartWorkspace } from '@/components/exam/exam-chart-workspace';
 import { getOrCreateExamChart } from '@/server/actions/exam-chart';
 import type { ExamSectionData } from '@/lib/exam/sections';
+import { ExamChartWorkspaceLazy } from '@/components/exam/exam-chart-workspace-lazy';
 
 export const metadata = { title: 'Exam chart' };
 
@@ -23,9 +23,18 @@ export default async function EncounterExamPage({
 
   const encounter = await db.encounter.findUnique({
     where: { id: encounterId },
-    include: {
-      patient: true,
-      appointment: true,
+    select: {
+      id: true,
+      organizationId: true,
+      patientId: true,
+      status: true,
+      patient: {
+        select: {
+          id: true,
+          firstName: true,
+          lastName: true,
+        },
+      },
       examChart: true,
     },
   });
@@ -53,7 +62,7 @@ export default async function EncounterExamPage({
             Exam — {formatFullName(encounter.patient.firstName, encounter.patient.lastName)}
           </h2>
           <span className="rounded-md border border-border/60 bg-white/70 px-2 py-0.5 text-xs font-medium">
-            {chart!.status.replace(/_/g, ' ')}
+            {chart.status.replace(/_/g, ' ')}
           </span>
         </div>
         <p className="text-sm text-muted-foreground">
@@ -67,12 +76,12 @@ export default async function EncounterExamPage({
           <CardTitle className="text-base">Encounter exam workspace</CardTitle>
         </CardHeader>
         <CardContent>
-          <ExamChartWorkspace
-            chartId={chart!.id}
+          <ExamChartWorkspaceLazy
+            chartId={chart.id}
             encounterId={encounterId}
-            status={chart!.status}
-            initialSections={(chart!.sectionData as ExamSectionData) ?? {}}
-            signed={chart!.status === 'SIGNED'}
+            status={chart.status}
+            initialSections={(chart.sectionData as ExamSectionData) ?? {}}
+            signed={chart.status === 'SIGNED'}
           />
         </CardContent>
       </Card>

@@ -1,12 +1,12 @@
-import { CopilotContextSetter } from '@/components/copilot/copilot-context-setter';
-import { CommandCenterDashboard } from '@/components/dashboard/command-center';
-import { DemoPitchTour } from '@/components/demo/demo-pitch-tour';
 import {
   BillingDashboard,
   FrontDeskDashboard,
   OpticalDashboard,
   TechnicianDashboard,
 } from '@/components/dashboard/roles';
+import { CopilotContextSetter } from '@/components/copilot/copilot-context-setter';
+import { CommandCenterDashboard } from '@/components/dashboard/command-center';
+import { DemoPitchTour } from '@/components/demo/demo-pitch-tour';
 import { requirePermission } from '@/lib/auth/require';
 import { hasPermission } from '@/lib/auth/rbac';
 import { DEMO_ORG_SLUG } from '@/lib/demo/constants';
@@ -70,7 +70,7 @@ export default async function DashboardPage() {
     );
   }
 
-  const [stats, todays, aiQueue, billingIssues] = await Promise.all([
+  const [stats, todays, aiQueue, billingIssues, roleMetrics] = await Promise.all([
     getDashboardStats(user.organizationId, locationId),
     listAppointments({
       organizationId: user.organizationId,
@@ -89,6 +89,15 @@ export default async function DashboardPage() {
           },
         })
       : Promise.resolve(0),
+    persona === 'billing'
+      ? getBillingDashboardMetrics(user.organizationId)
+      : persona === 'frontdesk'
+        ? getFrontDeskDashboardMetrics(user.organizationId, locationId)
+        : persona === 'technician'
+          ? getTechnicianDashboardMetrics(user.organizationId, locationId)
+          : persona === 'optical'
+            ? getOpticalDashboardMetrics(user.organizationId, locationId)
+            : Promise.resolve(null),
   ]);
 
   const base = {
@@ -104,25 +113,22 @@ export default async function DashboardPage() {
   return (
     <div className="space-y-8">
       <CopilotContextSetter page="dashboard" />
-      {persona === 'billing' ? (
-        <BillingDashboard
-          {...base}
-          metrics={await getBillingDashboardMetrics(user.organizationId)}
-        />
-      ) : persona === 'frontdesk' ? (
+      {persona === 'billing' && roleMetrics ? (
+        <BillingDashboard {...base} metrics={roleMetrics as Awaited<ReturnType<typeof getBillingDashboardMetrics>>} />
+      ) : persona === 'frontdesk' && roleMetrics ? (
         <FrontDeskDashboard
           {...base}
-          metrics={await getFrontDeskDashboardMetrics(user.organizationId, locationId)}
+          metrics={roleMetrics as Awaited<ReturnType<typeof getFrontDeskDashboardMetrics>>}
         />
-      ) : persona === 'technician' ? (
+      ) : persona === 'technician' && roleMetrics ? (
         <TechnicianDashboard
           {...base}
-          metrics={await getTechnicianDashboardMetrics(user.organizationId, locationId)}
+          metrics={roleMetrics as Awaited<ReturnType<typeof getTechnicianDashboardMetrics>>}
         />
-      ) : persona === 'optical' ? (
+      ) : persona === 'optical' && roleMetrics ? (
         <OpticalDashboard
           {...base}
-          metrics={await getOpticalDashboardMetrics(user.organizationId, locationId)}
+          metrics={roleMetrics as Awaited<ReturnType<typeof getOpticalDashboardMetrics>>}
         />
       ) : (
         <CommandCenterDashboard

@@ -27,19 +27,37 @@ export async function evaluatePilotLaunch(organizationId: string): Promise<{
 }> {
   const org = await db.organization.findUnique({
     where: { id: organizationId },
-    include: {
+    select: {
+      id: true,
+      slug: true,
+      mfaRequiredForStaff: true,
+      livePhiEnabled: true,
+      controlledPilotEnabled: true,
+      rlsVerifiedAt: true,
+      auditVerifiedAt: true,
+      backupRestoreTestAt: true,
+      backupStatus: true,
+      monitoringVerifiedAt: true,
+      incidentResponseReviewedAt: true,
+      staffTrainingCompletedAt: true,
+      _count: {
+        select: {
+          locations: { where: { active: true } },
+          providers: true,
+        },
+      },
       users: {
         where: { isActive: true, role: { not: 'PATIENT' } },
         select: {
-          id: true,
           role: true,
           mfaEnrolledAt: true,
           staffOnboarding: { select: { completedAt: true } },
         },
       },
-      locations: { where: { active: true }, select: { id: true } },
-      providers: { select: { id: true } },
-      vendorReadiness: true,
+      vendorReadiness: {
+        where: { vendor: 'OPENAI' },
+        select: { vendor: true, baaCompletedAt: true },
+      },
     },
   });
 
@@ -56,10 +74,10 @@ export async function evaluatePilotLaunch(organizationId: string): Promise<{
   const owners = staff.filter((u) => u.role === 'OWNER' || u.role === 'ADMIN');
   const mfaEnrolledCount = staff.filter((u) => u.mfaEnrolledAt).length;
   const onboardingDone = staff.filter((u) => u.staffOnboarding?.completedAt).length;
-  const openaiBaa = org.vendorReadiness.some(
-    (v) => v.vendor === 'OPENAI' && v.baaCompletedAt,
-  );
+  const openaiBaa = org.vendorReadiness.some((v) => v.baaCompletedAt);
   const isDemoOrg = org.slug === DEMO_ORG_SLUG || isDemoAppEnvironment();
+  const locationsCount = org._count.locations;
+  const providersCount = org._count.providers;
 
   const items: PilotChecklistItem[] = [
     { id: 'practice', label: 'Practice created', done: true, requiredForPilot: true },
@@ -90,13 +108,13 @@ export async function evaluatePilotLaunch(organizationId: string): Promise<{
     {
       id: 'locations',
       label: 'Locations configured',
-      done: org.locations.length > 0,
+      done: locationsCount > 0,
       requiredForPilot: true,
     },
     {
       id: 'providers',
       label: 'Providers configured',
-      done: org.providers.length > 0,
+      done: providersCount > 0,
       requiredForPilot: true,
     },
     {
@@ -189,7 +207,7 @@ export async function evaluatePilotLaunch(organizationId: string): Promise<{
     ).length === 0
   ) {
     status = 'controlled_pilot_ready';
-  } else if (!isDemoOrg && org.locations.length > 0) {
+  } else if (!isDemoOrg && locationsCount > 0) {
     status = 'not_ready';
   }
 

@@ -16,6 +16,7 @@ import {
   LifeBuoy,
   Building2,
   Wand2,
+  BookOpen,
 } from 'lucide-react';
 import type { Role } from '@prisma/client';
 import { hasAnyPermission, type Permission } from '@/lib/auth/rbac';
@@ -99,16 +100,44 @@ const PRIMARY_NAV: StaffNavItem[] = [
     permissions: ['ai:use', 'scribe:use', 'ai:configure'],
   },
   {
-    href: '/provider/reputation',
-    label: 'nav.reputation',
-    icon: Star,
-    permissions: ['reputation:read'],
+    href: '/provider/eye-health-library',
+    label: 'nav.education',
+    icon: BookOpen,
+    permissions: ['templates:read'],
   },
   {
     href: '/provider/reports',
     label: 'nav.reports',
     icon: LineChart,
     permissions: ['finance:read', 'intelligence:practice', 'appointments:read'],
+  },
+];
+
+/** Google Reviews / Reputation — Owner/Admin/Manager full access via reputation:* */
+const REPUTATION_NAV: StaffNavItem[] = [
+  {
+    href: '/provider/reputation',
+    label: 'nav.googleReviews',
+    icon: Star,
+    permissions: ['reputation:read'],
+  },
+  {
+    href: '/provider/reputation/questions',
+    label: 'nav.googleQuestions',
+    icon: MessageSquare,
+    permissions: ['reputation:read'],
+  },
+  {
+    href: '/provider/reputation/drafts',
+    label: 'nav.replyDrafts',
+    icon: Sparkles,
+    permissions: ['reputation:read'],
+  },
+  {
+    href: '/provider/reputation/analytics',
+    label: 'nav.reviewAnalytics',
+    icon: LineChart,
+    permissions: ['reputation:read'],
   },
 ];
 
@@ -183,6 +212,7 @@ function filterItems(role: Role, items: StaffNavItem[]): StaffNavItem[] {
 /** Returns sidebar sections visible for the given staff role. */
 export function getStaffNavSections(role: Role): StaffNavSection[] {
   const primary = filterItems(role, PRIMARY_NAV);
+  const reputation = filterItems(role, REPUTATION_NAV);
   const clinical = filterItems(role, CLINICAL_EXTRAS);
   const admin = filterItems(role, ADMIN_NAV);
   const settings = filterItems(role, SETTINGS_NAV);
@@ -190,6 +220,9 @@ export function getStaffNavSections(role: Role): StaffNavSection[] {
   const sections: StaffNavSection[] = [];
   if (primary.length) {
     sections.push({ label: 'nav.section.workspace', items: primary });
+  }
+  if (reputation.length) {
+    sections.push({ label: 'nav.section.reputation', items: reputation });
   }
   if (clinical.length) {
     sections.push({ label: 'nav.section.clinical', items: clinical });
@@ -203,18 +236,35 @@ export function getStaffNavSections(role: Role): StaffNavSection[] {
   return sections;
 }
 
-/** Flat mobile nav links for staff (deduped by href). */
+/** Flat mobile nav links for staff (deduped by href). Prioritizes core + reputation. */
 export function getStaffMobileNavItems(role: Role): { href: string; label: DictionaryKey }[] {
-  const seen = new Set<string>();
+  const priority = [
+    '/provider/dashboard',
+    '/provider/appointments',
+    '/provider/patients',
+    '/provider/messages',
+    '/provider/reputation',
+    '/provider/imaging',
+    '/provider/billing',
+    '/provider/eye-health-library',
+  ];
+  const all = getStaffNavSections(role).flatMap((s) => s.items);
+  const byHref = new Map(all.map((i) => [i.href, i]));
   const out: { href: string; label: DictionaryKey }[] = [];
-  for (const section of getStaffNavSections(role)) {
-    for (const item of section.items) {
-      if (seen.has(item.href)) continue;
-      seen.add(item.href);
-      out.push({ href: item.href, label: item.label });
-    }
+  const seen = new Set<string>();
+
+  for (const href of priority) {
+    const item = byHref.get(href);
+    if (!item || seen.has(href)) continue;
+    seen.add(href);
+    out.push({ href: item.href, label: item.label });
   }
-  return out.slice(0, 8);
+  for (const item of all) {
+    if (seen.has(item.href) || out.length >= 10) continue;
+    seen.add(item.href);
+    out.push({ href: item.href, label: item.label });
+  }
+  return out;
 }
 
 export type DashboardPersona =

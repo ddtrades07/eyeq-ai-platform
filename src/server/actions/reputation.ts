@@ -72,6 +72,9 @@ export const draftReviewReply = action({
     });
 
     revalidatePath('/provider/reputation');
+    revalidatePath('/provider/reputation/drafts');
+    revalidatePath('/provider/reputation/analytics');
+    revalidatePath('/provider/dashboard');
     return updated;
   },
 });
@@ -105,6 +108,8 @@ export const updateReviewReplyDraft = action({
     });
 
     revalidatePath('/provider/reputation');
+    revalidatePath('/provider/reputation/drafts');
+    revalidatePath('/provider/dashboard');
     return updated;
   },
 });
@@ -174,6 +179,9 @@ export const publishReviewReply = action({
     });
 
     revalidatePath('/provider/reputation');
+    revalidatePath('/provider/reputation/drafts');
+    revalidatePath('/provider/reputation/analytics');
+    revalidatePath('/provider/dashboard');
     return withDemoNotice(
       { ...updated, publishMode: result.mode },
       user.organizationSlug,
@@ -206,6 +214,8 @@ export const skipReviewReply = action({
     });
 
     revalidatePath('/provider/reputation');
+    revalidatePath('/provider/reputation/drafts');
+    revalidatePath('/provider/dashboard');
     return updated;
   },
 });
@@ -281,6 +291,8 @@ export const syncGoogleReviews = action({
     });
 
     revalidatePath('/provider/reputation');
+    revalidatePath('/provider/reputation/analytics');
+    revalidatePath('/provider/dashboard');
     return withDemoNotice({ imported }, user.organizationSlug);
   },
 });

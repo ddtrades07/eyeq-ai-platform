@@ -1,50 +1,54 @@
 # Sales Demo Flow
 
-Suggested 10–12 minute walkthrough.
+Canonical path: Live Demo → `/demo` → role → `/provider/demo-walkthrough`.
 
-## 1. Open polished
+## 1. Open
 
-1. Enter demo org
-2. Append `?recording=true` for video captures
-3. Land on Dashboard command center
+1. Click **Live Demo** on the public site
+2. Land on `/demo` (premium intro, not a raw login dump)
+3. Pick Owner for the fullest reputation + readiness story
 
-## 2. Today's flow
+## 2. Walkthrough first
 
-- Click flow tiles → Patient Flow board
-- Show next patient / currently waiting cards
+Do not skip straight into a busy dashboard. Use the guided 15-step walkthrough, then open pages from each step.
 
-## 3. Provider work
+## 3. Clinical core
 
-- Open unsigned notes / imaging awaiting review from Provider focus
-- Open AI work queue and emphasize draft-only + provider review
+- Chart, encounter, SOAP, Rx
+- Imaging + AI image analysis (provider-review language only)
+- Eye Health Library recommendation
 
-## 4. Patient chart
+## 4. Patient experience
 
-- Search patient (⌘K / Ctrl+K global search)
-- Show sticky header actions: Start encounter, Schedule, Message, Optical, Invoice, Note, Rx, Imaging
-- Open exam chart — draft status visible, never auto-sign
+- Portal home
+- Secure messages
+- Approved Rx / education only
 
-## 5. Patient experience
+## 5. Operations
 
-- Messages + appointment requests
-- Patient portal home (upcoming visit, forms, Rx, billing if enabled)
+- Optical orders / inventory low stock
+- Billing drafts (honest: not full RCM)
 
 ## 6. Reputation
 
-- Google reviews needing approval — never auto-post
+- Google reviews needing approval
+- Negative escalation
+- Draft awaiting approval
+- DEMO_PUBLISHED example
+- Google questions inbox
 
-## 7. Launch readiness (owner)
+Status line to say: **Demo-ready, live Google connection required for real publishing.**
 
-- Practice onboarding progress
-- Staff onboarding status
-- PHI readiness / pilot launch
-- Plan & usage (alerts only — no clinical lockout)
+## 7. Trust close
 
-## 8. Support
+- PHI readiness fail-closed
+- Audit logs + support ticket
+- Demo banner / recording mode if filming (`?recording=true`)
 
-- Submit a sample ticket (non-PHI)
-- Show admin assign/close flow
+## Objection handling
 
-## Close
-
-Reaffirm: EyeQ is a premium optometry OS with fail-closed live PHI and honest draft-only AI.
+| Objection | Response |
+|-----------|----------|
+| "Will this auto-post to Google?" | No. Approve before publish. Demo uses DEMO_PUBLISHED only. |
+| "Does AI diagnose?" | No. Provider review required. |
+| "Is this my production EHR?" | Demo is synthetic. Live PHI requires readiness and BAAs. |

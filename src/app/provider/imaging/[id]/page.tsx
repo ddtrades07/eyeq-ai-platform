@@ -4,9 +4,9 @@ import { ArrowLeft } from 'lucide-react';
 import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { buttonVariants } from '@/components/ui/button';
-import { ImagingViewer } from '@/components/imaging/imaging-viewer';
 import { ImagingCaseActions } from '@/components/imaging/imaging-case-actions';
 import { StructuredReviewActions } from '@/components/imaging/structured-review-actions';
+import { ImagingViewerLazy } from '@/components/imaging/imaging-viewer-lazy';
 import { CopilotContextSetter } from '@/components/copilot/copilot-context-setter';
 import { IMAGING_SAFETY_DISCLAIMER, MANUAL_REVIEW_MESSAGE } from '@/lib/imaging/constants';
 import { buildStructuredReviewFromDb } from '@/lib/imaging/build-review-from-db';
@@ -137,7 +137,7 @@ export default async function ImagingViewerPage({
             <CardTitle className="text-base">Study viewer</CardTitle>
           </CardHeader>
           <CardContent>
-            <ImagingViewer
+            <ImagingViewerLazy
               signedUrl={signedUrl}
               fileName={imagingCase.fileName}
               mimeType={imagingCase.mimeType}

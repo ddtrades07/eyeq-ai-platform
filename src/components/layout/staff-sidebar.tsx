@@ -67,7 +67,7 @@ export function StaffSidebar({
           compact={collapsed}
           size="nav"
           variant={collapsed ? 'icon' : 'mark'}
-          className={cn('shrink-0', !collapsed && 'max-w-[9.5rem]')}
+          className={cn('shrink-0')}
         />
         {!collapsed ? (
           <div className="min-w-0 leading-tight">

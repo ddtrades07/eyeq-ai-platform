@@ -28,18 +28,18 @@ export const metadata: Metadata = {
     siteName: 'EyeQ AI',
     type: 'website',
     locale: 'en_US',
-    images: [{ url: '/brand/eyeq-mark.png', width: 1524, height: 324, alt: 'EyeQ' }],
+    images: [{ url: '/brand/eyeq-logo-original.png', width: 1024, height: 1024, alt: 'EyeQ' }],
   },
   twitter: {
     card: 'summary',
     title: 'EyeQ AI | A Home for Connected Eye Care',
     description:
       'A connected home for modern eye care, for practices and patients.',
-    images: ['/brand/eyeq-mark.png'],
+    images: ['/brand/eyeq-logo-original.png'],
   },
   icons: {
-    icon: [{ url: '/brand/eyeq-icon.png', type: 'image/png' }],
-    apple: [{ url: '/brand/eyeq-icon.png', type: 'image/png' }],
+    icon: [{ url: '/brand/eyeq-logo-original.png', type: 'image/png' }],
+    apple: [{ url: '/brand/eyeq-logo-original.png', type: 'image/png' }],
   },
   robots: { index: true, follow: true },
 };
@@ -60,7 +60,7 @@ export default async function LandingPage() {
             '@type': 'Organization',
             name: 'EyeQ AI',
             url: publicEnv.appUrl,
-            logo: `${publicEnv.appUrl}/brand/eyeq-mark.png`,
+            logo: `${publicEnv.appUrl}/brand/eyeq-logo-original.png`,
             description:
               'A connected home for modern eye care, appointments, prescriptions, imaging, and provider-guided workflows.',
           }),

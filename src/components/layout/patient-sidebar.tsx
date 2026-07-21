@@ -11,7 +11,7 @@ export function PatientSidebar({ patientName }: { patientName: string }) {
   return (
     <aside className="hidden w-64 shrink-0 border-r bg-card/50 lg:flex lg:flex-col">
       <div className="flex items-center gap-2.5 border-b px-5 py-3">
-        <EyeQLogo size="nav" variant="mark" className="max-w-[9.5rem] shrink-0" />
+        <EyeQLogo size="nav" variant="mark" className="shrink-0" />
         <div className="leading-tight">
           <div className="text-xs text-muted-foreground">Patient portal</div>
         </div>

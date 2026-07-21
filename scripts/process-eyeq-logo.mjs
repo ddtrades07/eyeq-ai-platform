@@ -1,6 +1,6 @@
 /**
- * Strip cream circular plate + soft drop shadow from the official EyeQ badge,
- * producing transparent PNGs that blend into marketing/app chrome.
+ * Build transparent EyeQ brand assets from the official circular badge.
+ * Uses edge flood-fill (not aggressive chroma kill) so navy/teal ink stays sharp.
  *
  * Usage: node scripts/process-eyeq-logo.mjs
  */
@@ -10,70 +10,85 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const SRC = path.join(root, 'public/brand/eyeq-logo.png');
 const BACKUP = path.join(root, 'public/brand/eyeq-logo-original.png');
+const SRC_CANDIDATES = [
+  BACKUP,
+  path.join(root, 'public/brand/eyeq-logo.png'),
+];
 const FULL_OUT = path.join(root, 'public/brand/eyeq-logo.png');
 const MARK_OUT = path.join(root, 'public/brand/eyeq-mark.png');
 const ICON_ONLY_OUT = path.join(root, 'public/brand/eyeq-icon.png');
 const ICON_OUT = path.join(root, 'src/app/icon.png');
 const APPLE_OUT = path.join(root, 'src/app/apple-icon.png');
 
-if (!existsSync(BACKUP)) {
-  copyFileSync(SRC, BACKUP);
+const inputPath = SRC_CANDIDATES.find((p) => existsSync(p));
+if (!inputPath) {
+  console.error('No source logo found under public/brand/');
+  process.exit(1);
+}
+if (!existsSync(BACKUP) && inputPath !== BACKUP) {
+  copyFileSync(inputPath, BACKUP);
 }
 
-const inputPath = existsSync(BACKUP) ? BACKUP : SRC;
 const { data, info } = await sharp(inputPath).ensureAlpha().raw().toBuffer({ resolveWithObject: true });
 const w = info.width;
 const h = info.height;
-const out = Buffer.from(data);
+const rgba = Buffer.from(data);
 
-function isPlateOrShadow(r, g, b) {
+function lum(r, g, b) {
+  return 0.2126 * r + 0.7152 * g + 0.0722 * b;
+}
+
+function isBackground(r, g, b, a) {
+  if (a < 8) return true;
   const max = Math.max(r, g, b);
   const min = Math.min(r, g, b);
   const chroma = max - min;
-  const lum = 0.2126 * r + 0.7152 * g + 0.0722 * b;
-
-  // Pure white outside the badge
-  if (r >= 250 && g >= 250 && b >= 250) return { kill: true, soft: 0 };
-
-  // Cream plate (~#faf8f4 / #fcf7f3)
-  if (r >= 245 && g >= 240 && b >= 230 && chroma <= 24) return { kill: true, soft: 0 };
-
-  // Warm soft plate still cream-like
-  if (r >= 235 && g >= 228 && b >= 215 && chroma <= 28 && lum >= 230) return { kill: true, soft: 0 };
-
-  // Soft drop shadow: low-chroma gray / warm gray (not navy/teal ink)
-  if (chroma <= 18 && lum >= 170 && lum <= 245) {
-    const tealish = b > 140 && g > 140 && Math.abs(g - b) < 25 && r < g;
-    if (!tealish) return { kill: true, soft: 0 };
-  }
-
-  // Feather near-cream fringe so edges aren't harsh
-  if (r >= 220 && g >= 210 && b >= 195 && chroma <= 35 && lum >= 210) {
-    if (b >= g && lum < 215) return { kill: false, soft: 0 };
-    const t = Math.min(1, (lum - 210) / 35);
-    return { kill: false, soft: 0.35 + t * 0.65 };
-  }
-
-  return { kill: false, soft: 0 };
+  const L = lum(r, g, b);
+  // Exterior white
+  if (r >= 248 && g >= 248 && b >= 248) return true;
+  // Cream plate / soft shadow (low chroma, bright)
+  if (chroma <= 22 && L >= 210) return true;
+  if (r >= 236 && g >= 230 && b >= 218 && chroma <= 30 && L >= 225) return true;
+  // Soft gray drop shadow
+  if (chroma <= 14 && L >= 175 && L <= 235) return true;
+  return false;
 }
 
-for (let i = 0; i < out.length; i += 4) {
-  const r = out[i];
-  const g = out[i + 1];
-  const b = out[i + 2];
-  const a = out[i + 3];
-  if (a === 0) continue;
-  const { kill, soft } = isPlateOrShadow(r, g, b);
-  if (kill) {
-    out[i + 3] = 0;
-  } else if (soft > 0) {
-    out[i + 3] = Math.round(a * (1 - soft));
-  }
+// Flood-fill from image edges so we only remove exterior plate, not interior highlights.
+const visit = new Uint8Array(w * h);
+const queue = [];
+const push = (x, y) => {
+  if (x < 0 || y < 0 || x >= w || y >= h) return;
+  const i = y * w + x;
+  if (visit[i]) return;
+  const o = i * 4;
+  if (!isBackground(rgba[o], rgba[o + 1], rgba[o + 2], rgba[o + 3])) return;
+  visit[i] = 1;
+  queue.push(i);
+};
+
+for (let x = 0; x < w; x++) {
+  push(x, 0);
+  push(x, h - 1);
+}
+for (let y = 0; y < h; y++) {
+  push(0, y);
+  push(w - 1, y);
 }
 
-function contentBounds(buf, width, height, alphaMin = 16) {
+while (queue.length) {
+  const i = queue.pop();
+  const x = i % w;
+  const y = (i / w) | 0;
+  rgba[i * 4 + 3] = 0;
+  push(x + 1, y);
+  push(x - 1, y);
+  push(x, y + 1);
+  push(x, y - 1);
+}
+
+function contentBounds(buf, width, height, alphaMin = 20) {
   let minX = width;
   let minY = height;
   let maxX = 0;
@@ -88,6 +103,7 @@ function contentBounds(buf, width, height, alphaMin = 16) {
       }
     }
   }
+  if (maxX < minX) return { minX: 0, minY: 0, maxX: width - 1, maxY: height - 1 };
   return { minX, minY, maxX, maxY };
 }
 
@@ -113,16 +129,15 @@ function cropRgba(buf, width, height, box, pad = 0) {
   return { data: cropped, width: cw, height: ch };
 }
 
-const bounds = contentBounds(out, w, h);
-console.log('content bounds', bounds);
-const full = cropRgba(out, w, h, bounds, 24);
+const fullBox = contentBounds(rgba, w, h);
+const full = cropRgba(rgba, w, h, fullBox, 16);
 
 await sharp(full.data, { raw: { width: full.width, height: full.height, channels: 4 } })
   .png()
   .toFile(FULL_OUT);
 
-// Compact horizontal lockup: eye icon | EYE Q wordmark (no taglines).
-// Better for h-9–h-11 nav than a tall stacked badge.
+// Row density to find the divider ABOVE taglines (lower portion), not the
+// gap between the eye icon and the EYE Q wordmark.
 const rowDensity = [];
 for (let y = 0; y < full.height; y++) {
   let opaque = 0;
@@ -132,151 +147,85 @@ for (let y = 0; y < full.height; y++) {
   rowDensity.push(opaque);
 }
 
-const mid = Math.floor(full.height * 0.45);
-let wordmarkPeak = mid;
-for (let y = mid; y < full.height * 0.75; y++) {
-  if (rowDensity[y] > rowDensity[wordmarkPeak]) wordmarkPeak = y;
-}
-
-// Wordmark band sits just under the icon — search upward only a short window
-// so iris/pupil quiet zones are not mistaken for the icon/wordmark gap.
-let wmStart = wordmarkPeak;
-for (let y = wordmarkPeak; y > Math.max(0, wordmarkPeak - 90); y--) {
-  if (rowDensity[y] < 60 && rowDensity[Math.max(0, y - 1)] < 80) {
-    wmStart = y + 1;
+const densMax = Math.max(...rowDensity, 1);
+// Tagline block lives in the bottom ~35%. Find a quiet horizontal rule there.
+let dividerY = Math.floor(full.height * 0.78);
+for (let y = Math.floor(full.height * 0.68); y < Math.floor(full.height * 0.9); y++) {
+  const d = rowDensity[y] / densMax;
+  const next = rowDensity[Math.min(full.height - 1, y + 2)] / densMax;
+  // Thin rule: very sparse row, then denser tagline rows below
+  if (d < 0.08 && next > 0.12) {
+    dividerY = y;
     break;
   }
 }
-let wmEnd = wordmarkPeak;
-for (let y = wordmarkPeak; y < Math.min(full.height - 1, wordmarkPeak + 100); y++) {
-  if (rowDensity[y] > 90) wmEnd = y;
-  if (y > wordmarkPeak + 15 && rowDensity[y] < 25 && rowDensity[y + 1] < 25) {
-    break;
-  }
-}
-// Include glyph descenders / Q bottom if a second dense blip follows a tiny gap
-for (let y = wmEnd + 1; y < Math.min(full.height - 1, wmEnd + 45); y++) {
-  if (rowDensity[y] > 150) wmEnd = y;
-  if (rowDensity[y] < 20 && y > wmEnd + 8) break;
-}
-wmEnd = Math.min(full.height - 1, wmEnd + 4);
-wmStart = Math.max(0, wmStart - 2);
 
-// Ensure we captured full glyph height (EYE Q often has a counter-gap mid-letter)
-let lateDense = wmEnd;
-for (let y = wmStart; y < Math.min(full.height - 1, wordmarkPeak + 90); y++) {
-  if (rowDensity[y] > 150) lateDense = y;
-}
-// Don't swallow the divider/tagline block (usually a quieter then thinner band)
-if (lateDense > wmEnd && lateDense - wmEnd < 55) {
-  wmEnd = lateDense + 4;
-}
+// Nav mark = icon + EYE Q (exclude taglines below divider)
+const markCrop = cropRgba(
+  full.data,
+  full.width,
+  full.height,
+  { minX: 0, minY: 0, maxX: full.width - 1, maxY: Math.max(80, dividerY - 2) },
+  0,
+);
+const markTrim = cropRgba(
+  markCrop.data,
+  markCrop.width,
+  markCrop.height,
+  contentBounds(markCrop.data, markCrop.width, markCrop.height),
+  8,
+);
 
-// Icon: everything above wordmark start (Q-tail may slightly overlap — clip above wm)
-const iconEnd = Math.max(24, wmStart - 4);
-const iconBox = contentBounds(full.data, full.width, iconEnd);
-const iconCrop = cropRgba(full.data, full.width, iconEnd, iconBox, 8);
-
-const wmHeight = wmEnd - wmStart + 1;
-const wmSlice = Buffer.alloc(full.width * wmHeight * 4);
-for (let y = 0; y < wmHeight; y++) {
-  full.data.copy(
-    wmSlice,
-    y * full.width * 4,
-    (wmStart + y) * full.width * 4,
-    (wmStart + y + 1) * full.width * 4,
-  );
-}
-const wmBox = contentBounds(wmSlice, full.width, wmHeight);
-const wmCrop = cropRgba(wmSlice, full.width, wmHeight, wmBox, 6);
-
-console.log('icon', iconCrop.width, iconCrop.height, 'wordmark', wmCrop.width, wmCrop.height, {
-  wmStart,
-  wmEnd,
-  wordmarkPeak,
-});
-
-// Scale wordmark to ~42% of icon height, then compose horizontally
-const targetWmH = Math.max(24, Math.round(iconCrop.height * 0.42));
-const wmScale = targetWmH / wmCrop.height;
-const targetWmW = Math.round(wmCrop.width * wmScale);
-const wmResized = await sharp(wmCrop.data, {
-  raw: { width: wmCrop.width, height: wmCrop.height, channels: 4 },
+// Export at high resolution so nav downscale stays crisp (no stretch mush)
+await sharp(markTrim.data, {
+  raw: { width: markTrim.width, height: markTrim.height, channels: 4 },
 })
-  .resize(targetWmW, targetWmH)
-  .ensureAlpha()
-  .raw()
-  .toBuffer({ resolveWithObject: true });
-
-const gap = Math.round(iconCrop.height * 0.08);
-const markH = iconCrop.height;
-const markW = iconCrop.width + gap + wmResized.info.width;
-const composed = Buffer.alloc(markW * markH * 4);
-// place icon at left
-for (let y = 0; y < iconCrop.height; y++) {
-  for (let x = 0; x < iconCrop.width; x++) {
-    const si = (y * iconCrop.width + x) * 4;
-    const di = (y * markW + x) * 4;
-    composed[di] = iconCrop.data[si];
-    composed[di + 1] = iconCrop.data[si + 1];
-    composed[di + 2] = iconCrop.data[si + 2];
-    composed[di + 3] = iconCrop.data[si + 3];
-  }
-}
-// place wordmark vertically centered to the right
-const wmOx = iconCrop.width + gap;
-const wmOy = Math.floor((markH - wmResized.info.height) / 2);
-for (let y = 0; y < wmResized.info.height; y++) {
-  for (let x = 0; x < wmResized.info.width; x++) {
-    const si = (y * wmResized.info.width + x) * 4;
-    const di = ((y + wmOy) * markW + (x + wmOx)) * 4;
-    const a = wmResized.data[si + 3];
-    if (a === 0) continue;
-    // alpha over
-    const ia = a / 255;
-    composed[di] = Math.round(wmResized.data[si] * ia + composed[di] * (1 - ia));
-    composed[di + 1] = Math.round(wmResized.data[si + 1] * ia + composed[di + 1] * (1 - ia));
-    composed[di + 2] = Math.round(wmResized.data[si + 2] * ia + composed[di + 2] * (1 - ia));
-    composed[di + 3] = Math.min(255, composed[di + 3] + a);
-  }
-}
-
-const markTrimBox = contentBounds(composed, markW, markH);
-const mark = cropRgba(composed, markW, markH, markTrimBox, 12);
-
-await sharp(mark.data, { raw: { width: mark.width, height: mark.height, channels: 4 } })
+  .resize({
+    width: Math.round(markTrim.width * 2),
+    height: Math.round(markTrim.height * 2),
+    kernel: sharp.kernel.lanczos3,
+  })
   .png()
   .toFile(MARK_OUT);
 
-// Icon-only (eye) for collapsed chrome
-await sharp(iconCrop.data, {
-  raw: { width: iconCrop.width, height: iconCrop.height, channels: 4 },
+// Icon-only: top portion until wordmark band (approx upper 55% of mark)
+const iconCut = Math.floor(markTrim.height * 0.58);
+const iconSlice = cropRgba(
+  markTrim.data,
+  markTrim.width,
+  markTrim.height,
+  { minX: 0, minY: 0, maxX: markTrim.width - 1, maxY: iconCut },
+  0,
+);
+const iconTrim = cropRgba(iconSlice.data, iconSlice.width, iconSlice.height, contentBounds(iconSlice.data, iconSlice.width, iconSlice.height), 6);
+
+await sharp(iconTrim.data, {
+  raw: { width: iconTrim.width, height: iconTrim.height, channels: 4 },
 })
   .png()
   .toFile(ICON_ONLY_OUT);
 
-// Square favicons from the eye mark
-const side = Math.max(iconCrop.width, iconCrop.height);
-const icon = Buffer.alloc(side * side * 4);
-const ox = Math.floor((side - iconCrop.width) / 2);
-const oy = Math.floor((side - iconCrop.height) / 2);
-for (let y = 0; y < iconCrop.height; y++) {
-  for (let x = 0; x < iconCrop.width; x++) {
-    const si = (y * iconCrop.width + x) * 4;
+const side = Math.max(iconTrim.width, iconTrim.height);
+const square = Buffer.alloc(side * side * 4);
+const ox = Math.floor((side - iconTrim.width) / 2);
+const oy = Math.floor((side - iconTrim.height) / 2);
+for (let y = 0; y < iconTrim.height; y++) {
+  for (let x = 0; x < iconTrim.width; x++) {
+    const si = (y * iconTrim.width + x) * 4;
     const di = ((y + oy) * side + (x + ox)) * 4;
-    icon[di] = iconCrop.data[si];
-    icon[di + 1] = iconCrop.data[si + 1];
-    icon[di + 2] = iconCrop.data[si + 2];
-    icon[di + 3] = iconCrop.data[si + 3];
+    square[di] = iconTrim.data[si];
+    square[di + 1] = iconTrim.data[si + 1];
+    square[di + 2] = iconTrim.data[si + 2];
+    square[di + 3] = iconTrim.data[si + 3];
   }
 }
 
-await sharp(icon, { raw: { width: side, height: side, channels: 4 } })
+await sharp(square, { raw: { width: side, height: side, channels: 4 } })
   .resize(512, 512)
   .png()
   .toFile(ICON_OUT);
 
-await sharp(icon, { raw: { width: side, height: side, channels: 4 } })
+await sharp(square, { raw: { width: side, height: side, channels: 4 } })
   .resize(180, 180)
   .png()
   .toFile(APPLE_OUT);
@@ -284,6 +233,7 @@ await sharp(icon, { raw: { width: side, height: side, channels: 4 } })
 const fullMeta = await sharp(FULL_OUT).metadata();
 const markMeta = await sharp(MARK_OUT).metadata();
 const iconMeta = await sharp(ICON_ONLY_OUT).metadata();
-console.log('wrote full', fullMeta.width, 'x', fullMeta.height);
-console.log('wrote mark', markMeta.width, 'x', markMeta.height);
-console.log('wrote icon', iconMeta.width, 'x', iconMeta.height);
+console.log('source', inputPath);
+console.log('full', fullMeta.width, 'x', fullMeta.height);
+console.log('mark', markMeta.width, 'x', markMeta.height);
+console.log('icon', iconMeta.width, 'x', iconMeta.height);

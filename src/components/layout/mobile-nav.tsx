@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, Eye } from 'lucide-react';
+import { Menu, X } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 import { PATIENT_NAV } from '@/lib/navigation/patient-nav';
@@ -11,6 +11,7 @@ import { getStaffMobileNavItems } from '@/lib/navigation/staff-nav';
 import { ROLE_LABELS } from '@/lib/auth/rbac';
 import type { Role } from '@prisma/client';
 import { useT } from '@/components/providers/locale-provider';
+import { EyeQLogo } from '@/components/brand/eyeq-logo';
 
 export function MobileNav({
   variant = 'provider',
@@ -53,17 +54,12 @@ export function MobileNav({
             aria-hidden
           />
           <div className="fixed inset-y-0 left-0 z-[81] w-72 bg-card shadow-xl animate-in slide-in-from-left duration-200">
-            <div className="flex items-center justify-between border-b px-4 py-4">
-              <div className="flex items-center gap-2">
-                <span className="grid h-8 w-8 place-items-center rounded-md bg-primary text-primary-foreground">
-                  <Eye className="h-4 w-4" />
-                </span>
-                <div>
-                  <span className="text-sm font-bold">EyeQ</span>
-                  {role && variant === 'provider' ? (
-                    <p className="text-[10px] text-muted-foreground">{ROLE_LABELS[role]}</p>
-                  ) : null}
-                </div>
+            <div className="flex items-center justify-between border-b px-4 py-3">
+              <div className="flex min-w-0 items-center gap-2">
+                <EyeQLogo compact variant="icon" className="shrink-0" />
+                {role && variant === 'provider' ? (
+                  <p className="truncate text-[10px] text-muted-foreground">{ROLE_LABELS[role]}</p>
+                ) : null}
               </div>
               <Button
                 variant="ghost"

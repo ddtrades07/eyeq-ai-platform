@@ -17,6 +17,10 @@ export const metadata: Metadata = {
   description:
     'EyeQ AI, an AI-assisted operating layer for optometry practices. Scheduling, charting, imaging review support, patient portal, and care-gap automation.',
   applicationName: publicEnv.appName,
+  icons: {
+    icon: [{ url: '/brand/eyeq-icon.png', type: 'image/png' }],
+    apple: [{ url: '/brand/eyeq-icon.png', type: 'image/png' }],
+  },
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {

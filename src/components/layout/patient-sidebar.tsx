@@ -2,20 +2,17 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Eye } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { PATIENT_NAV } from '@/lib/navigation/patient-nav';
+import { EyeQLogo } from '@/components/brand/eyeq-logo';
 
 export function PatientSidebar({ patientName }: { patientName: string }) {
   const pathname = usePathname();
   return (
     <aside className="hidden w-64 shrink-0 border-r bg-card/50 lg:flex lg:flex-col">
-      <div className="flex items-center gap-2 border-b px-5 py-4">
-        <span className="grid h-9 w-9 place-items-center rounded-md bg-primary text-primary-foreground">
-          <Eye className="h-5 w-5" />
-        </span>
+      <div className="flex items-center gap-2.5 border-b px-5 py-3">
+        <EyeQLogo size="nav" variant="mark" className="max-w-[9.5rem] shrink-0" />
         <div className="leading-tight">
-          <div className="text-sm font-semibold">EyeQ</div>
           <div className="text-xs text-muted-foreground">Patient portal</div>
         </div>
       </div>

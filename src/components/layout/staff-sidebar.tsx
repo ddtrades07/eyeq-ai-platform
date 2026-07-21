@@ -3,13 +3,14 @@
 import * as React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { ChevronsLeft, ChevronsRight, Eye, Sparkles } from 'lucide-react';
+import { ChevronsLeft, ChevronsRight, Sparkles } from 'lucide-react';
 import { useCopilotStore } from '@/store/copilot';
 import { cn } from '@/lib/utils';
 import { hasAnyPermission, ROLE_LABELS } from '@/lib/auth/rbac';
 import type { Role } from '@prisma/client';
 import { useT } from '@/components/providers/locale-provider';
 import { getStaffNavSections } from '@/lib/navigation/staff-nav';
+import { EyeQLogo } from '@/components/brand/eyeq-logo';
 
 const COLLAPSED_KEY = 'eyeq.sidebar.collapsed';
 
@@ -58,16 +59,18 @@ export function StaffSidebar({
     >
       <div
         className={cn(
-          'flex items-center border-b border-border/60 px-3 py-4',
-          collapsed ? 'justify-center' : 'gap-2 px-4',
+          'flex items-center border-b border-border/60 px-3 py-3',
+          collapsed ? 'justify-center' : 'gap-2.5 px-4',
         )}
       >
-        <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-primary to-lens-aqua text-primary-foreground shadow-sm">
-          <Eye className="h-5 w-5" />
-        </span>
+        <EyeQLogo
+          compact={collapsed}
+          size="nav"
+          variant={collapsed ? 'icon' : 'mark'}
+          className={cn('shrink-0', !collapsed && 'max-w-[9.5rem]')}
+        />
         {!collapsed ? (
           <div className="min-w-0 leading-tight">
-            <div className="text-sm font-semibold tracking-tight">EyeQ AI</div>
             <div className="text-[11px] text-muted-foreground">Practice workspace</div>
           </div>
         ) : null}

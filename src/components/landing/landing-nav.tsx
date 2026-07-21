@@ -2,8 +2,9 @@
 
 import * as React from 'react';
 import Link from 'next/link';
-import { Eye, Menu, Sparkles, X } from 'lucide-react';
+import { Menu, Sparkles, X } from 'lucide-react';
 import { Button, buttonVariants } from '@/components/ui/button';
+import { EyeQLogo } from '@/components/brand/eyeq-logo';
 import { cn } from '@/lib/utils';
 
 const NAV_LINKS = [
@@ -31,15 +32,13 @@ export function LandingNav({ liveDemoHref = '/demo' }: { liveDemoHref?: string }
 
   return (
     <header className="sticky top-0 z-50 border-b border-landing-border/60 bg-landing-bg/90 backdrop-blur-md">
-      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-4 lg:px-8">
-        <Link href="/" className="flex min-w-0 items-center gap-2.5 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-landing-teal focus-visible:ring-offset-2">
-          <span className="grid h-9 w-9 shrink-0 place-items-center rounded-xl bg-landing-navy text-white shadow-sm">
-            <Eye className="h-5 w-5" aria-hidden />
-          </span>
-          <div className="min-w-0 leading-tight">
-            <span className="block font-semibold tracking-tight text-landing-navy">EyeQ AI</span>
-            <span className="hidden text-xs text-landing-muted sm:block">A home for connected eye care</span>
-          </div>
+      <div className="mx-auto flex max-w-6xl items-center justify-between gap-4 px-5 py-3 lg:px-8">
+        <Link
+          href="/"
+          className="flex min-w-0 shrink-0 items-center bg-transparent focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-landing-teal focus-visible:ring-offset-2"
+          aria-label="EyeQ home"
+        >
+          <EyeQLogo size="nav" variant="mark" className="max-w-[10.5rem] sm:max-w-[12rem]" priority />
         </Link>
 
         <nav className="hidden items-center gap-1 lg:flex" aria-label="Main">

@@ -11,6 +11,7 @@ import { DEMO_ORG_SLUG } from '@/lib/demo/constants';
 import { DEMO_ROLE_ACCOUNTS } from '@/lib/demo/accounts';
 import { DEMO_FEATURE_CARDS, DEMO_PRIMARY_ENTRIES } from '@/lib/demo/guide-steps';
 import { DemoRoleEnterButton } from '@/components/demo/demo-role-enter-button';
+import { EyeQLogo } from '@/components/brand/eyeq-logo';
 import { cn } from '@/lib/utils';
 
 export const metadata = {
@@ -39,8 +40,8 @@ export default async function DemoLandingPage() {
     <div className="min-h-screen bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(245,188,66,0.18),transparent),linear-gradient(to_bottom,#fffbeb,var(--background))]">
       <header className="border-b bg-background/80 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 lg:px-8">
-          <Link href="/" className="text-sm font-semibold tracking-tight">
-            EyeQ AI
+          <Link href="/" className="inline-flex items-center" aria-label="EyeQ home">
+            <EyeQLogo size="nav" variant="mark" />
           </Link>
           <Link href="/login" className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
             Practice sign in
@@ -198,8 +199,8 @@ function DemoUnavailable() {
     <div className="min-h-screen bg-[radial-gradient(ellipse_80%_50%_at_50%_-10%,rgba(245,188,66,0.12),transparent),linear-gradient(to_bottom,#fffbeb,var(--background))]">
       <header className="border-b bg-background/80 backdrop-blur">
         <div className="mx-auto flex max-w-6xl items-center justify-between px-5 py-4 lg:px-8">
-          <Link href="/" className="text-sm font-semibold tracking-tight">
-            EyeQ AI
+          <Link href="/" className="inline-flex items-center" aria-label="EyeQ home">
+            <EyeQLogo size="nav" variant="mark" />
           </Link>
           <Link href="/login" className={buttonVariants({ variant: 'ghost', size: 'sm' })}>
             Practice sign in

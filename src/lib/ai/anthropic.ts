@@ -3,7 +3,7 @@ import { serverEnv } from '@/lib/env';
 import { IMAGING_REVIEW_SYSTEM } from './prompts';
 
 /**
- * Anthropic provider — REST API (no SDK dependency).
+ * Anthropic provider. REST API (no SDK dependency).
  */
 export const anthropicProvider: AIProvider = {
   name: 'anthropic',

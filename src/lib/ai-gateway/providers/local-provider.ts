@@ -2,7 +2,7 @@ import 'server-only';
 import type { ProviderInvokeArgs } from './adapter';
 import type { ProviderCompletionResult } from '../types';
 
-/** Deterministic local rules engine — no external API calls. */
+/** Deterministic local rules engine: no external API calls. */
 export const localGatewayProvider = {
   async complete(args: ProviderInvokeArgs): Promise<ProviderCompletionResult> {
     const lastUser = [...args.messages].reverse().find((m) => m.role === 'user');

@@ -25,7 +25,7 @@ type PitchStop = {
 };
 
 /**
- * Guided tour card for optometry pitches — surfaces the richest demo stories
+ * Guided tour card for optometry pitches: surfaces the richest demo stories
  * without implying automated clinical diagnosis.
  */
 export async function DemoPitchTour({ organizationId }: { organizationId: string }) {
@@ -74,7 +74,7 @@ export async function DemoPitchTour({ organizationId }: { organizationId: string
     },
     {
       title: "Today's schedule",
-      description: 'Visits on the board — glaucoma, diabetic, dry eye, pediatric, walk-in, and more.',
+      description: 'Visits on the board: glaucoma, diabetic, dry eye, pediatric, walk-in, and more.',
       href: '/provider/appointments',
       icon: Activity,
     },
@@ -93,7 +93,7 @@ export async function DemoPitchTour({ organizationId }: { organizationId: string
       ? [
           {
             title: 'Imaging review queue',
-            description: 'Sample studies with descriptive AI flags — always provider-verified.',
+            description: 'Sample studies with descriptive AI flags: always provider-verified.',
             href: `/provider/imaging/${imagingCase.id}`,
             icon: Camera,
             badge: 'Sample signals',
@@ -113,7 +113,7 @@ export async function DemoPitchTour({ organizationId }: { organizationId: string
             title: 'James Wilson · diabetic exam in progress',
             description: encounter
               ? 'Checked-in visit with a live exam chart and pretest workflow.'
-              : 'Checked-in diabetic visit on today\'s schedule — open from appointments.',
+              : 'Checked-in diabetic visit on today\'s schedule: open from appointments.',
             href: encounter
               ? `/provider/encounters/${encounter.id}/exam`
               : '/provider/appointments',
@@ -165,7 +165,7 @@ export async function DemoPitchTour({ organizationId }: { organizationId: string
     },
     {
       title: 'EHR connections',
-      description: 'Sandbox RevolutionEHR link — ask us which vendors you need next.',
+      description: 'Sandbox RevolutionEHR link: ask us which vendors you need next.',
       href: '/provider/ehr-integrations',
       icon: Workflow,
     },
@@ -182,7 +182,7 @@ export async function DemoPitchTour({ organizationId }: { organizationId: string
           </Badge>
         </div>
         <p className="text-sm text-muted-foreground">
-          Walk optometrists through real screens with sample patients. AI outputs are illustrative —
+          Walk optometrists through real screens with sample patients. AI outputs are illustrative ,
           clinical decisions stay with the provider. Reset anytime from the banner above.
         </p>
       </CardHeader>

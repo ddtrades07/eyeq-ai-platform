@@ -243,7 +243,7 @@ export default async function PracticeOnboardingPage() {
           </div>
           {!sub ? (
             <p className="mt-3 text-xs text-muted-foreground">
-              SaaS plan record not created yet —{' '}
+              SaaS plan record not created yet ,{' '}
               <Link href="/provider/settings/subscription" className="underline">
                 view plan & usage
               </Link>

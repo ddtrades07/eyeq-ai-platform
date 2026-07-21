@@ -17,7 +17,7 @@ export default async function SignupPracticePage({
       <h1 className="text-2xl font-semibold tracking-tight">Start a practice</h1>
       <p className="mt-1 text-sm text-muted-foreground">
         Create your owner account, then choose a plan and complete Stripe Checkout. Patients never
-        pay — the practice owns the subscription. Selected plan:{' '}
+        pay: the practice owns the subscription. Selected plan:{' '}
         <strong>{plan}</strong>.
       </p>
       <div className="mt-6">

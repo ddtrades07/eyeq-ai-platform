@@ -1,6 +1,6 @@
 import type { ImageType } from '@prisma/client';
 
-/** Prefix stored on demo imaging rows — no Supabase object required for pitch. */
+/** Prefix stored on demo imaging rows: no Supabase object required for pitch. */
 export const DEMO_IMAGING_PATH_PREFIX = 'demo://';
 
 const TYPE_TO_ASSET: Partial<Record<ImageType, string>> = {

@@ -52,7 +52,7 @@ export function WalkInDialog({
         toast.error(r.error);
         return;
       }
-      toast.success('Walk-in checked in — encounter created');
+      toast.success('Walk-in checked in: encounter created');
       setOpen(false);
       router.refresh();
     });

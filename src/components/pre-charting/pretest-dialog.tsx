@@ -75,7 +75,7 @@ export function PretestDialog({
         toast.error(r.error);
         return;
       }
-      toast.success('Pretest saved — appointment advanced to pretest');
+      toast.success('Pretest saved: appointment advanced to pretest');
       setOpen(false);
       router.refresh();
     });

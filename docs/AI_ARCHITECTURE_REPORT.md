@@ -1,7 +1,7 @@
-# EyeQ AI Platform — Architecture Audit & Implementation Report
+# EyeQ AI Platform. Architecture Audit & Implementation Report
 
 **Date:** July 6, 2026  
-**Scope:** Production-ready AI gateway foundation (Phases 1–2 partial, scaffolding for 3–7)
+**Scope:** Production-ready AI gateway foundation (Phases 1-2 partial, scaffolding for 3-7)
 
 ---
 
@@ -9,15 +9,15 @@
 
 | Area | Location | Behavior |
 |------|----------|----------|
-| Copilot orchestrator | `src/lib/ai/copilot/orchestrator.ts` | Direct `getAIProvider().complete()` — no gateway |
+| Copilot orchestrator | `src/lib/ai/copilot/orchestrator.ts` | Direct `getAIProvider().complete()`: no gateway |
 | Provider abstraction | `src/lib/ai/provider.ts`, `openai.ts`, `mock.ts`, `anthropic.ts` | Env-driven; Anthropic stub; mock default |
 | Copilot API | `src/app/api/copilot/stream/route.ts` | Simulated streaming; **360-line `generateFallbackResponse()`** with templated clinical answers |
 | Imaging (legacy) | `src/lib/ai/imaging.ts` | General LLM imaging review |
 | Imaging (structured) | `src/lib/imaging/services/*` | Separate pipeline with validated providers |
-| Ambient scribe | `src/server/actions/scribe.ts` | Regex/heuristic transcript parsing — **no STT vendor** |
+| Ambient scribe | `src/server/actions/scribe.ts` | Regex/heuristic transcript parsing: **no STT vendor** |
 | Assistant persistence | `src/server/actions/assistant.ts` | DB only |
 | Safety rules | `src/lib/ai/safety.ts` | `containsDisallowedClinicalLanguage()` **defined but unused** |
-| Audit | `src/lib/audit/log.ts` | Generic `AI_INVOCATION` — not per-request gateway logs |
+| Audit | `src/lib/audit/log.ts` | Generic `AI_INVOCATION`: not per-request gateway logs |
 
 **Security positive:** All vendor API keys are server-side (`serverEnv`). No browser-direct AI calls found.
 
@@ -28,7 +28,7 @@
 | Feature | Risk | Resolution |
 |---------|------|------------|
 | `AI_PROVIDER=mock` default | Fake clinical answers in dev | Gateway blocks mock when `AI_HIPAA_MODE=true` |
-| `generateFallbackResponse()` | Templated SOAP/summaries bypassing providers | **Removed** — safe empty/error states |
+| `generateFallbackResponse()` | Templated SOAP/summaries bypassing providers | **Removed**: safe empty/error states |
 | Scribe `injectMockTranscript()` | Demo transcript injection | Unchanged UI hook; note generation still heuristic |
 | `development-mock-provider.ts` | Fake imaging findings | Retained for dev only behind `IMAGING_DEV_MOCK` |
 | Mock keyword copilot (`mock.ts`) | Static responses | Bypassed when gateway requires real provider |
@@ -50,7 +50,7 @@
 - **Emergency shutdown** (`AI_EMERGENCY_SHUTDOWN`)
 
 ### Remaining
-- NER / DICOM metadata / image PHI classifiers (layers 3–7 in spec)
+- NER / DICOM metadata / image PHI classifiers (layers 3-7 in spec)
 - Per-practice cost limit enforcement (env vars exist; enforcement not wired)
 - Secondary AI PHI review
 - Malware scanning on attachments
@@ -73,7 +73,7 @@
 ### Still needed (future phases)
 - `ai_conversations` / `ai_messages` (partially covered by `AiAssistant*`)
 - `ai_prompt_templates`, `ai_prompt_versions`
-- `ai_model_registry` (exists as `ModelRegistry` — not wired to gateway)
+- `ai_model_registry` (exists as `ModelRegistry`: not wired to gateway)
 - `ai_cost_events`, `ai_feedback`, `ai_failures`, `ai_evaluations`
 - `scribe_audio_files`, `scribe_transcript_versions`, `ai_generated_notes`
 - `imaging_studies`, `imaging_ai_jobs` (partially covered by existing imaging models)

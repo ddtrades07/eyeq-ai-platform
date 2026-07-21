@@ -14,7 +14,7 @@ function createPrismaClient(): PrismaClient {
 }
 
 /**
- * One PrismaClient per Node process. Never create additional instances —
+ * One PrismaClient per Node process. Never create additional instances ,
  * Supabase session pooler caps total clients (~15); extra instances leak
  * connections until the dev server restarts.
  */

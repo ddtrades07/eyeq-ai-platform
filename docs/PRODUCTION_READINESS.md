@@ -1,4 +1,4 @@
-# EyeQ AI — Production Readiness Report
+# EyeQ AI. Production Readiness Report
 
 **Date:** May 2026  
 **Scope:** Office pilot readiness (not HIPAA-certified clinical deployment)
@@ -104,7 +104,7 @@ All staff routes have `loading.tsx` skeletons (including dynamic `[id]` routes).
 
 ## 7. EHR integrations (placeholder)
 
-Epic, Oracle Health, athenahealth, eClinicalWorks, NextGen, DrChrono, RevolutionEHR, Eyefinity, Crystal PM, Compulink, MaximEyes, iTRUST, Other/FHIR — status cards and sync metadata are **mock** until credentials and legal agreements exist.
+Epic, Oracle Health, athenahealth, eClinicalWorks, NextGen, DrChrono, RevolutionEHR, Eyefinity, Crystal PM, Compulink, MaximEyes, iTRUST, Other/FHIR: status cards and sync metadata are **mock** until credentials and legal agreements exist.
 
 ---
 
@@ -119,7 +119,7 @@ Epic, Oracle Health, athenahealth, eClinicalWorks, NextGen, DrChrono, Revolution
 - [ ] Penetration test / SOC2 path if enterprise
 - [ ] Clinical translation review
 - [ ] Consent capture for recording + SMS opt-in stored in DB
-- [ ] **Not HIPAA compliant by default** — requires organizational compliance program
+- [ ] **Not HIPAA compliant by default**: requires organizational compliance program
 
 ---
 
@@ -147,17 +147,17 @@ If `prisma generate` fails with `EPERM` on Windows, stop `npm run dev` and pause
 ## 10. Office workflow test sequence
 
 1. Login or **Demo mode**
-2. **Brain** — confirm today’s appointments and insights load
-3. **Cmd/Ctrl+K** — search patient → opens chart + sets context
-4. **Appointments** — create appointment → check **Scheduling** + **Patient chart**
-5. **Pre-charting** — open patient prep
-6. **Ambient scribe** — transcript → generate note → provider sign-off
-7. **Imaging** — upload → structured review → provider verification
-8. **Care gaps** — view/recalculate gaps
-9. **Reminders** — draft message
-10. **Portal** (patient role) — only signed summaries, no AI flags
-11. **Financial reports** as Owner — loads; as Technician — blocked
-12. **Sign out** — returns to login
+2. **Brain**: confirm today’s appointments and insights load
+3. **Cmd/Ctrl+K**: search patient → opens chart + sets context
+4. **Appointments**: create appointment → check **Scheduling** + **Patient chart**
+5. **Pre-charting**: open patient prep
+6. **Ambient scribe**: transcript → generate note → provider sign-off
+7. **Imaging**: upload → structured review → provider verification
+8. **Care gaps**: view/recalculate gaps
+9. **Reminders**: draft message
+10. **Portal** (patient role): only signed summaries, no AI flags
+11. **Financial reports** as Owner: loads; as Technician: blocked
+12. **Sign out**: returns to login
 
 ---
 

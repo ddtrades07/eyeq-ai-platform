@@ -62,7 +62,7 @@ export default async function ReputationPage() {
   const avgRating =
     reviews.length > 0
       ? (reviews.reduce((sum, r) => sum + r.starRating, 0) / reviews.length).toFixed(1)
-      : '—';
+      : ': ';
 
   return (
     <ReputationShell

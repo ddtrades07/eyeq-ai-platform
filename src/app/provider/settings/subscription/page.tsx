@@ -208,7 +208,7 @@ export default async function SubscriptionPage() {
       <section>
         <SectionHeader
           title="Available plans"
-          description="Informational plan catalog — use Billing settings for Checkout and the Stripe Customer Portal."
+          description="Informational plan catalog: use Billing settings for Checkout and the Stripe Customer Portal."
         />
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
           {(Object.keys(PLAN_COPY) as SaasPlan[]).map((key) => (

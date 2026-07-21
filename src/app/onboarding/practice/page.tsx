@@ -37,7 +37,7 @@ export default async function OnboardingPracticePage({
     <div className="mx-auto max-w-3xl space-y-6 px-4 py-10">
       <PageHeader
         title="Activate your practice"
-        description={`${org.name} — pay for the organization subscription, then invite your team and patients. Patients never pay.`}
+        description={`${org.name}: pay for the organization subscription, then invite your team and patients. Patients never pay.`}
       />
 
       <div className="flex flex-wrap items-center gap-2 text-sm">

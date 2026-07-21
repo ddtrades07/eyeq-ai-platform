@@ -15,7 +15,7 @@ Audit actions: `INCIDENT_CREATED`, `INCIDENT_REVIEW`.
 ## Common steps (all incidents)
 
 1. Stabilize: stop sending (pause campaigns), freeze risky imports, consider disabling controlled pilot / live PHI for the org.
-2. Preserve evidence: timestamps, user ids, audit log ids — **no PHI in tickets**.
+2. Preserve evidence: timestamps, user ids, audit log ids: **no PHI in tickets**.
 3. Notify practice owner + EyeQ ops.
 4. Remediate and verify.
 5. Write short post-incident notes; audit `INCIDENT_REVIEW`.
@@ -27,21 +27,21 @@ Audit actions: `INCIDENT_CREATED`, `INCIDENT_REVIEW`.
 1. Disable live PHI / controlled pilot for the org if exposure is app-side.
 2. Rotate compromised credentials (DB, storage, AI, messaging).
 3. Review audit logs for access window.
-4. Legal/HIPAA breach assessment (manual — outside app).
+4. Legal/HIPAA breach assessment (manual: outside app).
 5. Document patients/systems affected at a high level only.
 
 ### Wrong-patient access
 
 1. Identify user, patient ids, and pages/actions from audit log.
 2. Lock or force MFA re-enrollment for the user if appropriate.
-3. Correct any clinical artifacts created under the wrong chart (notes stay draft until signed — void if needed).
+3. Correct any clinical artifacts created under the wrong chart (notes stay draft until signed: void if needed).
 4. Notify practice clinical lead.
 
 ### Vendor outage
 
 1. Confirm vendor status (Twilio, SendGrid, OpenAI, Stripe, Supabase).
 2. Switch to portal-only messaging if SMS/email down.
-3. Keep AI in review-only / mock if AI vendor down — do not fake success.
+3. Keep AI in review-only / mock if AI vendor down: do not fake success.
 4. Communicate delay to staff via practice channel.
 
 ### AI safety event

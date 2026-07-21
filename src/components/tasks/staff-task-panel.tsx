@@ -177,7 +177,7 @@ export function PatientImportForm() {
   return (
     <div className="space-y-3">
       <p className="text-xs text-muted-foreground">
-        CSV patient migration assistant — not full EHR conversion. Controlled pilot requires a dry run
+        CSV patient migration assistant: not full EHR conversion. Controlled pilot requires a dry run
         before live import.
       </p>
       <Textarea

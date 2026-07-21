@@ -1,5 +1,5 @@
 /**
- * Background AI jobs — durable DB-backed queue.
+ * Background AI jobs: durable DB-backed queue.
  * @see src/lib/jobs/queue.ts and src/lib/jobs/processor.ts
  */
 

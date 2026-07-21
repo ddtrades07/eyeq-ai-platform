@@ -5,7 +5,7 @@ import { cn } from '@/lib/utils';
 
 /**
  * Lightweight sticky panel: sticks within its section on large screens.
- * No JS scroll hijacking — CSS sticky only; disabled under reduced motion via CSS.
+ * No JS scroll hijacking. CSS sticky only; disabled under reduced motion via CSS.
  */
 export function StickyPanel({
   children,

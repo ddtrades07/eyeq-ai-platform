@@ -1,4 +1,4 @@
-# EyeQ AI — Implementation Roadmap (Releases 1–5)
+# EyeQ AI. Implementation Roadmap (Releases 1-5)
 
 **Date:** July 6, 2026  
 **Planning horizon:** ~18 months to enterprise-ready optometry platform  
@@ -18,7 +18,7 @@
 
 ---
 
-## Release 1 — Foundation hardening
+## Release 1. Foundation hardening
 
 **Goal:** Safe pilot with native workflows; no false production claims.
 
@@ -50,11 +50,11 @@
 | Consolidate duplicate `image-quality-service` | Eng | Imaging tests | P2 |
 | Production checklist sign-off | PM/Sec | All P0 above | P0 |
 
-**R1 status:** Partially complete — core models shipped; onboarding and test harness block pilot with real tenants.
+**R1 status:** Partially complete: core models shipped; onboarding and test harness block pilot with real tenants.
 
 ---
 
-## Release 2 — Communications + speech
+## Release 2. Communications + speech
 
 **Goal:** Outbound recall and ambient scribe with BAA'd vendors.
 
@@ -73,7 +73,7 @@
 
 ---
 
-## Release 3 — Revenue cycle + payments
+## Release 3. Revenue cycle + payments
 
 **Goal:** Invoice lifecycle beyond display; optional claims path.
 
@@ -92,7 +92,7 @@
 
 ---
 
-## Release 4 — Clinical validation + EHR connectivity
+## Release 4. Clinical validation + EHR connectivity
 
 **Goal:** One real EHR connector; imaging AI evaluation harness.
 
@@ -111,7 +111,7 @@
 
 ---
 
-## Release 5 — Enterprise + compliance program
+## Release 5. Enterprise + compliance program
 
 **Goal:** SOC2-ready operations; multi-org enterprise sales.
 
@@ -152,7 +152,7 @@ flowchart TD
 
 | Workstream | Releases | Notes |
 |------------|----------|-------|
-| **Security / HIPAA safeguards** | R1–R5 | See `HIPAA_TECHNICAL_SAFEGUARDS.md` |
+| **Security / HIPAA safeguards** | R1-R5 | See `HIPAA_TECHNICAL_SAFEGUARDS.md` |
 | **Test coverage** | R1+ | Target 60% on server actions by R3 |
 | **Documentation** | R1 | This doc set; keep `EYEQ_MASTER_STATUS.md` updated |
 | **Demo vs prod** | R1 | Demo never in PHI prod |

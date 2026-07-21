@@ -95,10 +95,10 @@ export async function executeAIRequest(
         userId: request.userId,
         requestType: request.requestType,
         reason: !serverEnv.aiAllowPhi
-          ? 'Patient chart context blocked — AI_ALLOW_PHI=false'
+          ? 'Patient chart context blocked. AI_ALLOW_PHI=false'
           : !baaOk
             ? 'Patient chart context blocked without approved OpenAI BAA'
-            : 'Patient chart context blocked — OpenAI not configured',
+            : 'Patient chart context blocked. OpenAI not configured',
         phiRiskLevel: 'CONFIRMED_PHI',
       });
       throw new AIGatewayError(

@@ -33,7 +33,7 @@ export default async function AppointmentRequestsPage() {
     <div className="space-y-6">
       <PageHeader
         title="Online appointment requests"
-        description="Approve by converting to a scheduled visit, or decline. Portal booking creates a request — not an automatic appointment."
+        description="Approve by converting to a scheduled visit, or decline. Portal booking creates a request: not an automatic appointment."
       />
 
       <div className="grid gap-3 sm:grid-cols-3">

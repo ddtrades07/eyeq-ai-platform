@@ -1,4 +1,4 @@
-# EyeQ AI — Feature Matrix
+# EyeQ AI. Feature Matrix
 
 **Date:** July 20, 2026  
 **Legend**

@@ -181,7 +181,7 @@ async function loadStaffNotifications(
   return items.slice(0, 12);
 }
 
-/** Short-lived cache of lightweight notification DTOs (counts/titles only — no PHI bodies). */
+/** Short-lived cache of lightweight notification DTOs (counts/titles only: no PHI bodies). */
 export async function getStaffNotifications(
   organizationId: string,
   role: Role,

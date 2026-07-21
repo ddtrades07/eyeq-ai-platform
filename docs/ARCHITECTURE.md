@@ -52,7 +52,7 @@ Every row has `organizationId`. There is no row-level security trickery in app c
 
 ## RBAC
 
-`src/lib/auth/rbac.ts` declares the permission grid as `Role -> Set<Permission>`. UI uses `hasPermission` to hide affordances; the server enforces it via `assertPermission`. The dual check matters — never trust the client.
+`src/lib/auth/rbac.ts` declares the permission grid as `Role -> Set<Permission>`. UI uses `hasPermission` to hide affordances; the server enforces it via `assertPermission`. The dual check matters: never trust the client.
 
 ## AI provider abstraction
 

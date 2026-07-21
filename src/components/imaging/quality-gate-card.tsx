@@ -76,7 +76,7 @@ export function QualityGateCard({ q }: { q: ImageQualityAssessment }) {
 
           <p className="mt-1 text-[10px] text-muted-foreground">
 
-            70–100 Gradable · 45–69 Gradable With Limitations · below 45 Not Gradable
+            70-100 Gradable · 45-69 Gradable With Limitations · below 45 Not Gradable
 
           </p>
 

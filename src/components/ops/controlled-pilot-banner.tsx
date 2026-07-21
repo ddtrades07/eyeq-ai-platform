@@ -9,7 +9,7 @@ export function ControlledPilotBanner() {
     >
       <span className="inline-flex items-center justify-center gap-2 font-medium">
         <ShieldAlert className="h-4 w-4 shrink-0" aria-hidden />
-        Controlled Live Pilot — live PHI for this practice only. No auto-send AI, auto-sign notes,
+        Controlled Live Pilot: live PHI for this practice only. No auto-send AI, auto-sign notes,
         fake vendor publish, or unverified imports/reminders.
         <Link
           href="/provider/settings/pilot-launch"

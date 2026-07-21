@@ -32,7 +32,7 @@ export const EDUCATION_TOPICS: EducationTopic[] = [
           'Use preservative-free artificial tears 4 times per day.',
           'Take a 20-second screen break every 20 minutes.',
           'A warm compress on closed eyes for 5 minutes helps oil glands.',
-          'Stay hydrated. Aim for 6–8 glasses of water per day.',
+          'Stay hydrated. Aim for 6-8 glasses of water per day.',
         ],
         whenToCall: [
           'Sudden severe pain.',
@@ -48,7 +48,7 @@ export const EDUCATION_TOPICS: EducationTopic[] = [
           'Use lágrimas artificiales sin conservantes 4 veces al día.',
           'Tome un descanso de pantalla de 20 segundos cada 20 minutos.',
           'Aplique una compresa tibia sobre los ojos cerrados durante 5 minutos.',
-          'Manténgase hidratado. Beba 6–8 vasos de agua al día.',
+          'Manténgase hidratado. Beba 6-8 vasos de agua al día.',
         ],
         whenToCall: [
           'Dolor repentino e intenso.',
@@ -69,7 +69,7 @@ export const EDUCATION_TOPICS: EducationTopic[] = [
         summary:
           'Cataract surgery replaces your eye’s cloudy lens with a clear artificial lens. Most patients see better within a few days.',
         keyPoints: [
-          'Surgery takes about 15–30 minutes per eye.',
+          'Surgery takes about 15-30 minutes per eye.',
           'You will be awake. The surgeon numbs your eye with drops.',
           'Bring a driver. Plan to rest the day of surgery.',
           'Use the prescribed drops for 4 weeks.',

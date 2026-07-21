@@ -1,4 +1,4 @@
-# EyeQ AI — Imaging Implementation Plan
+# EyeQ AI. Imaging Implementation Plan
 
 **Audit date:** May 2026  
 **Stack:** Next.js 15 App Router · Prisma · PostgreSQL (Supabase) · Supabase Auth/Storage · Zustand · Server Actions
@@ -13,9 +13,9 @@
 | Auth | Supabase SSR + `User`/`Role` RBAC |
 | Storage | Supabase private buckets + signed URLs |
 | State | Zustand (patient/copilot), server components for data |
-| Imaging model | Flat `ImagingCase` — no child assets/analysis/findings |
+| Imaging model | Flat `ImagingCase`: no child assets/analysis/findings |
 | Current analysis | **Problem:** mock findings from patient chart context; GPT-4o Vision fallback when OpenAI key set (general LLM, not validated imaging model) |
-| Quality gate | Metadata heuristics only — exists but not persisted |
+| Quality gate | Metadata heuristics only: exists but not persisted |
 | Dashboard | 6 stat cards + duplicate insight widgets (TodayInsights + ProactiveAlerts + RecentPatients) |
 | Tests | None configured |
 | Location | Switcher + `UserLocationAccess` already implemented |
@@ -38,7 +38,7 @@
 - Expand enums; map legacy `ImagingStatus` ↔ `studyStatus` in orchestrator
 
 ### B. Services (`src/lib/imaging/services/`)
-- `imagingOrchestrator` — upload → quality → provider → persist → revalidate
+- `imagingOrchestrator`: upload → quality → provider → persist → revalidate
 - `imagingProviderInterface` + `manualReviewProvider`, `externalValidatedProvider`, `developmentMockProvider`
 - `modelRegistryService`, `imageQualityService` (enhanced), `resultNormalizer`, `uncertaintyService`, `auditService`
 - **Remove** chart-context mock findings from production path
@@ -47,7 +47,7 @@
 - `IMAGING_ANALYSIS_MODE`: `manual` | `external` | `custom` | `development-mock`
 - `IMAGING_DEV_MOCK=true` only in development
 - External: `IMAGING_ANALYSIS_ENDPOINT` + `IMAGING_ANALYSIS_API_KEY` (server-only)
-- Production default: **manual** — store image, no automated findings
+- Production default: **manual**: store image, no automated findings
 
 ### D. UI
 - `ImagingViewer` client component (zoom/pan, quality banner, disclaimer)

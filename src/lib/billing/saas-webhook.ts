@@ -197,7 +197,7 @@ export async function processSaasStripeEvent(
     });
 
     // Activation waits for subscription.updated/created or invoice.payment_succeeded.
-    // If session is paid, activate immediately as a convenience — still webhook-verified.
+    // If session is paid, activate immediately as a convenience: still webhook-verified.
     await db.orgSubscription.update({
       where: { id: sub.id },
       data: {
@@ -350,7 +350,7 @@ export async function processSaasStripeEvent(
           gracePeriodEndsAt:
             existing.gracePeriodEndsAt ??
             new Date(Date.now() + billingGracePeriodDays() * 24 * 60 * 60 * 1000),
-          adminAlertNote: 'Invoice payment failed — update payment method in Billing Portal',
+          adminAlertNote: 'Invoice payment failed: update payment method in Billing Portal',
         },
       });
     }
@@ -375,7 +375,7 @@ export async function processSaasStripeEvent(
     return { handled: true };
   }
 
-  // Unknown SaaS-ish event — record and acknowledge
+  // Unknown SaaS-ish event: record and acknowledge
   if (isSaas) {
     await recordBillingEvent({
       stripeEventId: event.id,

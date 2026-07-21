@@ -41,7 +41,7 @@ Seat checks: `assertProviderSeatAvailable` / `assertLocationSeatAvailable`
 
 ## PHI
 
-Stripe metadata / descriptions: `organizationId`, `plan`, `product=eyeq_saas` only — **never PHI**.
+Stripe metadata / descriptions: `organizationId`, `plan`, `product=eyeq_saas` only: **never PHI**.
 
 ## Owner surfaces
 

@@ -8,7 +8,7 @@ import { unstable_cache } from 'next/cache';
  * Rules:
  * - Never cache patient-identifiable content here
  * - Always include organizationId (and location/role) in the key
- * - Short TTLs only — dashboard counts / notification badges
+ * - Short TTLs only: dashboard counts / notification badges
  * - Do not use for clinical note bodies, messages, imaging blobs
  */
 

@@ -1,4 +1,4 @@
-# EyeQ AI — Multi-Office Readiness Report
+# EyeQ AI. Multi-Office Readiness Report
 
 **Date:** May 2026  
 **Scope:** Controlled office pilot (not full HIPAA-certified clinical production)
@@ -21,31 +21,31 @@
 ## 2. Pages audited
 
 ### Practice Operations
-- Brain (Dashboard) — location-filtered stats & schedule
-- Appointments — synced via Prisma + `revalidateAppointmentViews`
-- Patient Chart — org-scoped patient; appointments per patient
-- Pre-Charting — patient-scoped intelligence
-- Ambient Scribe — transcript-grounded + unsupported-statement check
+- Brain (Dashboard): location-filtered stats & schedule
+- Appointments: synced via Prisma + `revalidateAppointmentViews`
+- Patient Chart: org-scoped patient; appointments per patient
+- Pre-Charting: patient-scoped intelligence
+- Ambient Scribe: transcript-grounded + unsupported-statement check
 
 ### Clinical Intelligence
-- Timeline Intelligence — patient-scoped
-- Imaging Review — quality gate, provider sign-off, no diagnosis language
-- Imaging Timeline — patient/org scoped
-- Disease Templates — org templates
-- Care Gap Autopilot — location-filtered queue
-- AI Copilots — role-aware
+- Timeline Intelligence: patient-scoped
+- Imaging Review: quality gate, provider sign-off, no diagnosis language
+- Imaging Timeline: patient/org scoped
+- Disease Templates: org templates
+- Care Gap Autopilot: location-filtered queue
+- AI Copilots: role-aware
 
 ### Patient Engagement
-- Messages, Scheduling, Reminders, Education Center — org-scoped
+- Messages, Scheduling, Reminders, Education Center: org-scoped
 
 ### Business
-- Inventory — location-filtered
-- Financial Reports — `finance:read` + location filter
-- Admin Insights — `finance:read` gated
+- Inventory: location-filtered
+- Financial Reports: `finance:read` + location filter
+- Admin Insights: `finance:read` gated
 
 ### Configuration
 - Practice Setup, Team, Workflow Builder, EHR Integrations, Settings
-- **Installation Readiness** — new checklist page (`/installation-readiness`)
+- **Installation Readiness**: new checklist page (`/installation-readiness`)
 
 ---
 
@@ -65,13 +65,13 @@
 
 ## 4. Remaining limitations
 
-- **Care gaps / messages** — org-level; location filter uses patient appointment association (approximate for gaps without location field)
-- **Imaging without appointment** — may not appear when location filter active
-- **Real-time sync** — server revalidation on mutation; not WebSocket live updates
-- **EHR sync** — placeholders until credentials configured
-- **SMS/email** — mock delivery logs until Twilio/SES keys
-- **UserLocationAccess admin UI** — managed via seed/DB; no Team page editor yet
-- **Manager role** — can view all locations; per-location assignment UI pending
+- **Care gaps / messages**: org-level; location filter uses patient appointment association (approximate for gaps without location field)
+- **Imaging without appointment**: may not appear when location filter active
+- **Real-time sync**: server revalidation on mutation; not WebSocket live updates
+- **EHR sync**: placeholders until credentials configured
+- **SMS/email**: mock delivery logs until Twilio/SES keys
+- **UserLocationAccess admin UI**: managed via seed/DB; no Team page editor yet
+- **Manager role**: can view all locations; per-location assignment UI pending
 
 ---
 
@@ -124,7 +124,7 @@ Execute BAAs with:
 
 ---
 
-## 9–17. Verification checklist
+## 9-17. Verification checklist
 
 | Check | Status |
 |-------|--------|

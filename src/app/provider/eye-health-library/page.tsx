@@ -34,7 +34,7 @@ export default async function ProviderEyeHealthLibraryPage({
     <div className="space-y-6">
       <PageHeader
         title="Eye Health Library"
-        description="Patient-friendly education for conditions, prevention, and care. Educational only — not a diagnosis tool. Preview, approve, and recommend articles to patients."
+        description="Patient-friendly education for conditions, prevention, and care. Educational only: not a diagnosis tool. Preview, approve, and recommend articles to patients."
       />
 
       <form className="flex flex-wrap gap-2" method="get">

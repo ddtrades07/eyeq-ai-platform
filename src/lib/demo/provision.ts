@@ -109,13 +109,13 @@ export async function ensureDemoMode(): Promise<string> {
       providerSeatLimit: 50,
       locationSeatLimit: 20,
       activatedAt: new Date(),
-      adminAlertNote: 'Demo org — payment not required',
+      adminAlertNote: 'Demo org: payment not required',
     },
     update: {
       billingStatus: 'MANUAL',
       providerSeatLimit: 50,
       locationSeatLimit: 20,
-      adminAlertNote: 'Demo org — payment not required',
+      adminAlertNote: 'Demo org: payment not required',
     },
   });
 
@@ -375,29 +375,29 @@ async function populateDemoData(organizationId: string, ownerId: string): Promis
   // Demo patient cast. Index positions carry connected story data below
   // (appointments, imaging, notes, billing), so keep this order stable.
   const patientSpecs: PatientSpec[] = [
-    // 0 — Featured connected journey: glaucoma suspect follow-up
+    // 0. Featured connected journey: glaucoma suspect follow-up
     { firstName: 'Michael', lastName: 'Thompson', dob: '1958-03-12', hasGlaucomaPersonal: true, hasHypertension: true, insuranceCarrier: 'Medicare', phone: '555-100-1001' },
-    // 1 — Diabetic eye exam (checked in / in pretest today)
+    // 1. Diabetic eye exam (checked in / in pretest today)
     { firstName: 'James', lastName: 'Wilson', dob: '1972-09-04', hasDiabetes: true, insuranceCarrier: 'BlueCross', phone: '555-100-1002' },
-    // 2 — Dry eye evaluation
+    // 2. Dry eye evaluation
     { firstName: 'Emily', lastName: 'Chen', dob: '1985-06-22', insuranceCarrier: 'VSP', phone: '555-100-1003' },
-    // 3 — Outstanding balance + optical order
+    // 3. Outstanding balance + optical order
     { firstName: 'Daniel', lastName: 'Kim', dob: '1965-11-30', hasGlaucomaFamily: true, hasHypertension: true, insuranceCarrier: 'EyeMed', phone: '555-100-1004' },
-    // 4 — Contact lens follow-up
+    // 4. Contact lens follow-up
     { firstName: 'Sofia', lastName: 'Garcia', dob: '1990-01-19', insuranceCarrier: 'VSP', phone: '555-100-1005' },
-    // 5 — Postoperative follow-up
+    // 5. Postoperative follow-up
     { firstName: 'Robert', lastName: 'Hall', dob: '1948-07-08', hasHypertension: true, insuranceCarrier: 'Medicare', phone: '555-100-1006' },
-    // 6 — Pediatric myopia visit
+    // 6. Pediatric myopia visit
     { firstName: 'Aarav', lastName: 'Mehta', dob: '2016-04-14', insuranceCarrier: 'BlueCross', phone: '555-100-1007' },
-    // 7 — Routine comprehensive eye exam
+    // 7. Routine comprehensive eye exam
     { firstName: 'Rina', lastName: 'Desai', dob: '1979-12-02', insuranceCarrier: 'Aetna', phone: '555-100-1008' },
-    // 8 — Missing intake forms
+    // 8. Missing intake forms
     { firstName: 'Maria', lastName: 'Lopez', dob: '1994-08-25', insuranceCarrier: 'VSP', phone: '555-100-1009' },
-    // 9 — Urgent red eye appointment
+    // 9. Urgent red eye appointment
     { firstName: 'Linda', lastName: 'Brooks', dob: '1953-02-17', insuranceCarrier: 'Medicare', phone: '555-100-1010' },
-    // 10 — Background: upcoming comprehensive
+    // 10. Background: upcoming comprehensive
     { firstName: 'Lucia', lastName: 'Martinez', dob: '1981-10-09', insuranceCarrier: 'Cigna', phone: '555-100-1011' },
-    // 11 — Background: diabetic recall
+    // 11. Background: diabetic recall
     { firstName: 'Wendell', lastName: 'Park', dob: '1969-05-28', hasDiabetes: true, hasHypertension: true, insuranceCarrier: 'Medicare', phone: '555-100-1012' },
   ];
 
@@ -711,10 +711,10 @@ async function populateDemoData(organizationId: string, ownerId: string): Promis
             hpi: 'Type 2 diabetes, last A1C 7.1. No vision changes. Taking metformin.',
             visual_acuity: 'OD 20/25 cc, OS 20/20 cc',
             iop: 'OD 16 mmHg, OS 15 mmHg',
-            dilation: '1% tropicamide OU — pending',
+            dilation: '1% tropicamide OU: pending',
             slit_lamp: 'Lids/lashes WNL, conj clear, cornea clear OU',
             fundus: 'Pending dilation',
-            assessment: 'Diabetes mellitus — annual screening in progress',
+            assessment: 'Diabetes mellitus: annual screening in progress',
             plan: 'Complete dilated exam. Coordinate A1C with PCP if overdue.',
           },
         },
@@ -1149,7 +1149,7 @@ async function populateDemoData(organizationId: string, ownerId: string): Promis
       plan: 'Dilated retinal exam annually. Coordinate with PCP regarding A1C.',
       signed: true,
     },
-    // Michael Thompson — unsigned draft for today's visit (provider sign-off required)
+    // Michael Thompson: unsigned draft for today's visit (provider sign-off required)
     {
       patientIdx: 0,
       daysAgo: 0,
@@ -1526,7 +1526,7 @@ async function populateDemoData(organizationId: string, ownerId: string): Promis
         itemId: invFrames.id,
         type: InventoryActivityType.SOLD,
         quantityDelta: -1,
-        reason: 'Demo sale — Sofia Garcia',
+        reason: 'Demo sale. Sofia Garcia',
         performedById: fdUser.id,
         createdAt: addDays(today, -2),
       },
@@ -1547,7 +1547,7 @@ async function populateDemoData(organizationId: string, ownerId: string): Promis
     data: {
       organizationId,
       patientId: patients[0].id,
-      description: 'Glaucoma follow-up — medical office visit',
+      description: 'Glaucoma follow-up: medical office visit',
       totalCents: 18500,
       paidCents: 0,
       status: InvoiceStatus.OPEN,
@@ -1628,7 +1628,7 @@ async function populateDemoData(organizationId: string, ownerId: string): Promis
     },
   });
 
-  // Daniel Kim (idx 3) — optical order at the lab with an outstanding balance.
+  // Daniel Kim (idx 3): optical order at the lab with an outstanding balance.
   await db.opticalOrder.create({
     data: {
       organizationId,
@@ -1649,7 +1649,7 @@ async function populateDemoData(organizationId: string, ownerId: string): Promis
       orderedAt: addDays(today, -3),
       items: {
         create: [
-          { kind: 'FRAME', description: 'Ray-Ban RB5228 — Black', quantity: 1, unitPriceCents: 24900, inventoryItemId: invFrames.id },
+          { kind: 'FRAME', description: 'Ray-Ban RB5228. Black', quantity: 1, unitPriceCents: 24900, inventoryItemId: invFrames.id },
           { kind: 'LENS', description: 'Progressive 1.67 with AR coating', quantity: 1, unitPriceCents: 17100 },
         ],
       },
@@ -1663,7 +1663,7 @@ async function populateDemoData(organizationId: string, ownerId: string): Promis
     },
   });
 
-  // Sofia Garcia (idx 4) — contact lens order ready for pickup.
+  // Sofia Garcia (idx 4): contact lens order ready for pickup.
   await db.opticalOrder.create({
     data: {
       organizationId,
@@ -1682,7 +1682,7 @@ async function populateDemoData(organizationId: string, ownerId: string): Promis
       receivedAt: addDays(today, -1),
       items: {
         create: [
-          { kind: 'CONTACT_LENS', description: 'Dailies Total 1 — 90 pk x2', quantity: 2, unitPriceCents: 13000 },
+          { kind: 'CONTACT_LENS', description: 'Dailies Total 1: 90 pk x2', quantity: 2, unitPriceCents: 13000 },
         ],
       },
       statusEvents: {
@@ -1695,7 +1695,7 @@ async function populateDemoData(organizationId: string, ownerId: string): Promis
     },
   });
 
-  // Michael Thompson (idx 0) — fresh spectacle quote from today's visit.
+  // Michael Thompson (idx 0): fresh spectacle quote from today's visit.
   await db.opticalOrder.create({
     data: {
       organizationId,
@@ -1711,7 +1711,7 @@ async function populateDemoData(organizationId: string, ownerId: string): Promis
       createdById: opticalById,
       items: {
         create: [
-          { kind: 'FRAME', description: 'Modo 4501 — Tortoise', quantity: 1, unitPriceCents: 19000 },
+          { kind: 'FRAME', description: 'Modo 4501. Tortoise', quantity: 1, unitPriceCents: 19000 },
           { kind: 'LENS', description: 'Single vision 1.6 with AR coating', quantity: 1, unitPriceCents: 19000 },
         ],
       },
@@ -1721,7 +1721,7 @@ async function populateDemoData(organizationId: string, ownerId: string): Promis
     },
   });
 
-  // Rina Desai (idx 7) — spectacles dispensed today (counts toward today's sales).
+  // Rina Desai (idx 7): spectacles dispensed today (counts toward today's sales).
   await db.opticalOrder.create({
     data: {
       organizationId,
@@ -1740,7 +1740,7 @@ async function populateDemoData(organizationId: string, ownerId: string): Promis
       dispensedAt: atHour(today, 10, 30),
       items: {
         create: [
-          { kind: 'FRAME', description: 'Kate Spade Amelia — Rose', quantity: 1, unitPriceCents: 16000 },
+          { kind: 'FRAME', description: 'Kate Spade Amelia. Rose', quantity: 1, unitPriceCents: 16000 },
           { kind: 'LENS', description: 'Single vision 1.5 with AR coating', quantity: 1, unitPriceCents: 15000 },
         ],
       },
@@ -1758,7 +1758,7 @@ async function populateDemoData(organizationId: string, ownerId: string): Promis
     data: [
       {
         organizationId,
-        patientId: patients[8].id, // Maria Lopez — missing intake
+        patientId: patients[8].id, // Maria Lopez: missing intake
         title: 'New patient intake',
         description: 'Demographics, medical history, and consent for treatment.',
         formType: 'intake',
@@ -1774,7 +1774,7 @@ async function populateDemoData(organizationId: string, ownerId: string): Promis
       },
       {
         organizationId,
-        patientId: patients[0].id, // Michael Thompson — glaucoma history update
+        patientId: patients[0].id, // Michael Thompson: glaucoma history update
         title: 'Glaucoma history update',
         description: 'Medication adherence and symptom questionnaire.',
         formType: 'intake',
@@ -1839,7 +1839,7 @@ async function populateDemoData(organizationId: string, ownerId: string): Promis
         patientId: patients[4].id,
         assignedToId: opticalById,
         createdById: ownerId,
-        title: 'Notify Sofia Garcia — contacts ready for pickup',
+        title: 'Notify Sofia Garcia: contacts ready for pickup',
         status: 'IN_PROGRESS',
         priority: 'NORMAL',
       },
@@ -1879,7 +1879,7 @@ async function populateDemoData(organizationId: string, ownerId: string): Promis
       scheduledFor: addDays(today, -3),
       approvedById: ownerId,
       approvedAt: addDays(today, -4),
-      notes: 'Sample campaign for pitch — deliveries are illustrative.',
+      notes: 'Sample campaign for pitch: deliveries are illustrative.',
     },
   });
   await db.messageDeliveryLog.createMany({
@@ -2028,7 +2028,7 @@ async function populateDemoData(organizationId: string, ownerId: string): Promis
         { label: 'Patient demographic mapping', done: true, owner: 'Admin' },
         { label: 'Production go-live approval', done: false, owner: 'Owner' },
       ],
-      notes: 'Demo connection for pitch conversations — not syncing real PHI.',
+      notes: 'Demo connection for pitch conversations: not syncing real PHI.',
     },
   });
   await db.ehrSyncLog.create({
@@ -2221,7 +2221,7 @@ async function populateDemoData(organizationId: string, ownerId: string): Promis
     },
   });
 
-  // Eye Health Library — practice approval overlays + patient recommendations (demo)
+  // Eye Health Library: practice approval overlays + patient recommendations (demo)
   const demoEducationSlugs = [
     'dry-eye',
     'glaucoma-overview',

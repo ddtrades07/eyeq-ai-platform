@@ -11,7 +11,7 @@ export interface ImageQualityAssessment {
   /** @deprecated use classification */
   gradable?: boolean;
   classification?: string;
-  score: number; // 0–100
+  score: number; // 0-100
   descriptiveAnalysisAllowed?: boolean;
   retakeRecommended?: boolean;
   focus: 'sharp' | 'acceptable' | 'soft' | 'poor';

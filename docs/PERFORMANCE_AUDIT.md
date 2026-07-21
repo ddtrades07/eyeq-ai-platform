@@ -16,7 +16,7 @@ Internal report of EyeQ performance work (Jul 2026). PHI gates, RBAC, RLS, MFA, 
 | `/provider/reputation` | Unbounded reviews with full includes | `take: 40` + `select`; questions/drafts/analytics sub-routes | Older reviews need pagination UI |
 | `/provider/messages` | Per-thread unread counts | Prior: take 40 + preview | Denormalize unread still open |
 | `/provider/demo-walkthrough` | No loading UI; light prefetch | Route `loading.tsx`; prefetch dashboard/schedule/chart/imaging/messages/reputation/eye-health | First demo provision still cold |
-| Provider layout | Duplicate location + notifications | Prior: React.cache + 15s notification cache | — |
+| Provider layout | Duplicate location + notifications | Prior: React.cache + 15s notification cache |: |
 
 ## Expensive queries / duplicates
 

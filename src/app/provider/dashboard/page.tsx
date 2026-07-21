@@ -61,7 +61,7 @@ export default async function DashboardPage() {
         <CopilotContextSetter page="dashboard" />
         <CommandCenterDashboard
           greeting={timeOfDayGreeting(user.firstName)}
-          description="Your practice command center — flow, clinical work, AI drafts, and patient experience."
+          description="Your practice command center: flow, clinical work, AI drafts, and patient experience."
           data={data}
           showPitchTour={inDemo}
           pitchSlot={inDemo ? <DemoPitchTour organizationId={user.organizationId} /> : null}

@@ -14,7 +14,7 @@
 
 | Capability | Behavior |
 |------------|----------|
-| `AI_PROVIDER=mock` / demo mode | Labeled **Demo mock — not a clinical AI provider** |
+| `AI_PROVIDER=mock` / demo mode | Labeled **Demo mock: not a clinical AI provider** |
 | Seeded Ask EyeQ answers | Deterministic, non-diagnostic |
 
 ## Partially operational
@@ -47,7 +47,7 @@
 5. Minimum necessary PHI  
 6. Provider review required before chart persistence  
 7. Audit logs required  
-8. All AI calls via backend routes only — never expose API keys in the frontend  
+8. All AI calls via backend routes only: never expose API keys in the frontend  
 9. Public website AI must not accept PHI  
 
 ## Runtime states (`resolveAiRuntimeState`)
@@ -55,8 +55,8 @@
 | Status | Meaning |
 |--------|---------|
 | `openai` | Configured live OpenAI |
-| `demo_mock` | Explicit demo/mock — labeled |
-| `disabled` | Not configured — do not fake success |
+| `demo_mock` | Explicit demo/mock: labeled |
+| `disabled` | Not configured: do not fake success |
 
 ## Future roadmap
 

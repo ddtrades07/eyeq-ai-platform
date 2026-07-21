@@ -79,7 +79,7 @@ function toNormalizedFindings(review: DescriptiveImagingReview): NormalizedFindi
       : 'low') as 'low' | 'moderate' | 'high',
     limitations: [],
     supportedByModel: true,
-    actionCategory: 'Provider review recommended — not a diagnosis',
+    actionCategory: 'Provider review recommended: not a diagnosis',
   }));
 
   const fromAreas = review.possibleAreasForReview.map((a, i) => ({
@@ -96,7 +96,7 @@ function toNormalizedFindings(review: DescriptiveImagingReview): NormalizedFindi
           : 'low') as 'low' | 'moderate' | 'high',
     limitations: a.clinicalCorrelationNeeded,
     supportedByModel: true,
-    actionCategory: 'Correlate with examination and history — not a diagnosis',
+    actionCategory: 'Correlate with examination and history: not a diagnosis',
   }));
 
   return [...fromObservations, ...fromAreas];
@@ -120,7 +120,7 @@ export const descriptiveAiProvider: ImagingProvider = {
         analysisStatus: 'failed',
         modelName: visionModel,
         modelVersion: 'n/a',
-        intendedUse: 'AI image analysis for provider review — not a diagnosis',
+        intendedUse: 'AI image analysis for provider review: not a diagnosis',
         supportedFindings: [],
         possibleFindings: [],
         limitations: ['OPENAI_API_KEY is not configured on the server.'],
@@ -138,7 +138,7 @@ export const descriptiveAiProvider: ImagingProvider = {
         analysisStatus: 'failed',
         modelName: visionModel,
         modelVersion: 'n/a',
-        intendedUse: 'AI image analysis for provider review — not a diagnosis',
+        intendedUse: 'AI image analysis for provider review: not a diagnosis',
         supportedFindings: [],
         possibleFindings: [],
         limitations: ['Image could not be retrieved for analysis (missing signed URL or non-image file).'],
@@ -160,7 +160,7 @@ export const descriptiveAiProvider: ImagingProvider = {
 Laterality: ${laterality}
 ${modalityInstructions(input.modality)}
 
-Patient context (correlation only — do not invent chart data):
+Patient context (correlation only: do not invent chart data):
 ${input.patientContext ?? 'Not provided'}
 
 ${priorHint}
@@ -236,7 +236,7 @@ Rules for content:
           analysisStatus: 'failed',
           modelName: visionModel,
           modelVersion: 'n/a',
-          intendedUse: 'AI image analysis for provider review — not a diagnosis',
+          intendedUse: 'AI image analysis for provider review: not a diagnosis',
           supportedFindings: [],
           possibleFindings: [],
           limitations: ['Multimodal provider request failed.'],
@@ -262,7 +262,7 @@ Rules for content:
           analysisStatus: 'failed',
           modelName: visionModel,
           modelVersion: 'n/a',
-          intendedUse: 'AI image analysis for provider review — not a diagnosis',
+          intendedUse: 'AI image analysis for provider review: not a diagnosis',
           supportedFindings: [],
           possibleFindings: [],
           limitations: ['Model response failed schema validation.'],
@@ -298,7 +298,7 @@ Rules for content:
           analysisStatus: 'skipped',
           modelName: review.modelName,
           modelVersion: review.modelVersion ?? 'n/a',
-          intendedUse: 'AI image analysis for provider review — not a diagnosis',
+          intendedUse: 'AI image analysis for provider review: not a diagnosis',
           supportedFindings: [],
           possibleFindings: [],
           limitations: review.aiNotesForProvider.limitations,
@@ -315,7 +315,7 @@ Rules for content:
         analysisStatus: 'complete',
         modelName: review.modelName,
         modelVersion: review.modelVersion ?? 'n/a',
-        intendedUse: 'AI image analysis for provider review — not a diagnosis',
+        intendedUse: 'AI image analysis for provider review: not a diagnosis',
         supportedFindings: review.possibleAreasForReview.map((a) => a.label),
         possibleFindings: toNormalizedFindings(review),
         limitations: review.aiNotesForProvider.limitations,
@@ -331,7 +331,7 @@ Rules for content:
         analysisStatus: 'failed',
         modelName: visionModel,
         modelVersion: 'n/a',
-        intendedUse: 'AI image analysis for provider review — not a diagnosis',
+        intendedUse: 'AI image analysis for provider review: not a diagnosis',
         supportedFindings: [],
         possibleFindings: [],
         limitations: ['Analysis request failed or timed out.'],

@@ -65,7 +65,7 @@ Screenshots captured during browser verification (mobile viewport of the live ap
 | Focus rings retained on buttons/links | Pass |
 | Contrast on frosted cards | Pass on light theme (strong surface for tables/queues) |
 | `prefers-reduced-motion` | Transitions disabled |
-| Theme toggle / dark mode switcher | **Not wired** — CSS `.dark` tokens exist, but no UI toggle yet |
+| Theme toggle / dark mode switcher | **Not wired**. CSS `.dark` tokens exist, but no UI toggle yet |
 
 ## 6. Performance notes
 
@@ -73,7 +73,7 @@ Screenshots captured during browser verification (mobile viewport of the live ap
 |-------|--------|
 | Unit tests | 38/38 pass |
 | Typecheck | Pass |
-| Backdrop blur | Limited to header/sidebar/cards — not nested containers |
+| Backdrop blur | Limited to header/sidebar/cards: not nested containers |
 | Hover animation | ~180ms; transform only |
 | Server restart required | Cleared corrupted `.next` from earlier failed production build |
 

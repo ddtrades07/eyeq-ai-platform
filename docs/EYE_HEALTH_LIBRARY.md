@@ -45,7 +45,7 @@ Providers can recommend from the library article page (attach to portal and/or s
 
 > Your provider shared this article because it may relate to your visit.
 
-Contexts: `PROVIDER_RECOMMENDED`, `RELATED_TO_VISIT`, `DISCUSSION_TOPIC` (for suspected topics — never “you have this”).
+Contexts: `PROVIDER_RECOMMENDED`, `RELATED_TO_VISIT`, `DISCUSSION_TOPIC` (for suspected topics: never “you have this”).
 
 AI imaging does not auto-attach diagnosis articles.
 

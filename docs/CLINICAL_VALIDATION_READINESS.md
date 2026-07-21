@@ -1,4 +1,4 @@
-# EyeQ AI — Clinical Validation Readiness
+# EyeQ AI. Clinical Validation Readiness
 
 **Purpose:** Separate software functionality from clinical accuracy and regulatory validation.
 
@@ -58,7 +58,7 @@ EyeQ AI imaging review support is **not clinically validated** in this codebase 
 - Failed provider → manual review, no mock fallback in production
 - Out of distribution → manual review message
 
-## Validation metrics (placeholders — do not invent)
+## Validation metrics (placeholders: do not invent)
 
 | Metric | Value |
 |--------|-------|

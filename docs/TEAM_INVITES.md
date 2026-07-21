@@ -19,8 +19,8 @@ Email, name, role, optional credentials/NPI for providers. Temporary password or
 
 ## Status tracking
 
-`StaffOnboarding`: invite accepted, MFA, location access, PHI notice, workflow intro — see `/provider/settings/staff-onboarding`.
+`StaffOnboarding`: invite accepted, MFA, location access, PHI notice, workflow intro: see `/provider/settings/staff-onboarding`.
 
 ## Audit
 
-`CREATE` on `User` with metadata `{ role, channel }` — no PHI in audit metadata beyond role/email as required for account provisioning.
+`CREATE` on `User` with metadata `{ role, channel }`: no PHI in audit metadata beyond role/email as required for account provisioning.

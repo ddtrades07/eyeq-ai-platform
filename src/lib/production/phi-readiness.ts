@@ -62,7 +62,7 @@ export async function evaluatePhiReadiness(organizationId?: string | null): Prom
       id: 'demo_mode',
       label: 'Environment mode',
       state: 'demo_only',
-      detail: 'Demo/development mode — live PHI is not permitted',
+      detail: 'Demo/development mode: live PHI is not permitted',
     });
   } else if (isProductionApp()) {
     checks.push({
@@ -76,7 +76,7 @@ export async function evaluatePhiReadiness(organizationId?: string | null): Prom
       id: 'app_env',
       label: 'Environment mode',
       state: 'needs_configuration',
-      detail: `APP_ENV=${serverEnv.appEnv} — set production for live PHI`,
+      detail: `APP_ENV=${serverEnv.appEnv}: set production for live PHI`,
     });
   }
 
@@ -103,7 +103,7 @@ export async function evaluatePhiReadiness(organizationId?: string | null): Prom
     state: isMfaProviderConfigured() ? 'ready' : 'blocked',
     detail: isMfaProviderConfigured()
       ? 'Supabase Auth MFA available'
-      : 'MFA provider not configured — set NEXT_PUBLIC_SUPABASE_URL and anon key',
+      : 'MFA provider not configured: set NEXT_PUBLIC_SUPABASE_URL and anon key',
   });
 
   checks.push({
@@ -158,7 +158,7 @@ export async function evaluatePhiReadiness(organizationId?: string | null): Prom
       id: 'twilio_baa',
       label: 'Twilio SMS',
       state: 'needs_configuration',
-      detail: 'Twilio not configured — SMS with PHI disabled',
+      detail: 'Twilio not configured. SMS with PHI disabled',
     };
   }
 
@@ -168,7 +168,7 @@ export async function evaluatePhiReadiness(organizationId?: string | null): Prom
       id: 'sendgrid_baa',
       label: 'SendGrid email',
       state: 'needs_configuration',
-      detail: 'SendGrid not configured — email with PHI disabled',
+      detail: 'SendGrid not configured: email with PHI disabled',
     });
   } else {
     checks.push(
@@ -181,7 +181,7 @@ export async function evaluatePhiReadiness(organizationId?: string | null): Prom
     label: 'Storage (Supabase)',
     state: serverEnv.supabaseServiceRoleKey ? 'ready' : 'needs_configuration',
     detail: serverEnv.supabaseServiceRoleKey
-      ? 'Service role configured — confirm storage BAA operationally'
+      ? 'Service role configured: confirm storage BAA operationally'
       : 'SUPABASE_SERVICE_ROLE_KEY missing',
   });
 
@@ -206,7 +206,7 @@ export async function evaluatePhiReadiness(organizationId?: string | null): Prom
     state: isGoogleBusinessConfigured() ? 'ready' : 'demo_only',
     detail: isGoogleBusinessConfigured()
       ? 'Google Business API keys present'
-      : 'Not configured — reputation stays demo-only',
+      : 'Not configured: reputation stays demo-only',
   });
 
   if (organizationId) {
@@ -269,7 +269,7 @@ export async function evaluatePhiReadiness(organizationId?: string | null): Prom
           : 'blocked',
       detail: backupVerified
         ? `Verified restore ${org!.backupRestoreTestAt!.toISOString()} · provider ${org!.backupProvider ?? 'n/a'} · retention ${org!.backupRetentionDays ?? '?'}d`
-        : 'Admin must attest backup provider, last backup, retention, and completed restore test — EyeQ does not auto-verify backups',
+        : 'Admin must attest backup provider, last backup, retention, and completed restore test. EyeQ does not auto-verify backups',
     });
 
     checks.push({
@@ -281,8 +281,8 @@ export async function evaluatePhiReadiness(organizationId?: string | null): Prom
       detail: org?.monitoringVerifiedAt
         ? `Verified ${org.monitoringVerifiedAt.toISOString()} · ${org.monitoringProvider ?? 'configured'}`
         : serverEnv.errorTrackingDsn
-          ? 'ERROR_TRACKING_DSN set — admin must mark monitoring verified after ops review'
-          : 'Configure ERROR_TRACKING_PROVIDER/DSN (or equivalent) and mark monitoring verified — EyeQ does not auto-claim monitoring',
+          ? 'ERROR_TRACKING_DSN set: admin must mark monitoring verified after ops review'
+          : 'Configure ERROR_TRACKING_PROVIDER/DSN (or equivalent) and mark monitoring verified. EyeQ does not auto-claim monitoring',
     });
 
     checks.push({
@@ -309,7 +309,7 @@ export async function evaluatePhiReadiness(organizationId?: string | null): Prom
       state: org?.livePhiEnabled ? 'ready' : 'needs_configuration',
       detail: org?.livePhiEnabled
         ? 'Organization opted into live PHI'
-        : 'livePhiEnabled=false — explicit org opt-in required',
+        : 'livePhiEnabled=false: explicit org opt-in required',
     });
   }
 

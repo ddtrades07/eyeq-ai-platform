@@ -56,7 +56,7 @@ export async function getOpsHealthSnapshot(): Promise<{
     detail: smsOk
       ? serverEnv.twilioBaaConfirmed
         ? 'Configured'
-        : 'Configured — BAA incomplete'
+        : 'Configured. BAA incomplete'
       : 'Not configured',
   });
 
@@ -68,7 +68,7 @@ export async function getOpsHealthSnapshot(): Promise<{
     detail: emailOk
       ? serverEnv.sendgridBaaConfirmed
         ? 'Configured'
-        : 'Configured — BAA incomplete'
+        : 'Configured. BAA incomplete'
       : 'Not configured',
   });
 
@@ -127,7 +127,7 @@ export async function getOpsHealthSnapshot(): Promise<{
   return { overall, services, errorTrackingConfigured };
 }
 
-/** Safe production error message — never include PHI or secrets. */
+/** Safe production error message: never include PHI or secrets. */
 export function safeUserErrorMessage(err: unknown, fallback = 'Something went wrong. Please try again.'): string {
   if (!(err instanceof Error)) return fallback;
   const msg = err.message;

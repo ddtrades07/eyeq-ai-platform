@@ -83,7 +83,7 @@ export async function postGoogleReviewReply(args: {
   demoMode: boolean;
 }): Promise<{ postedAt: Date; mode: 'live' | 'demo' | 'not_configured' }> {
   if (args.demoMode) {
-    // Demo org only — caller must persist DEMO_PUBLISHED, never PUBLISHED.
+    // Demo org only: caller must persist DEMO_PUBLISHED, never PUBLISHED.
     return { postedAt: new Date(), mode: 'demo' };
   }
 

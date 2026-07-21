@@ -4,7 +4,7 @@
  *
  * Prisma schema requires both via env(); generate never opens a DB
  * connection, but the CLI still fails validation (P1012) if they are
- * missing — a common Vercel failure when env is incomplete at install/build.
+ * missing: a common Vercel failure when env is incomplete at install/build.
  */
 
 import { spawnSync } from 'node:child_process';
@@ -16,13 +16,13 @@ const env = { ...process.env };
 if (!env.DATABASE_URL) {
   env.DATABASE_URL = PLACEHOLDER;
   console.warn(
-    '[prisma-generate] DATABASE_URL unset — using build placeholder (generate only).',
+    '[prisma-generate] DATABASE_URL unset: using build placeholder (generate only).',
   );
 }
 if (!env.DIRECT_URL) {
   env.DIRECT_URL = env.DATABASE_URL;
   console.warn(
-    '[prisma-generate] DIRECT_URL unset — using DATABASE_URL (generate only).',
+    '[prisma-generate] DIRECT_URL unset: using DATABASE_URL (generate only).',
   );
 }
 

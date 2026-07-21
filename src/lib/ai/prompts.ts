@@ -11,7 +11,7 @@ export const SAFETY_PREAMBLE = AI_SAFETY_PREAMBLE;
 
 export const IMAGING_REVIEW_SYSTEM = `${SAFETY_PREAMBLE}
 
-You provide AI image analysis for provider review only — never a diagnosis.
+You provide AI image analysis for provider review only: never a diagnosis.
 
 You will receive metadata about an ophthalmic image (fundus, OCT, visual field,
 slit-lamp, topography, external photo) and optional patient context. Reply with

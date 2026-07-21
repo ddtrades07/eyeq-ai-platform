@@ -35,7 +35,7 @@ export type StaffNavSection = {
 };
 
 /**
- * Canonical staff sidebar — one clean product IA.
+ * Canonical staff sidebar: one clean product IA.
  * Items are filtered by role permissions (no persona duplication).
  */
 const PRIMARY_NAV: StaffNavItem[] = [
@@ -113,7 +113,7 @@ const PRIMARY_NAV: StaffNavItem[] = [
   },
 ];
 
-/** Google Reviews / Reputation — Owner/Admin/Manager full access via reputation:* */
+/** Google Reviews / Reputation. Owner/Admin/Manager full access via reputation:* */
 const REPUTATION_NAV: StaffNavItem[] = [
   {
     href: '/provider/reputation',

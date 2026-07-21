@@ -14,9 +14,9 @@ Implemented in:
 
 | Section | Audience | Contents |
 |---|---|---|
-| Today's practice flow | Clinical + ops | Scheduled, checked in, in exam, ready, completed, walk-ins, late — clickable to patient flow |
+| Today's practice flow | Clinical + ops | Scheduled, checked in, in exam, ready, completed, walk-ins, late: clickable to patient flow |
 | Provider focus | Clinical | Unsigned notes/Rx, imaging review, urgent gaps, messages |
-| AI work queue | Clinical | Pre-chart, SOAP/scribe, imaging support, blocked AI — always “draft · review required” |
+| AI work queue | Clinical | Pre-chart, SOAP/scribe, imaging support, blocked AI: always “draft · review required” |
 | Patient experience | Ops | Unread messages, appointment requests, reminder drafts, forms |
 | Practice health | Ops / owner | Completed visits, no-shows, care gaps, optical, invoices, reviews |
 | Reputation | Reputation roles | Reviews needing reply, AI drafts, unanswered, negative alerts |

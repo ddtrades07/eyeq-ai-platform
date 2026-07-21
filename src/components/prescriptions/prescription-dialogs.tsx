@@ -85,7 +85,7 @@ export function NewPrescriptionDialog({
         toast.error(r.error);
         return;
       }
-      toast.success('Prescription draft created — provider sign-off required');
+      toast.success('Prescription draft created: provider sign-off required');
       setOpen(false);
       router.refresh();
     });

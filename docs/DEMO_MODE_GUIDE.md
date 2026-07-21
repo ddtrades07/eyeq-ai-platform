@@ -4,7 +4,7 @@
 
 1. Click **Live Demo** on the marketing site (hero, nav, pathways, footer) or login page.
 2. Land on `/demo` (intro + role picker). Route is always public; role entry requires demo mode on the host.
-3. Start Owner, Provider, Staff, or Patient Portal demo (no password needed — Start Demo signs into synthetic accounts).
+3. Start Owner, Provider, Staff, or Patient Portal demo (no password needed. Start Demo signs into synthetic accounts).
 4. Staff roles open `/provider/demo-walkthrough`.
 5. Patient role opens `/patient/home`.
 

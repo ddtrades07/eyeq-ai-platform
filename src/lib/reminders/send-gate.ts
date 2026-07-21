@@ -35,7 +35,7 @@ export function getChannelVendorState(channel: ReminderChannel): {
       label: 'SendGrid',
     };
   }
-  // PORTAL / CALL — portal is always available; call is not automated.
+  // PORTAL / CALL: portal is always available; call is not automated.
   return { configured: true, baaComplete: true, label: channel };
 }
 
@@ -56,7 +56,7 @@ export async function evaluateReminderSend(args: {
       return {
         ok: false,
         status: 'BLOCKED_VENDOR',
-        reason: `Sending disabled — ${vendor.label} is not configured`,
+        reason: `Sending disabled: ${vendor.label} is not configured`,
       };
     }
     if (!vendor.baaComplete) {
@@ -66,7 +66,7 @@ export async function evaluateReminderSend(args: {
       return {
         ok: false,
         status: 'BLOCKED_BAA',
-        reason: `Sending disabled — ${vendor.label} BAA is incomplete`,
+        reason: `Sending disabled: ${vendor.label} BAA is incomplete`,
       };
     }
   }
@@ -129,10 +129,10 @@ export function reminderUiState(args: {
     return { label: 'Draft only', tone: 'muted' };
   }
   if (args.campaignStatus === 'BLOCKED_VENDOR' || (!vendor.configured && (args.channel === 'SMS' || args.channel === 'EMAIL'))) {
-    return { label: 'Sending disabled — vendor not configured', tone: 'bad' };
+    return { label: 'Sending disabled: vendor not configured', tone: 'bad' };
   }
   if (args.campaignStatus === 'BLOCKED_BAA' || (vendor.configured && !vendor.baaComplete && (args.channel === 'SMS' || args.channel === 'EMAIL'))) {
-    return { label: 'Sending disabled — BAA incomplete', tone: 'bad' };
+    return { label: 'Sending disabled. BAA incomplete', tone: 'bad' };
   }
   if (args.campaignStatus === 'COMPLETED') return { label: 'Sent', tone: 'ok' };
   if (args.campaignStatus === 'APPROVED' || args.campaignStatus === 'SCHEDULED') {

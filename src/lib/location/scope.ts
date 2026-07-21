@@ -16,7 +16,7 @@ export type LocationOption = {
 
 /**
  * Prisma filter fragment for appointment.locationId when a location is active.
- * When locationId is null/undefined, returns no filter (all locations) —
+ * When locationId is null/undefined, returns no filter (all locations) ,
  * only safe for roles that passed canViewAllLocations.
  */
 export function appointmentLocationFilter(

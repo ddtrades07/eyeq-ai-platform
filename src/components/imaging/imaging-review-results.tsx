@@ -88,10 +88,10 @@ export function ImagingReviewResults({
               <CardTitle className="text-base">1. Image overview</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2 text-sm">
-              <KV k="Image type" v={analysis.imageOverview.imageType || '—'} />
-              <KV k="Eye" v={analysis.imageOverview.eye || '—'} />
-              <KV k="Image quality" v={analysis.imageOverview.imageQuality || '—'} />
-              <KV k="Visible region" v={analysis.imageOverview.visibleRegion || '—'} />
+              <KV k="Image type" v={analysis.imageOverview.imageType || ': '} />
+              <KV k="Eye" v={analysis.imageOverview.eye || ': '} />
+              <KV k="Image quality" v={analysis.imageOverview.imageQuality || ': '} />
+              <KV k="Visible region" v={analysis.imageOverview.visibleRegion || ': '} />
               {analysis.imageOverview.limitations.length > 0 ? (
                 <div className="rounded-md border border-amber-200 bg-amber-50/60 p-3">
                   <p className="text-xs font-semibold uppercase tracking-wide text-amber-900">
@@ -138,7 +138,7 @@ export function ImagingReviewResults({
             <CardContent className="space-y-3 text-sm">
               {analysis.possibleObservations.length === 0 ? (
                 <p className="text-muted-foreground">
-                  No possible observations were flagged. This is not a clearance or diagnosis —
+                  No possible observations were flagged. This is not a clearance or diagnosis ,
                   provider review is still required.
                 </p>
               ) : (

@@ -30,6 +30,6 @@
 
 ## Known gaps (intentional)
 
-- **Email verification / MFA flows** in the UI are stubs — Supabase handles delivery; surface them in `/login` once your policy is finalized.
+- **Email verification / MFA flows** in the UI are stubs. Supabase handles delivery; surface them in `/login` once your policy is finalized.
 - **Patient data export / portability** endpoints are not yet implemented; clinics in HIPAA jurisdictions must build these to satisfy patient access rights.
 - **Break-glass access** (e.g. emergency override with audit) is not implemented; consider adding a special role + double-log workflow for clinics that require it.

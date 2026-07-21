@@ -1,4 +1,4 @@
-# EyeQ AI — Installation Readiness Checklist
+# EyeQ AI. Installation Readiness Checklist
 
 Use this checklist before deploying EyeQ AI to a new optometry office or multi-site group.
 
@@ -110,4 +110,4 @@ npm run build
 
 ---
 
-**Pilot standard:** Stable, synced, safe, multi-office aware — not full clinical production certification.
+**Pilot standard:** Stable, synced, safe, multi-office aware: not full clinical production certification.

@@ -70,7 +70,7 @@ export async function getPatientChartOverview(organizationId: string, patientId:
               createdAt: true,
               signedAt: true,
               chiefComplaint: true,
-              // Assessment snippet only for intelligence cards — full SOAP loads on Notes tab.
+              // Assessment snippet only for intelligence cards: full SOAP loads on Notes tab.
               assessment: true,
               appointmentId: true,
             },
@@ -205,7 +205,7 @@ export async function listPatientNotesPage(
   });
 }
 
-/** Paginated imaging for chart Imaging tab — metadata only (no full AI arrays). */
+/** Paginated imaging for chart Imaging tab: metadata only (no full AI arrays). */
 export async function listPatientImagingPage(
   organizationId: string,
   patientId: string,

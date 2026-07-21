@@ -1,4 +1,4 @@
-# EyeQ AI — HIPAA Technical Safeguards Mapping
+# EyeQ AI. HIPAA Technical Safeguards Mapping
 
 **Date:** July 6, 2026
 
@@ -17,42 +17,42 @@
 
 ---
 
-## Administrative safeguards (§164.308) — organizational
+## Administrative safeguards (§164.308): organizational
 
 These are **primarily customer responsibilities**. EyeQ provides features that support them.
 
 | Requirement | EyeQ support | Gap | Status |
 |-------------|--------------|-----|--------|
 | Security management process | Risk register docs; audit log | Formal customer risk analysis | Organizational |
-| Assigned security responsibility | — | Designate security officer | Organizational |
+| Assigned security responsibility |: | Designate security officer | Organizational |
 | Workforce training | UI disclaimers on AI | Training program | Organizational |
 | Information access management | RBAC | Periodic access reviews | Partial |
 | Security incident procedures | Audit log; stderr alerts | Incident response plan | Organizational |
 | Contingency plan | Depends on host (Vercel/Supabase SLAs) | BCP/DR testing | Organizational |
-| Evaluation | — | Periodic technical evaluations | Organizational |
+| Evaluation |: | Periodic technical evaluations | Organizational |
 | BAA with subcontractors | Documented subprocessor list | Execute BAAs with Supabase, AI vendors, etc. | Organizational |
 
 ---
 
-## Physical safeguards (§164.310) — host-dependent
+## Physical safeguards (§164.310): host-dependent
 
 EyeQ is cloud-hosted; physical controls are delegated to infrastructure providers.
 
 | Requirement | EyeQ / host | Gap | Status |
 |-------------|-------------|-----|--------|
 | Facility access controls | Supabase / Vercel / AWS physical security | Verify vendor SOC 2 reports | Host-dependent |
-| Workstation use | — | Customer workstation policy | Organizational |
+| Workstation use |: | Customer workstation policy | Organizational |
 | Device and media controls | No local PHI storage by design | Secure staff devices | Organizational |
 
 ---
 
-## Technical safeguards (§164.312) — platform mapping
+## Technical safeguards (§164.312): platform mapping
 
 ### Access control (§164.312(a)(1))
 
 | Standard | EyeQ implementation | Gap | Status |
 |----------|---------------------|-----|--------|
-| Unique user identification | Supabase user ID + Prisma `User` | — | Implemented |
+| Unique user identification | Supabase user ID + Prisma `User` |: | Implemented |
 | Emergency access procedure | `AI_EMERGENCY_SHUTDOWN`; break-glass not built | Customer runbook | Partial |
 | Automatic logoff | Supabase session expiry | Configurable idle timeout | Partial |
 | Encryption and decryption | TLS in transit; host encryption at rest | Verify Supabase settings | Partial |
@@ -82,7 +82,7 @@ EyeQ is cloud-hosted; physical controls are delegated to infrastructure provider
 | Standard | EyeQ implementation | Gap | Status |
 |----------|---------------------|-----|--------|
 | Integrity controls | HTTPS | Certificate pinning N/A for web | Implemented |
-| Encryption | TLS 1.2+ (host) | — | Implemented |
+| Encryption | TLS 1.2+ (host) |: | Implemented |
 
 ---
 

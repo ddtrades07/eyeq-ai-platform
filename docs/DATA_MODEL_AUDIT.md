@@ -1,4 +1,4 @@
-# EyeQ AI — Data Model Audit
+# EyeQ AI. Data Model Audit
 
 **Date:** July 14, 2026  
 **Source of truth:** `prisma/schema.prisma`  
@@ -19,7 +19,7 @@
 
 1. Support **walk-in encounters** (`appointmentId` optional, or synthetic appointment).
 2. Call sync on **reschedule/update**.
-3. Add **appointment status history** (actor, timestamp, reason) — currently single `status` field only.
+3. Add **appointment status history** (actor, timestamp, reason): currently single `status` field only.
 4. Prefer Prisma `include: { encounter }` once generate/restart hygiene is reliable.
 5. Restore or replace removed stale-Prisma-client guard in long-lived `next` processes.
 
@@ -36,8 +36,8 @@ Historical Jul 2026 failure (`include: { encounter }` validation error) was a **
 | Appointment / Encounter / Imaging / Notes / Rx / Gaps / Messages | Yes | Partial | Location filters inconsistent |
 | Claims / remittances / statements / optical / inventory | Yes | Partial | Optical metrics ignore location in places |
 | GoogleBusinessConnection / GoogleReview | Yes | Optional | Demo seeded |
-| BackgroundJob | Yes | — | |
-| AuditLog | Yes | — | |
+| BackgroundJob | Yes |: | |
+| AuditLog | Yes |: | |
 
 ## Present vs required (Phase 2 summary)
 
@@ -120,7 +120,7 @@ Historical Jul 2026 failure (`include: { encounter }` validation error) was a **
 3. Document that RLS is defense-in-depth only while Prisma uses table owner.  
 4. Add payment ledger before treating billing as production accounting.
 
-## Appointment–Encounter diagram
+## Appointment-Encounter diagram
 
 ```text
 Organization

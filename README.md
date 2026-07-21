@@ -1,4 +1,4 @@
-# EyeQ AI — Practice Operating Platform
+# EyeQ AI. Practice Operating Platform
 
 EyeQ AI is a production-grade SaaS foundation for optometry practices.
 
@@ -107,9 +107,9 @@ Enums cover roles, appointment status / type, imaging type / status, clinical-no
 
 | Model                       | Notes                                                                                                |
 | --------------------------- | ---------------------------------------------------------------------------------------------------- |
-| `EhrIntegration`            | One row per configured EHR connector. No tokens — those live in a vault.                              |
+| `EhrIntegration`            | One row per configured EHR connector. No tokens: those live in a vault.                              |
 | `EhrSyncLog`                | Structured "what would have been sent" envelope for every test / sync.                                |
-| `DiseaseTemplate`           | Documentation scaffolds (HPI, exam, plan, education, coding, referral) — provider always signs.       |
+| `DiseaseTemplate`           | Documentation scaffolds (HPI, exam, plan, education, coding, referral): provider always signs.       |
 | `InventoryItem` / `InventoryActivity` | Optical, dry-eye, drops, supplies, trial CLs; reorder thresholds + activity log.            |
 | `AmbientScribeSession` / `TranscriptSegment` | Consent-gated session with speaker-labelled transcript and AI draft artifacts.       |
 | `ReminderTemplate` / `ReminderCampaign` / `CommunicationPreference` / `MessageDeliveryLog` | Communication automation with vendor-agnostic delivery log. |
@@ -118,8 +118,8 @@ Enums cover roles, appointment status / type, imaging type / status, clinical-no
 
 ### Practice modes
 
-- **Native EHR Mode** — EyeQ AI is the EHR. All clinical data lives in this platform.
-- **Connected EHR Mode** — EyeQ AI sits on top of an existing EHR (Epic, Cerner, athenahealth, eClinicalWorks, NextGen, DrChrono, RevolutionEHR, Eyefinity / OfficeMate, Crystal PM, Compulink, MaximEyes, iTRUST, or a custom FHIR endpoint). Use the **EHR Integration Center** to configure each connector.
+- **Native EHR Mode**. EyeQ AI is the EHR. All clinical data lives in this platform.
+- **Connected EHR Mode**. EyeQ AI sits on top of an existing EHR (Epic, Cerner, athenahealth, eClinicalWorks, NextGen, DrChrono, RevolutionEHR, Eyefinity / OfficeMate, Crystal PM, Compulink, MaximEyes, iTRUST, or a custom FHIR endpoint). Use the **EHR Integration Center** to configure each connector.
 
 ---
 
@@ -159,7 +159,7 @@ SUPABASE_STORAGE_BUCKET_DOCUMENTS # default: "documents"
 AI_PROVIDER          # mock | openai | anthropic
 ```
 
-In Supabase Storage, create the buckets named above (private). The app issues short-lived signed URLs for uploads & downloads — no public bucket exposure.
+In Supabase Storage, create the buckets named above (private). The app issues short-lived signed URLs for uploads & downloads: no public bucket exposure.
 
 ### 4. Database
 
@@ -168,7 +168,7 @@ npm run db:migrate    # creates migrations + applies them
 npm run db:seed       # creates the Sunrise Eye Care demo org
 ```
 
-The seed inserts demo users with `supabaseUserId = seed-<role>-uid`. To **actually log them in**, create matching Supabase Auth users (via the Supabase dashboard or `supabase.auth.admin.createUser`) and update each `User.supabaseUserId` to the real UID — or simply sign up fresh accounts at `/signup` and `/signup-patient`.
+The seed inserts demo users with `supabaseUserId = seed-<role>-uid`. To **actually log them in**, create matching Supabase Auth users (via the Supabase dashboard or `supabase.auth.admin.createUser`) and update each `User.supabaseUserId` to the real UID: or simply sign up fresh accounts at `/signup` and `/signup-patient`.
 
 ### 5. Run
 
@@ -229,8 +229,8 @@ npm run db:studio    # prisma studio GUI
 
 ## Deployment (Vercel + Supabase)
 
-1. **Supabase** — create a project; provision Postgres + Storage buckets `imaging`, `documents` (private).
-2. **Vercel** — import this folder as a project; set `Build command` to `npm run build` (it runs `prisma generate` first).
+1. **Supabase**: create a project; provision Postgres + Storage buckets `imaging`, `documents` (private).
+2. **Vercel**: import this folder as a project; set `Build command` to `npm run build` (it runs `prisma generate` first).
 3. Add env vars in the Vercel project to mirror `.env.example`.
 4. Run migrations from CI/CD or locally against your prod `DIRECT_URL`:
    ```bash
@@ -255,11 +255,11 @@ npm run db:studio    # prisma studio GUI
 
 The architecture is wired end-to-end; the model calls themselves are stubbed.
 
-- `src/lib/ai/openai.ts` and `src/lib/ai/anthropic.ts` — replace `throw new Error(...)` with real SDK calls. Models, retry, and JSON-mode handling are the only feature work left.
-- `src/lib/ai/imaging.ts` — already orchestrates the call; with a real provider it will start producing structured imaging signals.
-- Embeddings / vector search (`getVectorSearchProvider`) — stub that returns `null`. Wire up `pgvector` or a managed vector DB when ready.
-- Multimodal imaging (`getMultimodalImagingProvider`) — stub that returns `null`. Hook a real vision model here when clinical validation supports it.
-- Pre-charting + outreach script generation — prompts live in `src/lib/ai/prompts.ts`; build feature surfaces on top of `getAIProvider().complete(...)` once the vendor flip is approved.
+- `src/lib/ai/openai.ts` and `src/lib/ai/anthropic.ts`: replace `throw new Error(...)` with real SDK calls. Models, retry, and JSON-mode handling are the only feature work left.
+- `src/lib/ai/imaging.ts`: already orchestrates the call; with a real provider it will start producing structured imaging signals.
+- Embeddings / vector search (`getVectorSearchProvider`): stub that returns `null`. Wire up `pgvector` or a managed vector DB when ready.
+- Multimodal imaging (`getMultimodalImagingProvider`): stub that returns `null`. Hook a real vision model here when clinical validation supports it.
+- Pre-charting + outreach script generation: prompts live in `src/lib/ai/prompts.ts`; build feature surfaces on top of `getAIProvider().complete(...)` once the vendor flip is approved.
 
 Before flipping `AI_PROVIDER=openai|anthropic`, sign a BAA with the vendor and confirm your data-residency posture. See [`docs/AI_ROADMAP.md`](docs/AI_ROADMAP.md).
 
@@ -299,7 +299,7 @@ EyeQ AI ships UI scaffolding for English, Spanish, Hindi, Gujarati, Arabic, Chin
 
 - Compile-time dictionary lives in `src/lib/i18n/dictionaries.ts`; missing keys fall back to English.
 - The active locale resolves from the logged-in user's `preferredLocale`, then the `eyeq_locale` cookie, then English.
-- Users change their language from the top-bar selector — it writes both the cookie and (when signed in) their DB preference.
+- Users change their language from the top-bar selector: it writes both the cookie and (when signed in) their DB preference.
 - Per-org translation overrides live in `TranslationString` so practices can localize patient-facing strings without redeploying.
 - Arabic (and any RTL locale you add) auto-flips `document.dir`.
 
@@ -316,7 +316,7 @@ EyeQ AI ships UI scaffolding for English, Spanish, Hindi, Gujarati, Arabic, Chin
 | Epic on FHIR              | OAuth + resource map placeholders                     | Epic on FHIR client ID, BAA, sandbox validation.               |
 | Ambient scribe            | Consent + recording UI + speaker-labelled transcript + draft generation (mock) | HIPAA-compliant ASR + LLM provider (e.g. Deepgram + Anthropic with BAA). |
 | SMS reminders             | Templates + campaigns + delivery log + opt-in/out     | Twilio (with BAA) or another HIPAA-compliant SMS vendor.       |
-| Email reminders           | Templates + campaigns + delivery log                  | HIPAA-compliant transactional email — **not** vanilla SendGrid for PHI. |
+| Email reminders           | Templates + campaigns + delivery log                  | HIPAA-compliant transactional email: **not** vanilla SendGrid for PHI. |
 | Imaging                   | Storage + signed URLs + AI hand-off interface         | A clinical imaging review model + validation cohort.            |
 | Financial reports         | Operational metrics derived from EyeQ data            | If you need encounter-level revenue, integrate practice billing data. |
 
@@ -324,13 +324,13 @@ EyeQ AI ships UI scaffolding for English, Spanish, Hindi, Gujarati, Arabic, Chin
 
 ## What is needed before pitching to real practices
 
-1. **Compliance package** — BAA with every vendor (Supabase, AI provider, SMS, email, ambient-scribe vendor). Don't store PHI in non-BAA providers.
-2. **Security review** — pen test, dependency audit, secrets management (Vercel + a vault for tokens).
-3. **Clinical validation** — sign-off from a licensed OD on copy in disease templates, scribe outputs, reminders, and patient education.
-4. **EHR connector go-live** — vendor approval, sandbox certification, then production cut-over.
-5. **Localized clinical content** — fluent clinician review of non-English patient-facing strings (Spanish, Hindi, Gujarati, Arabic, Chinese, Vietnamese).
-6. **Marketing site + portal branding** — finalize practice-facing copy and the patient portal welcome flow.
-7. **Operational runbook** — backups, restore drills, incident response, on-call rotation.
+1. **Compliance package**. BAA with every vendor (Supabase, AI provider, SMS, email, ambient-scribe vendor). Don't store PHI in non-BAA providers.
+2. **Security review**: pen test, dependency audit, secrets management (Vercel + a vault for tokens).
+3. **Clinical validation**: sign-off from a licensed OD on copy in disease templates, scribe outputs, reminders, and patient education.
+4. **EHR connector go-live**: vendor approval, sandbox certification, then production cut-over.
+5. **Localized clinical content**: fluent clinician review of non-English patient-facing strings (Spanish, Hindi, Gujarati, Arabic, Chinese, Vietnamese).
+6. **Marketing site + portal branding**: finalize practice-facing copy and the patient portal welcome flow.
+7. **Operational runbook**: backups, restore drills, incident response, on-call rotation.
 
 ---
 

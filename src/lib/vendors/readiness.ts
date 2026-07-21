@@ -113,7 +113,7 @@ export function detectVendorEnv(vendor: VendorKind): {
         baaComplete: false,
         hint: null,
         detail: serverEnv.clearinghouseEnabled
-          ? 'Flag enabled — live adapter still placeholder'
+          ? 'Flag enabled: live adapter still placeholder'
           : 'Placeholder / not connected',
       };
     case 'EHR':
@@ -121,7 +121,7 @@ export function detectVendorEnv(vendor: VendorKind): {
         configured: false,
         baaComplete: false,
         hint: null,
-        detail: 'EHR sync is placeholder — FHIR inbound limited',
+        detail: 'EHR sync is placeholder. FHIR inbound limited',
       };
     default:
       return { configured: false, baaComplete: false, hint: null, detail: 'Unknown' };

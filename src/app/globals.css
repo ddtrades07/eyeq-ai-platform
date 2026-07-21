@@ -4,7 +4,7 @@
 
 @layer base {
   :root {
-    /* Clinical light — pale blue-gray with frosted panels */
+    /* Clinical light: pale blue-gray with frosted panels */
     --background: 210 40% 97%;
     --foreground: 222 47% 11%;
     --card: 0 0% 100%;
@@ -50,7 +50,7 @@
   }
 
   .dark {
-    /* Premium dark — deep navy with blue glass */
+    /* Premium dark: deep navy with blue glass */
     --background: 222 47% 7%;
     --foreground: 210 40% 96%;
     --card: 222 40% 11%;
@@ -137,7 +137,7 @@
       );
   }
 
-  /* Decorative refraction rings — pointer-events none, low opacity */
+  /* Decorative refraction rings: pointer-events none, low opacity */
   .lens-canvas::before {
     content: '';
     position: absolute;

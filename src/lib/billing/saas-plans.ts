@@ -1,6 +1,6 @@
 /**
  * Editable SaaS plan catalog for marketing + entitlement gating.
- * Stripe Price IDs come from env — never hardcode live secrets here.
+ * Stripe Price IDs come from env: never hardcode live secrets here.
  * Display prices are informational; Checkout uses Stripe Price objects.
  */
 

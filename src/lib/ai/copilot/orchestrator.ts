@@ -20,7 +20,7 @@ import {
 import { executeAIRequest } from '@/lib/ai-gateway';
 
 /**
- * Copilot orchestrator — all requests route through the centralized AI Gateway.
+ * Copilot orchestrator: all requests route through the centralized AI Gateway.
  */
 export async function runCopilot(
   request: CopilotRequest,

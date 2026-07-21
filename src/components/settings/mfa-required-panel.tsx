@@ -75,7 +75,7 @@ export function MfaRequiredPanel({
         <CardContent className="space-y-3 text-sm text-muted-foreground">
           <p>
             This organization requires MFA, but the MFA provider is not configured.
-            PHI access stays blocked — EyeQ does not pretend MFA is active.
+            PHI access stays blocked. EyeQ does not pretend MFA is active.
           </p>
           <p>
             Configure <code>NEXT_PUBLIC_SUPABASE_URL</code> and{' '}

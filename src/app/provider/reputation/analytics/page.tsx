@@ -40,7 +40,7 @@ export default async function ReputationAnalyticsPage() {
   const avg =
     total > 0
       ? (reviews.reduce((s, r) => s + r.starRating, 0) / total).toFixed(2)
-      : '—';
+      : ': ';
   const byStars = [5, 4, 3, 2, 1].map((stars) => ({
     stars,
     count: reviews.filter((r) => r.starRating === stars).length,

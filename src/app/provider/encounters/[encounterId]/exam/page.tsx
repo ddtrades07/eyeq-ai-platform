@@ -59,7 +59,7 @@ export default async function EncounterExamPage({
       <div>
         <div className="flex flex-wrap items-center gap-2">
           <h2 className="text-2xl font-semibold tracking-tight">
-            Exam — {formatFullName(encounter.patient.firstName, encounter.patient.lastName)}
+            Exam: {formatFullName(encounter.patient.firstName, encounter.patient.lastName)}
           </h2>
           <span className="rounded-md border border-border/60 bg-white/70 px-2 py-0.5 text-xs font-medium">
             {chart.status.replace(/_/g, ' ')}

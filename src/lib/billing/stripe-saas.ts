@@ -51,7 +51,7 @@ async function stripePost(
 
 /**
  * Create a Stripe Customer for the practice org.
- * Metadata: organizationId only — never PHI, patient names, or clinical notes.
+ * Metadata: organizationId only: never PHI, patient names, or clinical notes.
  */
 export async function createStripeCustomer(input: {
   organizationId: string;

@@ -39,7 +39,7 @@ export function OrgMfaPolicyForm({
       </p>
       {!providerConfigured ? (
         <p className="rounded-md border border-amber-200 bg-amber-50 px-3 py-2 text-amber-900">
-          MFA provider not configured — you cannot require MFA until Supabase Auth is set.
+          MFA provider not configured: you cannot require MFA until Supabase Auth is set.
         </p>
       ) : null}
       <div className="flex flex-wrap items-center gap-2">

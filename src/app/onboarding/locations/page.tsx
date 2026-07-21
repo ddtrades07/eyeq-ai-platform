@@ -20,7 +20,7 @@ export default async function OnboardingLocationsPage() {
     <div className="mx-auto max-w-3xl space-y-6 px-4 py-10">
       <PageHeader
         title="Confirm locations"
-        description="Your primary location was created at signup. Add more from Practice setup — location limits follow your plan."
+        description="Your primary location was created at signup. Add more from Practice setup: location limits follow your plan."
         actions={
           <Link href="/provider/practice-setup" className={buttonVariants({ size: 'sm' })}>
             Practice setup

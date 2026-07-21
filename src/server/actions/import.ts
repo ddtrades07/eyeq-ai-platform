@@ -142,7 +142,7 @@ export const previewPatientImport = action({
       validCount: preview.filter((p) => p.status === 'valid').length,
       invalidCount: preview.filter((p) => p.status === 'invalid').length,
       duplicateCount: preview.filter((p) => p.status === 'duplicate').length,
-      label: 'CSV migration preview — not full EHR conversion',
+      label: 'CSV migration preview: not full EHR conversion',
     };
   },
 });

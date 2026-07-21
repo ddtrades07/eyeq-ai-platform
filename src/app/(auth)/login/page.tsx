@@ -35,7 +35,7 @@ export default async function LoginPage({
         </p>
         <p className="mt-1 text-xs text-muted-foreground">
           Open the Live Demo intro, pick a role, and follow the guided walkthrough with
-          synthetic patients only. No password needed — Start Demo signs you in automatically.
+          synthetic patients only. No password needed. Start Demo signs you in automatically.
         </p>
         <div className="mt-3">
           <Link href={liveDemoHref} className={cn(buttonVariants(), 'w-full')}>

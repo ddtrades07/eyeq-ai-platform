@@ -21,7 +21,7 @@
 | State | Meaning |
 |-------|---------|
 | Connected | Live Google keys present and non-demo connection |
-| Demo mode | Connection `demoMode=true` — demo reviews only |
+| Demo mode | Connection `demoMode=true`: demo reviews only |
 | Not configured | Missing `GOOGLE_BUSINESS_API_KEY` / account id |
 | Permission error | Live adapter rejects (future OAuth errors) |
 
@@ -30,7 +30,7 @@
 | Mode | DB status | Reality |
 |------|-----------|---------|
 | Live API success | `PUBLISHED` | Posted to Google |
-| Demo connection | `DEMO_PUBLISHED` | **Not** posted publicly — demo only |
+| Demo connection | `DEMO_PUBLISHED` | **Not** posted publicly: demo only |
 | Missing keys (non-demo) | Error | Does **not** fake publish |
 
 ## Demo-only

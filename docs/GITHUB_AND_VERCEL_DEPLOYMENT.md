@@ -12,8 +12,8 @@ Do not use a disconnected / CLI-only project when you need Git-based deploys and
 
 Prefer **two** Vercel projects (or clearly separated environments):
 
-1. **Demo** – public Live Demo, `DEMO_MODE=true` / `FEATURE_DEMO_MODE=true`, synthetic seed allowed
-2. **Pilot / production** – real practices, `DEMO_MODE=false`, PHI readiness enforced
+1. **Demo** - public Live Demo, `DEMO_MODE=true` / `FEATURE_DEMO_MODE=true`, synthetic seed allowed
+2. **Pilot / production** - real practices, `DEMO_MODE=false`, PHI readiness enforced
 
 Do not run public demos against a production database. Do not weaken PHI gates for convenience.
 
@@ -25,7 +25,7 @@ See also: [`CUSTOM_DOMAIN_DEPLOYMENT.md`](./CUSTOM_DOMAIN_DEPLOYMENT.md) for dem
 - Vercel account with permission to install the **Vercel GitHub App**
 - Env values ready (placeholders in `.env.example`; full list in [`ENVIRONMENT_VARIABLES.md`](./ENVIRONMENT_VARIABLES.md))
 
-## Path A — New private GitHub repo
+## Path A. New private GitHub repo
 
 If the GitHub remote does not exist yet:
 
@@ -43,7 +43,7 @@ git push -u origin main
 
 3. Confirm `.env.local` and other secrets are **not** staged (`git status`). Only `.env.example` should be trackable among env files.
 
-## Path B — Repo already exists (this project)
+## Path B. Repo already exists (this project)
 
 This repo already has a private remote, for example:
 
@@ -53,7 +53,7 @@ If code is already pushed to `main`:
 
 1. Confirm remote: `git remote -v`
 2. Pull/push as needed so GitHub matches what you want Vercel to build
-3. Skip `git init` / `remote add` — go straight to **Import into Vercel** below
+3. Skip `git init` / `remote add`: go straight to **Import into Vercel** below
 
 Never force-push secrets or `.env.local`. If a secret was ever committed, rotate it.
 
@@ -101,7 +101,7 @@ See [`ENVIRONMENT_VARIABLES.md`](./ENVIRONMENT_VARIABLES.md) and copy names from
 - `DATABASE_URL`, `DIRECT_URL`
 - `NEXT_PUBLIC_APP_URL`
 - `NEXT_PUBLIC_SUPABASE_URL`, `NEXT_PUBLIC_SUPABASE_ANON_KEY`
-- `SUPABASE_SERVICE_ROLE_KEY` (demo Supabase project only — not production)
+- `SUPABASE_SERVICE_ROLE_KEY` (demo Supabase project only: not production)
 - `DEMO_MODE=true` / `FEATURE_DEMO_MODE=true`
 - `APP_ENV=demo` (or non-production)
 - `JOB_PROCESSOR_SECRET`
@@ -174,7 +174,7 @@ Reset is org-scoped to the demo tenant and must never target production orgs.
 | Vercel GitHub App not installed / not authorized | Install and authorize the Vercel GitHub App for the account/org |
 | App lacks access to the private repo | Grant repository access to `eyeq-ai-platform` (or your private fork) |
 | Wrong account/org selected during Import | Re-import under the team that owns the GitHub connection |
-| Deploy API / CLI used with empty `gitSource` | Use the dashboard Import flow or pass a full Git source that includes `repoId` from a connected repo — do not invent a `repoId` |
+| Deploy API / CLI used with empty `gitSource` | Use the dashboard Import flow or pass a full Git source that includes `repoId` from a connected repo: do not invent a `repoId` |
 
 **Bottom line:** push to GitHub first, then **Import that repo into Vercel** so Vercel assigns `repoId`. Never deploy a production/preview Git workflow without that connection.
 

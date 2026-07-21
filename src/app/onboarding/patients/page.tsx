@@ -12,7 +12,7 @@ export default async function OnboardingPatientsPage() {
     <div className="mx-auto max-w-3xl space-y-6 px-4 py-10">
       <PageHeader
         title="Invite patients"
-        description="Patients never pay for EyeQ. Share your practice portal link — emails must not include PHI (no diagnoses, DOB, or chart details)."
+        description="Patients never pay for EyeQ. Share your practice portal link: emails must not include PHI (no diagnoses, DOB, or chart details)."
       />
       <div className="space-y-3 rounded-xl border bg-card p-6 text-sm text-muted-foreground">
         <p>
@@ -35,7 +35,7 @@ export default async function OnboardingPatientsPage() {
       </div>
       <div className="flex gap-3">
         <Link href="/provider/dashboard" className={buttonVariants()}>
-          Finish — dashboard
+          Finish: dashboard
         </Link>
         <Link href="/provider/settings/billing" className={buttonVariants({ variant: 'outline' })}>
           Billing settings

@@ -164,7 +164,7 @@ export default async function TimelineIntelligencePage({
                 lifestyle considerations, communication preferences.
               </li>
               <li>
-                <strong>Follow-up Risk</strong>, a heuristic 0–100 score with
+                <strong>Follow-up Risk</strong>, a heuristic 0-100 score with
                 full transparency about which factors moved the needle.
               </li>
               <li>

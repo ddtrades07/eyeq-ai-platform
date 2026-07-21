@@ -33,7 +33,7 @@ export const startPracticeCheckout = action({
 
     const plan = input.plan as SaasPlanId;
     if (plan === 'ENTERPRISE' || plan === 'PILOT') {
-      throw new Error('This plan requires contacting EyeQ — use /contact instead of Checkout.');
+      throw new Error('This plan requires contacting EyeQ: use /contact instead of Checkout.');
     }
 
     const org = await db.organization.findUniqueOrThrow({

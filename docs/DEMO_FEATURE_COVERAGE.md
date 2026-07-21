@@ -11,14 +11,14 @@ Maps Live Demo surfaces to readiness for public optometrist demos (synthetic dat
 | Rx (glasses + CL) | Yes | Step 5 | Via chart | Unsigned Rx | Yes | Portal approved only |
 | Imaging | Yes | Step 6 | Yes | Imaging queue | Yes | Provider review |
 | AI Image Analysis | Yes | Step 7 | Via imaging | AI queue | Yes | Provider-review only |
-| Eye Health Library | Yes | Step 8 | Yes | — | Yes | Practice-approved |
-| Patient portal | Yes | Step 9 | Patient nav | — | Yes | No live PHI |
+| Eye Health Library | Yes | Step 8 | Yes |: | Yes | Practice-approved |
+| Patient portal | Yes | Step 9 | Patient nav |: | Yes | No live PHI |
 | Secure messages | Yes | Step 10 | Yes | Messages card | Yes | Org-scoped |
 | Google Reviews / Reputation | Yes | Step 11 | Reputation section | Reputation card | Yes | DEMO_PUBLISHED |
 | Optical / inventory | Yes | Step 12 | Yes | Practice health | Yes | Synthetic |
 | Billing drafts | Yes | Step 13 | Yes | Invoices | Yes | No fake payer success |
 | PHI / vendor readiness | Yes | Step 14 | Settings | Launch (owner) | N/A | Fail-closed |
-| Audit / support | Yes | Step 15 | Yes | — | Ticket seeded | Demo ticket |
+| Audit / support | Yes | Step 15 | Yes |: | Ticket seeded | Demo ticket |
 
 ## Reputation detail
 

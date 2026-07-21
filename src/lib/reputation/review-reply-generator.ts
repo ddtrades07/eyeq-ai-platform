@@ -26,9 +26,9 @@ function templateReply(args: {
     return `Thank you, ${name}, for sharing your experience with ${practice}! We are glad our team could care for your vision. We look forward to seeing you again.`;
   }
   if (args.starRating === 3) {
-    return `Thank you for your feedback, ${name}. We appreciate you taking the time to review ${practice}. We would welcome the chance to learn more about your visit — please contact our office when convenient.`;
+    return `Thank you for your feedback, ${name}. We appreciate you taking the time to review ${practice}. We would welcome the chance to learn more about your visit: please contact our office when convenient.`;
   }
-  return `We are sorry your experience at ${practice} did not meet your expectations, ${name}. Your feedback helps us improve. A member of our team would like to follow up with you personally — please call our office at your convenience.`;
+  return `We are sorry your experience at ${practice} did not meet your expectations, ${name}. Your feedback helps us improve. A member of our team would like to follow up with you personally: please call our office at your convenience.`;
 }
 
 export async function generateReviewReplyDraft(args: {

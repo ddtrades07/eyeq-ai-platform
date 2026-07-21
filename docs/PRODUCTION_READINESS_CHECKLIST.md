@@ -1,4 +1,4 @@
-# EyeQ AI — Production Readiness Checklist
+# EyeQ AI. Production Readiness Checklist
 
 **Date:** July 6, 2026  
 **Use:** Sign off before pilot with **real PHI** or paid production tenant  
@@ -126,7 +126,7 @@
 
 ---
 
-## 9. Legal & organizational (P0 — customer)
+## 9. Legal & organizational (P0: customer)
 
 | # | Item | Status | Notes |
 |---|------|--------|-------|

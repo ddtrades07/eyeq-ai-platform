@@ -1,4 +1,4 @@
-# EyeQ AI — Integration Status
+# EyeQ AI. Integration Status
 
 **Date:** July 14, 2026  
 **Rule:** An integration is only **Connected** if it actually connects. Simulated, demo, and placeholder paths must not be marketed as live.
@@ -33,20 +33,20 @@
 | Twilio SMS | Adapter | Credentials Required | Real outbound | BAA; STOP/callbacks missing |
 | SendGrid email | Adapter | Credentials Required | Real outbound | BAA; bounce handling missing |
 | Stripe Checkout | Adapter + webhook | Credentials Required | Real Checkout | Ledger + idempotency incomplete |
-| Stripe refunds/disputes | — | Planned | Missing | |
+| Stripe refunds/disputes |: | Planned | Missing | |
 | Clearinghouse claims | Stub | Sandbox | Simulated `STUB-*` | Vendor contracting |
 | Eligibility 270/271 | Stub returns unknown | Planned / misleading UI | Simulated | Vendor + data model |
-| ERA 835 | — | Planned | Missing | Manual EOB only |
-| e-Prescribing | — | Planned | Missing | Surescripts / EPCS contracting |
+| ERA 835 |: | Planned | Missing | Manual EOB only |
+| e-Prescribing |: | Planned | Missing | Surescripts / EPCS contracting |
 | Google Business Profile | Stub/demo | Sandbox | Simulated reviews/publish | OAuth; fix false PUBLISHED |
 | RevolutionEHR | Connector shell | Sandbox / Planned | Placeholder / partial | Vendor DUA + API |
 | OfficeMate / Eyefinity / Epic / etc. | Catalog cards | Planned | Placeholder | Vendor contracting |
 | FHIR R4 Patient inbound | Partial | Sandbox capable | Partial real HTTP | SSRF allowlist; no fake DOB |
-| HL7 / MLLP devices | — | Planned | Missing | |
-| DICOM / PACS / MWL | — | Planned | Missing | MIME only today |
-| Optical lab EDI | — | Planned | Missing | Manual order tracker only |
-| QuickBooks | — | Planned | Missing | |
-| Calendar (Google/Microsoft) | — | Planned | Missing | |
+| HL7 / MLLP devices |: | Planned | Missing | |
+| DICOM / PACS / MWL |: | Planned | Missing | MIME only today |
+| Optical lab EDI |: | Planned | Missing | Manual order tracker only |
+| QuickBooks |: | Planned | Missing | |
+| Calendar (Google/Microsoft) |: | Planned | Missing | |
 | Sentry / OTel | Documented | Planned | Missing implementation | |
 | External audit webhook | Optional sink | Credentials Required | Partial | Timeout/retry |
 | Job cron runner | HTTP endpoint | Disabled / Error-prone | Real queue, weak ops | Secret required; no DLQ |

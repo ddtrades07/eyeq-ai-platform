@@ -2,7 +2,7 @@ import Link from 'next/link';
 import type { LucideIcon } from 'lucide-react';
 import { MetricCard } from '@/components/dashboard/metric-card';
 
-/** @deprecated Prefer MetricCard — kept for existing imports. */
+/** @deprecated Prefer MetricCard: kept for existing imports. */
 export function StatCard(props: {
   label: string;
   value: number | string;

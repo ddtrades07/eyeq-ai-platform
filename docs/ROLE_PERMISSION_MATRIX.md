@@ -1,9 +1,9 @@
-# EyeQ AI — Role Permission Matrix
+# EyeQ AI. Role Permission Matrix
 
 **Date:** July 6, 2026  
-**Source of truth:** `src/lib/auth/rbac.ts` — `PERMISSIONS` and `ROLE_PERMISSIONS`
+**Source of truth:** `src/lib/auth/rbac.ts`: `PERMISSIONS` and `ROLE_PERMISSIONS`
 
-**Legend:** ✅ = granted · — = denied
+**Legend:** ✅ = granted ·: = denied
 
 ---
 
@@ -30,12 +30,12 @@
 
 | Permission | OWNER | ADMIN | MANAGER | OPT | MD | RES | TECH | FD | OPTICAL | SCRIBE | BILL | PAT |
 |------------|:-----:|:-----:|:-------:|:---:|:--:|:---:|:----:|:--:|:-------:|:------:|:----:|:---:|
-| org:manage | ✅ | ✅ | — | — | — | — | — | — | — | — | — | — |
-| org:read | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | — |
-| users:manage | ✅ | ✅ | — | — | — | — | — | — | — | — | — | — |
-| audit:read | ✅ | ✅ | — | — | — | — | — | — | — | — | — | — |
-| finance:read | ✅ | ✅ | — | — | — | — | — | — | — | — | — | — |
-| i18n:manage | ✅ | ✅ | — | — | — | — | — | — | — | — | — | — |
+| org:manage | ✅ | ✅ |: |: |: |: |: |: |: |: |: |: |
+| org:read | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |: |
+| users:manage | ✅ | ✅ |: |: |: |: |: |: |: |: |: |: |
+| audit:read | ✅ | ✅ |: |: |: |: |: |: |: |: |: |: |
+| finance:read | ✅ | ✅ |: |: |: |: |: |: |: |: |: |: |
+| i18n:manage | ✅ | ✅ |: |: |: |: |: |: |: |: |: |: |
 
 ---
 
@@ -43,11 +43,11 @@
 
 | Permission | OWNER | ADMIN | MANAGER | OPT | MD | RES | TECH | FD | OPTICAL | SCRIBE | BILL | PAT |
 |------------|:-----:|:-----:|:-------:|:---:|:--:|:---:|:----:|:--:|:-------:|:------:|:----:|:---:|
-| appointments:read | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | — |
-| appointments:create | ✅ | ✅ | ✅ | — | — | — | — | ✅ | — | — | — | — |
-| appointments:update | ✅ | ✅ | ✅ | ✅ | ✅ | — | — | ✅ | — | — | — | — |
-| appointments:delete | ✅ | ✅ | — | — | — | — | — | — | — | — | — | — |
-| appointments:status | ✅ | ✅ | ✅ | ✅ | ✅ | — | ✅ | ✅ | ✅ | — | — | — |
+| appointments:read | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |: |
+| appointments:create | ✅ | ✅ | ✅ |: |: |: |: | ✅ |: |: |: |: |
+| appointments:update | ✅ | ✅ | ✅ | ✅ | ✅ |: |: | ✅ |: |: |: |: |
+| appointments:delete | ✅ | ✅ |: |: |: |: |: |: |: |: |: |: |
+| appointments:status | ✅ | ✅ | ✅ | ✅ | ✅ |: | ✅ | ✅ | ✅ |: |: |: |
 
 ---
 
@@ -55,11 +55,11 @@
 
 | Permission | OWNER | ADMIN | MANAGER | OPT | MD | RES | TECH | FD | OPTICAL | SCRIBE | BILL | PAT |
 |------------|:-----:|:-----:|:-------:|:---:|:--:|:---:|:----:|:--:|:-------:|:------:|:----:|:---:|
-| patients:read | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | — |
-| patients:create | ✅ | ✅ | ✅ | — | — | — | — | ✅ | — | — | — | — |
-| patients:update | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | — | — | — | — |
-| patients:delete | ✅ | ✅ | — | — | — | — | — | — | — | — | — | — |
-| portal:self | — | — | — | — | — | — | — | — | — | — | — | ✅ |
+| patients:read | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |: |
+| patients:create | ✅ | ✅ | ✅ |: |: |: |: | ✅ |: |: |: |: |
+| patients:update | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |: |: |: |: |
+| patients:delete | ✅ | ✅ |: |: |: |: |: |: |: |: |: |: |
+| portal:self |: |: |: |: |: |: |: |: |: |: |: | ✅ |
 
 ---
 
@@ -67,9 +67,9 @@
 
 | Permission | OWNER | ADMIN | MANAGER | OPT | MD | RES | TECH | FD | OPTICAL | SCRIBE | BILL | PAT |
 |------------|:-----:|:-----:|:-------:|:---:|:--:|:---:|:----:|:--:|:-------:|:------:|:----:|:---:|
-| notes:read | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | — | — | ✅ | — | — |
-| notes:write | ✅ | — | — | ✅ | ✅ | ✅ | ✅ | — | — | ✅ | — | — |
-| notes:sign | ✅ | — | — | ✅ | ✅ | — | — | — | — | — | — | — |
+| notes:read | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |: |: | ✅ |: |: |
+| notes:write | ✅ |: |: | ✅ | ✅ | ✅ | ✅ |: |: | ✅ |: |: |
+| notes:sign | ✅ |: |: | ✅ | ✅ |: |: |: |: |: |: |: |
 
 ---
 
@@ -77,9 +77,9 @@
 
 | Permission | OWNER | ADMIN | MANAGER | OPT | MD | RES | TECH | FD | OPTICAL | SCRIBE | BILL | PAT |
 |------------|:-----:|:-----:|:-------:|:---:|:--:|:---:|:----:|:--:|:-------:|:------:|:----:|:---:|
-| imaging:read | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | — | — | ✅ | — | — |
-| imaging:upload | ✅ | — | — | — | — | — | ✅ | — | — | — | — | — |
-| imaging:review | ✅ | — | — | ✅ | ✅ | — | — | — | — | — | — | — |
+| imaging:read | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |: |: | ✅ |: |: |
+| imaging:upload | ✅ |: |: |: |: |: | ✅ |: |: |: |: |: |
+| imaging:review | ✅ |: |: | ✅ | ✅ |: |: |: |: |: |: |: |
 
 ---
 
@@ -87,8 +87,8 @@
 
 | Permission | OWNER | ADMIN | MANAGER | OPT | MD | RES | TECH | FD | OPTICAL | SCRIBE | BILL | PAT |
 |------------|:-----:|:-----:|:-------:|:---:|:--:|:---:|:----:|:--:|:-------:|:------:|:----:|:---:|
-| rx:read | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | — | ✅ | — | — | — |
-| rx:write | ✅ | — | — | ✅ | ✅ | — | — | — | — | — | — | — |
+| rx:read | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |: | ✅ |: |: |: |
+| rx:write | ✅ |: |: | ✅ | ✅ |: |: |: |: |: |: |: |
 
 ---
 
@@ -96,8 +96,8 @@
 
 | Permission | OWNER | ADMIN | MANAGER | OPT | MD | RES | TECH | FD | OPTICAL | SCRIBE | BILL | PAT |
 |------------|:-----:|:-----:|:-------:|:---:|:--:|:---:|:----:|:--:|:-------:|:------:|:----:|:---:|
-| caregaps:read | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | — | — | — |
-| caregaps:manage | ✅ | ✅ | ✅ | ✅ | ✅ | — | — | ✅ | — | — | — | — |
+| caregaps:read | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |: |: |: |
+| caregaps:manage | ✅ | ✅ | ✅ | ✅ | ✅ |: |: | ✅ |: |: |: |: |
 
 ---
 
@@ -105,9 +105,9 @@
 
 | Permission | OWNER | ADMIN | MANAGER | OPT | MD | RES | TECH | FD | OPTICAL | SCRIBE | BILL | PAT |
 |------------|:-----:|:-----:|:-------:|:---:|:--:|:---:|:----:|:--:|:-------:|:------:|:----:|:---:|
-| messages:read | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | — |
-| messages:send | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | — | ✅ | ✅ | — | ✅ | — |
-| messages:internal | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | — | — | ✅ | — | — |
+| messages:read | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |: |
+| messages:send | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |: | ✅ | ✅ |: | ✅ |: |
+| messages:internal | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |: |: | ✅ |: |: |
 
 ---
 
@@ -115,10 +115,10 @@
 
 | Permission | OWNER | ADMIN | MANAGER | OPT | MD | RES | TECH | FD | OPTICAL | SCRIBE | BILL | PAT |
 |------------|:-----:|:-----:|:-------:|:---:|:--:|:---:|:----:|:--:|:-------:|:------:|:----:|:---:|
-| templates:read | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | — | — | ✅ | — | — |
-| templates:manage | ✅ | ✅ | — | ✅ | — | — | — | — | — | — | — | — |
-| ehr:read | ✅ | ✅ | — | — | — | — | — | — | — | — | — | — |
-| ehr:manage | ✅ | ✅ | — | — | — | — | — | — | — | — | — | — |
+| templates:read | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |: |: | ✅ |: |: |
+| templates:manage | ✅ | ✅ |: | ✅ |: |: |: |: |: |: |: |: |
+| ehr:read | ✅ | ✅ |: |: |: |: |: |: |: |: |: |: |
+| ehr:manage | ✅ | ✅ |: |: |: |: |: |: |: |: |: |: |
 
 ---
 
@@ -126,9 +126,9 @@
 
 | Permission | OWNER | ADMIN | MANAGER | OPT | MD | RES | TECH | FD | OPTICAL | SCRIBE | BILL | PAT |
 |------------|:-----:|:-----:|:-------:|:---:|:--:|:---:|:----:|:--:|:-------:|:------:|:----:|:---:|
-| inventory:read | ✅ | ✅ | ✅ | ✅ | ✅ | — | ✅ | — | ✅ | — | — | — |
-| inventory:adjust | ✅ | ✅ | ✅ | — | — | — | ✅ | — | ✅ | — | — | — |
-| inventory:manage | ✅ | ✅ | — | — | — | — | — | — | ✅ | — | — | — |
+| inventory:read | ✅ | ✅ | ✅ | ✅ | ✅ |: | ✅ |: | ✅ |: |: |: |
+| inventory:adjust | ✅ | ✅ | ✅ |: |: |: | ✅ |: | ✅ |: |: |: |
+| inventory:manage | ✅ | ✅ |: |: |: |: |: |: | ✅ |: |: |: |
 
 ---
 
@@ -136,9 +136,9 @@
 
 | Permission | OWNER | ADMIN | MANAGER | OPT | MD | RES | TECH | FD | OPTICAL | SCRIBE | BILL | PAT |
 |------------|:-----:|:-----:|:-------:|:---:|:--:|:---:|:----:|:--:|:-------:|:------:|:----:|:---:|
-| billing:read | ✅ | ✅ | — | — | — | — | — | — | — | — | ✅ | — |
-| billing:manage | ✅ | ✅ | — | — | — | — | — | — | — | — | ✅ | — |
-| forms:manage | ✅ | ✅ | — | — | — | — | — | ✅ | — | — | — | — |
+| billing:read | ✅ | ✅ |: |: |: |: |: |: |: |: | ✅ |: |
+| billing:manage | ✅ | ✅ |: |: |: |: |: |: |: |: | ✅ |: |
+| forms:manage | ✅ | ✅ |: |: |: |: |: | ✅ |: |: |: |: |
 
 ---
 
@@ -146,13 +146,13 @@
 
 | Permission | OWNER | ADMIN | MANAGER | OPT | MD | RES | TECH | FD | OPTICAL | SCRIBE | BILL | PAT |
 |------------|:-----:|:-----:|:-------:|:---:|:--:|:---:|:----:|:--:|:-------:|:------:|:----:|:---:|
-| scribe:use | ✅ | — | — | ✅ | ✅ | ✅ | — | — | — | ✅ | — | — |
-| ai:use | ✅ | ✅ | — | ✅ | ✅ | ✅ | ✅ | — | — | ✅ | — | ✅ |
-| ai:clinical | ✅ | — | — | ✅ | ✅ | ✅ | — | — | — | ✅ | — | — |
-| ai:configure | ✅ | ✅ | — | — | — | — | — | — | — | — | — | — |
-| ai:approve | ✅ | — | — | ✅ | ✅ | — | — | — | — | — | — | — |
+| scribe:use | ✅ |: |: | ✅ | ✅ | ✅ |: |: |: | ✅ |: |: |
+| ai:use | ✅ | ✅ |: | ✅ | ✅ | ✅ | ✅ |: |: | ✅ |: | ✅ |
+| ai:clinical | ✅ |: |: | ✅ | ✅ | ✅ |: |: |: | ✅ |: |: |
+| ai:configure | ✅ | ✅ |: |: |: |: |: |: |: |: |: |: |
+| ai:approve | ✅ |: |: | ✅ | ✅ |: |: |: |: |: |: |: |
 
-> **Note:** `canApproveAIOutput()` requires `notes:sign` OR `imaging:review` — so ADMIN cannot approve clinical AI output despite `ai:configure`.
+> **Note:** `canApproveAIOutput()` requires `notes:sign` OR `imaging:review`: so ADMIN cannot approve clinical AI output despite `ai:configure`.
 
 ---
 
@@ -160,9 +160,9 @@
 
 | Permission | OWNER | ADMIN | MANAGER | OPT | MD | RES | TECH | FD | OPTICAL | SCRIBE | BILL | PAT |
 |------------|:-----:|:-----:|:-------:|:---:|:--:|:---:|:----:|:--:|:-------:|:------:|:----:|:---:|
-| reminders:read | ✅ | ✅ | ✅ | ✅ | ✅ | — | — | ✅ | — | — | — | — |
-| reminders:manage | ✅ | ✅ | ✅ | — | — | — | — | ✅ | — | — | — | — |
-| reminders:approve | ✅ | ✅ | — | — | — | — | — | — | — | — | — | — |
+| reminders:read | ✅ | ✅ | ✅ | ✅ | ✅ |: |: | ✅ |: |: |: |: |
+| reminders:manage | ✅ | ✅ | ✅ |: |: |: |: | ✅ |: |: |: |: |
+| reminders:approve | ✅ | ✅ |: |: |: |: |: |: |: |: |: |: |
 
 ---
 
@@ -170,8 +170,8 @@
 
 | Permission | OWNER | ADMIN | MANAGER | OPT | MD | RES | TECH | FD | OPTICAL | SCRIBE | BILL | PAT |
 |------------|:-----:|:-----:|:-------:|:---:|:--:|:---:|:----:|:--:|:-------:|:------:|:----:|:---:|
-| intelligence:read | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | — | — | — | — |
-| intelligence:practice | ✅ | ✅ | ✅ | — | — | — | — | — | — | — | — | — |
+| intelligence:read | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ | ✅ |: |: |: |: |
+| intelligence:practice | ✅ | ✅ | ✅ |: |: |: |: |: |: |: |: |: |
 
 ---
 

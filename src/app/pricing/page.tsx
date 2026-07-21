@@ -11,8 +11,9 @@ import { publicLiveDemoHref } from '@/lib/demo/public-demo-href';
 import { LandingNav } from '@/components/landing/landing-nav';
 
 export const metadata = {
-  title: 'Pricing · EyeQ AI',
-  description: 'Practice membership plans. Patients never pay. Live Demo is free.',
+  title: 'Membership · EyeQ AI',
+  description:
+    'For practice owners only. Patients do not pay for EyeQ access. Live Demo is free.',
 };
 
 export default function PricingPage() {
@@ -24,8 +25,11 @@ export default function PricingPage() {
       <main className="mx-auto max-w-6xl px-5 py-16 lg:px-8">
         <p className="text-sm font-medium text-landing-teal">Practice membership</p>
         <h1 className="landing-display mt-3 text-4xl font-semibold tracking-tight sm:text-5xl">
-          Plans for practices — patients never pay.
+          Plans for practices. Patients never pay.
         </h1>
+        <p className="mt-4 max-w-2xl rounded-xl border border-landing-teal/25 bg-landing-teal/5 px-4 py-3 text-sm font-medium text-landing-navy">
+          For practice owners only. Patients do not pay for EyeQ access.
+        </p>
         <p className="mt-4 max-w-2xl text-lg text-landing-muted">
           Owners subscribe for the organization. Live Demo stays free with synthetic data and no
           Checkout. Display prices are informational; activation happens only after verified Stripe
@@ -91,7 +95,7 @@ export default function PricingPage() {
             <div>
               <p className="font-semibold text-landing-navy">Live Demo is free</p>
               <p className="mt-1 text-sm text-landing-muted">
-                Explore as owner, provider, staff, or patient — no payment, no live PHI.
+                Explore as owner, provider, staff, or patient: no payment, no live PHI.
               </p>
             </div>
             <Link

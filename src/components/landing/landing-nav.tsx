@@ -8,10 +8,10 @@ import { cn } from '@/lib/utils';
 
 const NAV_LINKS = [
   { href: '#features', label: 'Features' },
-  { href: '#ai-safety', label: 'AI Safety' },
-  { href: '#for-patients', label: 'For Patients' },
-  { href: '/pricing', label: 'Pricing' },
-  { href: '#trust', label: 'Trust' },
+  { href: '/demo', label: 'Live Demo', isDemo: true },
+  { href: '#for-practices', label: 'For Practices' },
+  { href: '/login?next=/portal', label: 'Patient Login' },
+  { href: '/login', label: 'Staff Login' },
 ] as const;
 
 export function LandingNav({ liveDemoHref = '/demo' }: { liveDemoHref?: string }) {
@@ -25,6 +25,9 @@ export function LandingNav({ liveDemoHref = '/demo' }: { liveDemoHref?: string }
     window.addEventListener('keydown', onKey);
     return () => window.removeEventListener('keydown', onKey);
   }, [open]);
+
+  const resolveHref = (link: (typeof NAV_LINKS)[number]) =>
+    'isDemo' in link && link.isDemo ? liveDemoHref : link.href;
 
   return (
     <header className="sticky top-0 z-50 border-b border-landing-border/60 bg-landing-bg/90 backdrop-blur-md">
@@ -40,25 +43,30 @@ export function LandingNav({ liveDemoHref = '/demo' }: { liveDemoHref?: string }
         </Link>
 
         <nav className="hidden items-center gap-1 lg:flex" aria-label="Main">
-          {NAV_LINKS.map((link) =>
-            link.href.startsWith('/') ? (
+          {NAV_LINKS.map((link) => {
+            const href = resolveHref(link);
+            const isHash = href.startsWith('#');
+            if (isHash) {
+              return (
+                <a
+                  key={link.label}
+                  href={href}
+                  className="rounded-md px-3 py-2 text-sm text-landing-muted transition-colors hover:bg-landing-sand/40 hover:text-landing-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-landing-teal"
+                >
+                  {link.label}
+                </a>
+              );
+            }
+            return (
               <Link
-                key={link.href}
-                href={link.href}
+                key={link.label}
+                href={href}
                 className="rounded-md px-3 py-2 text-sm text-landing-muted transition-colors hover:bg-landing-sand/40 hover:text-landing-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-landing-teal"
               >
                 {link.label}
               </Link>
-            ) : (
-              <a
-                key={link.href}
-                href={link.href}
-                className="rounded-md px-3 py-2 text-sm text-landing-muted transition-colors hover:bg-landing-sand/40 hover:text-landing-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-landing-teal"
-              >
-                {link.label}
-              </a>
-            ),
-          )}
+            );
+          })}
         </nav>
 
         <div className="hidden items-center gap-2 lg:flex">
@@ -72,17 +80,11 @@ export function LandingNav({ liveDemoHref = '/demo' }: { liveDemoHref?: string }
             <Sparkles className="h-3.5 w-3.5" aria-hidden />
             Live Demo
           </Link>
-          <Link href="/login?next=/portal" className={cn(buttonVariants({ variant: 'ghost', size: 'sm' }), 'text-landing-navy')}>
-            Patient Portal
-          </Link>
-          <Link href="/login" className={cn(buttonVariants({ variant: 'outline', size: 'sm' }), 'border-landing-border text-landing-navy')}>
-            Practice Sign In
-          </Link>
           <Link
-            href="/contact"
+            href="/signup/practice"
             className={cn(buttonVariants({ size: 'sm' }), 'bg-landing-navy text-white hover:bg-landing-navy/90')}
           >
-            Meet EyeQ
+            Start Practice Setup
           </Link>
         </div>
 
@@ -101,27 +103,39 @@ export function LandingNav({ liveDemoHref = '/demo' }: { liveDemoHref?: string }
       {open ? (
         <nav id="mobile-nav" className="border-t border-landing-border/60 bg-landing-bg px-5 py-4 lg:hidden" aria-label="Mobile">
           <ul className="space-y-1">
-            {NAV_LINKS.map((link) => (
-              <li key={link.href}>
-                {link.href.startsWith('/') ? (
-                  <Link
-                    href={link.href}
-                    className="block rounded-md px-3 py-2.5 text-sm font-medium text-landing-navy"
-                    onClick={() => setOpen(false)}
-                  >
-                    {link.label}
-                  </Link>
-                ) : (
-                  <a
-                    href={link.href}
-                    className="block rounded-md px-3 py-2.5 text-sm font-medium text-landing-navy"
-                    onClick={() => setOpen(false)}
-                  >
-                    {link.label}
-                  </a>
-                )}
-              </li>
-            ))}
+            {NAV_LINKS.map((link) => {
+              const href = resolveHref(link);
+              return (
+                <li key={link.label}>
+                  {href.startsWith('#') ? (
+                    <a
+                      href={href}
+                      className="block rounded-md px-3 py-2.5 text-sm font-medium text-landing-navy"
+                      onClick={() => setOpen(false)}
+                    >
+                      {link.label}
+                    </a>
+                  ) : (
+                    <Link
+                      href={href}
+                      className="block rounded-md px-3 py-2.5 text-sm font-medium text-landing-navy"
+                      onClick={() => setOpen(false)}
+                    >
+                      {link.label}
+                    </Link>
+                  )}
+                </li>
+              );
+            })}
+            <li>
+              <Link
+                href="/pricing"
+                className="block rounded-md px-3 py-2.5 text-sm text-landing-muted"
+                onClick={() => setOpen(false)}
+              >
+                Membership (practice owners)
+              </Link>
+            </li>
           </ul>
           <div className="mt-4 flex flex-col gap-2 border-t border-landing-border/60 pt-4">
             <Button asChild className="w-full bg-landing-teal hover:bg-landing-teal/90">
@@ -130,19 +144,9 @@ export function LandingNav({ liveDemoHref = '/demo' }: { liveDemoHref?: string }
                 Live Demo
               </Link>
             </Button>
-            <Button asChild variant="outline" className="w-full border-landing-border">
-              <Link href="/login?next=/portal" onClick={() => setOpen(false)}>
-                Patient Portal
-              </Link>
-            </Button>
-            <Button asChild variant="outline" className="w-full border-landing-border">
-              <Link href="/login" onClick={() => setOpen(false)}>
-                Practice Sign In
-              </Link>
-            </Button>
             <Button asChild className="w-full bg-landing-navy hover:bg-landing-navy/90">
-              <Link href="/contact" onClick={() => setOpen(false)}>
-                Meet EyeQ
+              <Link href="/signup/practice" onClick={() => setOpen(false)}>
+                Start Practice Setup
               </Link>
             </Button>
           </div>

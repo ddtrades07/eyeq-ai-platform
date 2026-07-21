@@ -178,7 +178,7 @@ export default async function AppointmentsPage({
                           <EncounterStatusBadge status={appt.encounter.status} />
                         </Link>
                       ) : (
-                        <span className="text-xs text-muted-foreground">—</span>
+                        <span className="text-xs text-muted-foreground">: </span>
                       )}
                     </TableCell>
                     <TableCell className="text-right">

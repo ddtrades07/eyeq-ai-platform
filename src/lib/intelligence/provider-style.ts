@@ -4,8 +4,8 @@ import { db } from '@/lib/db';
 /**
  * Provider Personalization (placeholder)
  * -------------------------------------------------------
- * Eventually this will learn each provider's documentation style —
- * preferred wording, common templates, follow-up intervals, etc. —
+ * Eventually this will learn each provider's documentation style ,
+ * preferred wording, common templates, follow-up intervals, etc. ,
  * and feed it into scribe and template defaults so the EHR feels like
  * it was built around how *this* provider already works.
  *
@@ -13,7 +13,7 @@ import { db } from '@/lib/db';
  * on the provider's actual chart history, so the UI can show real
  * signal without an external model.
  *
- * Safety: this layer never produces a diagnosis or clinical decision —
+ * Safety: this layer never produces a diagnosis or clinical decision ,
  * it only describes style preferences (verbosity, common phrases,
  * preferred follow-up intervals).
  */

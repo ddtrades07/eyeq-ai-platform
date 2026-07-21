@@ -39,7 +39,7 @@ export function evaluateSubscriptionAccess(
       productionWorkflowsAllowed: true,
       expansionAllowed: true,
       showBillingWarning: false,
-      reason: 'Demo organization — payment not required',
+      reason: 'Demo organization: payment not required',
       status: 'DEMO',
       inGracePeriod: false,
     };
@@ -50,7 +50,7 @@ export function evaluateSubscriptionAccess(
       productionWorkflowsAllowed: false,
       expansionAllowed: false,
       showBillingWarning: true,
-      reason: 'No subscription — select a plan to activate the practice',
+      reason: 'No subscription: select a plan to activate the practice',
       status: 'MISSING',
       inGracePeriod: false,
     };
@@ -91,8 +91,8 @@ export function evaluateSubscriptionAccess(
       expansionAllowed: inGrace,
       showBillingWarning: true,
       reason: inGrace
-        ? 'Payment past due — update billing during grace period'
-        : 'Payment past due — new invites and locations are paused',
+        ? 'Payment past due: update billing during grace period'
+        : 'Payment past due: new invites and locations are paused',
       status,
       inGracePeriod: inGrace,
     };
@@ -105,8 +105,8 @@ export function evaluateSubscriptionAccess(
     showBillingWarning: true,
     reason:
       status === 'CANCELLED'
-        ? 'Subscription cancelled — renew to expand the practice'
-        : 'Subscription inactive — complete Checkout or request a pilot',
+        ? 'Subscription cancelled: renew to expand the practice'
+        : 'Subscription inactive: complete Checkout or request a pilot',
     status,
     inGracePeriod: false,
   };
@@ -140,7 +140,7 @@ export async function assertExpansionAllowed(organizationId: string): Promise<vo
   }
 }
 
-/** Soft check used by UI banners — never throws. */
+/** Soft check used by UI banners: never throws. */
 export async function getBillingWarning(organizationId: string) {
   const { access, sub } = await getOrganizationSubscriptionAccess(organizationId);
   if (!access.showBillingWarning) return null;

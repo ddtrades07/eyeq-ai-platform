@@ -208,7 +208,7 @@ async function loadCommandCenterUncached(
     .filter((t) => t.type === 'WALK_IN')
     .reduce((sum, t) => sum + t._count._all, 0);
 
-  // Secondary widgets — fail soft independently
+  // Secondary widgets: fail soft independently
   const secondary = await Promise.allSettled([
     db.appointmentRequest.count({ where: { organizationId, status: 'PENDING' } }),
     db.reminderCampaign.count({
@@ -549,7 +549,7 @@ async function loadCommandCenterUncached(
   };
 }
 
-/** Premium command-center metrics — short-lived cache, org+location scoped (counts only). */
+/** Premium command-center metrics: short-lived cache, org+location scoped (counts only). */
 export async function getCommandCenterData(
   organizationId: string,
   locationId: string | null | undefined,

@@ -24,7 +24,7 @@ export function resolveAiRuntimeState(): AiRuntimeState {
       return {
         status: 'disabled',
         provider: null,
-        label: 'Not configured — production PHI AI requires AI_MODE=openai and OPENAI_API_KEY',
+        label: 'Not configured: production PHI AI requires AI_MODE=openai and OPENAI_API_KEY',
       };
     }
     return { status: 'openai', provider: openaiProvider, label: 'OpenAI (production)' };
@@ -46,7 +46,7 @@ export function resolveAiRuntimeState(): AiRuntimeState {
     return {
       status: 'demo_mock',
       provider: mockAIProvider,
-      label: 'Demo mock — not a clinical AI provider',
+      label: 'Demo mock: not a clinical AI provider',
     };
   }
 
@@ -69,8 +69,8 @@ export function getAIProvider(): AIProvider {
   // callers should still treat as non-clinical via resolveAiRuntimeState.
   if (serverEnv.demoModeEnabled) return mockAIProvider;
 
-  // Disabled: still return mock for type stability, but status is disabled
-  // — feature UIs must check resolveAiRuntimeState().
+  // Disabled: still return mock for type stability, but status is disabled.
+  // Feature UIs must check resolveAiRuntimeState().
   return mockAIProvider;
 }
 

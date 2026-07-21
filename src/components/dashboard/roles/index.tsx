@@ -88,7 +88,7 @@ function aiInsightItems(aiQueue: AiReviewQueue, stats: DashboardStats) {
     {
       id: 'high-risk',
       title: 'Priority imaging flags',
-      detail: 'Elevated review priority based on case metadata — confirm clinically.',
+      detail: 'Elevated review priority based on case metadata: confirm clinically.',
       href: '/provider/imaging',
       count: aiQueue.highRiskImaging,
     },

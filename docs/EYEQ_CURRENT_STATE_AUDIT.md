@@ -1,14 +1,14 @@
-# EyeQ AI — Current State Audit
+# EyeQ AI. Current State Audit
 
 **Date:** July 6, 2026  
-**Scope:** Full codebase review — `eyeq-ai-platform/` (Next.js 15 App Router, Prisma 6, Supabase Auth/Storage)  
+**Scope:** Full codebase review: `eyeq-ai-platform/` (Next.js 15 App Router, Prisma 6, Supabase Auth/Storage)  
 **Route count:** ~82 App Router segments (54 pages, 11 API routes, loading/error layouts, auth callback, legacy redirects)
 
 ---
 
 ## Executive summary
 
-EyeQ AI is a **multi-tenant optometry platform** with a clear **provider (`/provider/*`) / patient (`/patient/*`)** split. Core clinical workflows—scheduling, patients, structured imaging review, care gaps, messaging, RBAC, and audit logging—are **implemented with real database persistence**. A new **AI Gateway** layer (PHI safety gate, tenant isolation, model routing) is in place and partially wired to the copilot.
+EyeQ AI is a **multi-tenant optometry platform** with a clear **provider (`/provider/*`) / patient (`/patient/*`)** split. Core clinical workflows: scheduling, patients, structured imaging review, care gaps, messaging, RBAC, and audit logging: are **implemented with real database persistence**. A new **AI Gateway** layer (PHI safety gate, tenant isolation, model routing) is in place and partially wired to the copilot.
 
 Several areas remain **UI-only, stubbed, or demo-seeded**: EHR connectors, ambient scribe STT, outbound SMS/email, claims/payments, and vector search. Demo mode is now **gated by `FEATURE_DEMO_MODE`** (defaults off in production).
 
@@ -71,10 +71,10 @@ Several areas remain **UI-only, stubbed, or demo-seeded**: EHR connectors, ambie
 
 | Path | Issue |
 |------|-------|
-| `/onboarding` | Referenced in `requireStaffUser()` when `organizationId` is null — **no page exists** → 404 |
-| `/forgot-password` | Listed in middleware `PUBLIC_ROUTES` — **no page** |
-| `/reset-password` | Listed in middleware `PUBLIC_ROUTES` — **no page** |
-| Legacy `/dashboard`, `/portal/*` | Redirect to `/provider/*` and `/patient/*` (308) — works |
+| `/onboarding` | Referenced in `requireStaffUser()` when `organizationId` is null: **no page exists** → 404 |
+| `/forgot-password` | Listed in middleware `PUBLIC_ROUTES`: **no page** |
+| `/reset-password` | Listed in middleware `PUBLIC_ROUTES`: **no page** |
+| Legacy `/dashboard`, `/portal/*` | Redirect to `/provider/*` and `/patient/*` (308): works |
 
 ---
 
@@ -95,13 +95,13 @@ Only **10 API routes** exist; most domains use **server actions only**:
 
 | Gap | Detail |
 |-----|--------|
-| **Staff tasks** | `createStaffTask` uses `org:read` — overly broad; no dedicated `tasks:*` permission |
+| **Staff tasks** | `createStaffTask` uses `org:read`: overly broad; no dedicated `tasks:*` permission |
 | **API routes** | Some check `isStaffRole` only, not granular permissions (e.g. imaging analyze) |
-| **Patient portal AI** | Patients have `ai:use` — gateway must restrict clinical actions (partially done) |
+| **Patient portal AI** | Patients have `ai:use`: gateway must restrict clinical actions (partially done) |
 
 ### Schema note
 
-`prisma/schema.prisma` contains a **syntax error** around lines 59–69 (orphaned `AppointmentStatus` enum values without `enum AppointmentStatus {`). Prisma generate may fail until fixed.
+`prisma/schema.prisma` contains a **syntax error** around lines 59-69 (orphaned `AppointmentStatus` enum values without `enum AppointmentStatus {`). Prisma generate may fail until fixed.
 
 ---
 
@@ -110,11 +110,11 @@ Only **10 API routes** exist; most domains use **server actions only**:
 | ID | Severity | Finding |
 |----|----------|---------|
 | SEC-01 | High | Demo mode provisions shared credentials; must stay **`FEATURE_DEMO_MODE=false`** in production PHI environments |
-| SEC-02 | High | AI PHI transmission blocked by default (`AI_ALLOW_PHI=false`) — correct; marketing must not imply cloud AI on PHI without BAA |
+| SEC-02 | High | AI PHI transmission blocked by default (`AI_ALLOW_PHI=false`): correct; marketing must not imply cloud AI on PHI without BAA |
 | SEC-03 | Medium | API routes lack permission-level checks on some endpoints |
-| SEC-04 | Medium | No Supabase RLS policies documented/enforced at DB layer — isolation relies on app code |
-| SEC-05 | Medium | `/api/admin/ai/status` — verify admin-only gate in production |
-| SEC-06 | Low | Middleware auth skipped when Supabase env missing — intentional for build preview |
+| SEC-04 | Medium | No Supabase RLS policies documented/enforced at DB layer: isolation relies on app code |
+| SEC-05 | Medium | `/api/admin/ai/status`: verify admin-only gate in production |
+| SEC-06 | Low | Middleware auth skipped when Supabase env missing: intentional for build preview |
 | SEC-07 | Low | Demo org uses predictable emails/passwords in constants |
 
 ---
@@ -151,7 +151,7 @@ Only **10 API routes** exist; most domains use **server actions only**:
 | Imaging descriptive schema | `descriptive-schema.test.ts` | ✅ 2 tests pass |
 | Image quality | `image-quality-service.test.ts` | ✅ 4 tests pass |
 | RBAC | `rbac.test.ts` | ✅ 5 tests pass |
-| PHI safety gate | `phi-safety-gate.test.ts` | ❌ Fails — `server-only` import in Vitest |
+| PHI safety gate | `phi-safety-gate.test.ts` | ❌ Fails: `server-only` import in Vitest |
 
 **Total:** 11 passing tests across 3 files; 1 suite blocked by test harness config.
 
@@ -165,7 +165,7 @@ Only **10 API routes** exist; most domains use **server actions only**:
 2. **Remove or gate** workflow builder and installation readiness until executable.
 3. **Hide EHR "Connect" buttons** until at least one real connector ships.
 4. **Rename billing pages** to "Invoices" until claims/payments exist.
-5. **Fix `/onboarding`** or remove redirect — blocking new staff signup flow.
+5. **Fix `/onboarding`** or remove redirect: blocking new staff signup flow.
 6. **Fix Prisma schema** enum syntax before next migration.
 7. **Consolidate duplicate imaging modules** to reduce maintenance drift.
 
@@ -205,7 +205,7 @@ Only **10 API routes** exist; most domains use **server actions only**:
 | `Encounter` model + actions | ✅ Done |
 | `StaffTask` model + `/provider/tasks` | ✅ Done |
 | Provider adapter interfaces (`src/lib/providers/`) | ✅ Defined; stubs for most vendors |
-| API auth tightened (staff + org checks) | ✅ Partial — not all routes use permissions |
+| API auth tightened (staff + org checks) | ✅ Partial: not all routes use permissions |
 | Demo gated (`FEATURE_DEMO_MODE`) | ✅ Done |
 | Onboarding flow for new practices | ❌ Missing page |
 | PHI test suite green | ❌ Vitest config fix needed |

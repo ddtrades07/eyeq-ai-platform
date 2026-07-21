@@ -1,4 +1,4 @@
-# EyeQ AI — Security Risk Register
+# EyeQ AI. Security Risk Register
 
 **Date:** July 6, 2026  
 **Owner:** Engineering + Security  
@@ -38,8 +38,8 @@
 | **SR-008** | Medium | `/onboarding` 404 leaves staff without org in limbo | Implement onboarding; fail closed on org assignment | Open |
 | **SR-009** | Medium | Audit log failure silent to user | stderr alert on failure; monitor `[audit] failed` | Mitigated (partial); no paging |
 | **SR-010** | Medium | AI copilot SSE without rate limits | Add per-user/org rate limits in gateway usage tracker | Open |
-| **SR-011** | Medium | Regex PHI detection misses unstructured PHI | Layer NER/classifier in gateway; block enriched context without BAA | Open (partial — gate exists) |
-| **SR-012** | Medium | Demo reset wipes data — acceptable only in demo org | Restrict reset to `DEMO_ORG_SLUG`; audit demo actions | Mitigated |
+| **SR-011** | Medium | Regex PHI detection misses unstructured PHI | Layer NER/classifier in gateway; block enriched context without BAA | Open (partial: gate exists) |
+| **SR-012** | Medium | Demo reset wipes data: acceptable only in demo org | Restrict reset to `DEMO_ORG_SLUG`; audit demo actions | Mitigated |
 | **SR-013** | Medium | Session fixation / stale sessions | Supabase SSR refresh in middleware | Mitigated |
 | **SR-014** | Medium | No MFA for staff accounts | Enable Supabase MFA; enforce for admin roles (R5) | Open |
 | **SR-015** | Medium | Password reset routes missing | Implement forgot/reset pages; remove dead PUBLIC_ROUTES or add pages | Open |
@@ -51,7 +51,7 @@
 | **SR-021** | High | Third-party subprocessors without BAA (OpenAI, Anthropic, Twilio, etc.) | Maintain subprocessor list; block features until BAA executed | Open (process) |
 | **SR-022** | Medium | SQL injection via Prisma | Parameterized queries via Prisma; validate with Zod on actions | Mitigated |
 | **SR-023** | Low | XSS in user-generated messages | React escaping; sanitize rich text if added | Mitigated (baseline) |
-| **SR-024** | Medium | Insider threat — audit log readable by ADMIN | Restrict `audit:read` to OWNER; log exports | Mitigated (RBAC) |
+| **SR-024** | Medium | Insider threat: audit log readable by ADMIN | Restrict `audit:read` to OWNER; log exports | Mitigated (RBAC) |
 | **SR-025** | Critical | Marketing claims HIPAA compliance without organizational controls | Legal review; disclaimers in UI; no compliance claims in docs | Mitigated (messaging); ongoing |
 
 ---

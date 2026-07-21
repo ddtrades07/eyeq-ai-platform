@@ -83,7 +83,7 @@ export function NewClinicalNoteDialog({
         toast.error(r.error);
         return;
       }
-      toast.success('Draft note created — not signed');
+      toast.success('Draft note created: not signed');
       setFields(empty);
       setOpen(false);
       router.refresh();

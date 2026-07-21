@@ -1,4 +1,4 @@
-# EyeQ AI — Integration Requirements
+# EyeQ AI. Integration Requirements
 
 **Date:** July 6, 2026  
 **Purpose:** Vendor options, BAA requirements, environment variables, and fallback behavior per integration category
@@ -152,7 +152,7 @@ See `ENVIRONMENT_VARIABLES.md` for full list. Critical:
 
 ## 6. Speech-to-text (ambient scribe)
 
-**Implementation:** `TranscriptionProvider` interface — **not implemented**  
+**Implementation:** `TranscriptionProvider` interface: **not implemented**  
 **Code:** `src/lib/providers/transcription.ts`
 
 | Vendor options (planned R2) | Notes |
@@ -192,7 +192,7 @@ See `ENVIRONMENT_VARIABLES.md` for full list. Critical:
 | Variable | Example |
 |----------|---------|
 | `SMS_PROVIDER` | `twilio` |
-| `TWILIO_ACCOUNT_SID` | — |
+| `TWILIO_ACCOUNT_SID` |: |
 | `TWILIO_AUTH_TOKEN` | server only |
 | `TWILIO_FROM_NUMBER` | E.164 |
 
@@ -229,7 +229,7 @@ See `ENVIRONMENT_VARIABLES.md` for full list. Critical:
 
 ## 9. Payments
 
-**Implementation:** `PaymentProvider` interface — not wired  
+**Implementation:** `PaymentProvider` interface: not wired  
 **Code:** `src/lib/providers/index.ts`
 
 | Vendor | Notes |
@@ -263,7 +263,7 @@ See `ENVIRONMENT_VARIABLES.md` for full list. Critical:
 | Crystal PM | CSV import | Placeholder |
 | Epic / Cerner / athena | FHIR / SMART | Placeholder |
 
-### Environment variables (per integration — stored in DB, not env)
+### Environment variables (per integration: stored in DB, not env)
 
 - `baseUrl`, `scopes` on `EhrIntegration` model
 - OAuth tokens **must** live in vault (not Prisma fields)

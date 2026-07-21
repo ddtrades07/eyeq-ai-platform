@@ -22,4 +22,20 @@ describe('marketing AI safety + Live Demo free', () => {
     expect(pricing).toMatch(/Live Demo is free/i);
     expect(pricing).toMatch(/Patients never pay/i);
   });
+
+  it('homepage has patient-safe path cards and no plan price preview', () => {
+    expect(landing).toMatch(/Choose how you use EyeQ/);
+    expect(landing).toMatch(/Patient Login/);
+    expect(landing).toMatch(/Staff Login/);
+    expect(landing).toMatch(/Start Practice Setup/);
+    expect(landing).toMatch(/Built for Modern Optometry Practices/);
+    expect(landing).not.toMatch(/formatPlanPrice/);
+    expect(landing).not.toMatch(/SAAS_PLAN_ORDER/);
+    expect(landing).not.toMatch(/\$\d+/);
+  });
+
+  it('pricing page states practice-owners-only label', () => {
+    expect(pricing).toMatch(/For practice owners only/i);
+    expect(pricing).toMatch(/Patients do not pay for EyeQ access/i);
+  });
 });

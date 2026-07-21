@@ -4,7 +4,7 @@ import { DEMO_ORG_SLUG } from '@/lib/demo/constants';
 import { db } from '@/lib/db';
 
 /**
- * Controlled live pilot restrictions — org-scoped, fail-closed for risky automation.
+ * Controlled live pilot restrictions: org-scoped, fail-closed for risky automation.
  * Demo mode is separate; this only applies when controlledPilotEnabled is true.
  */
 export type ControlledPilotRestrictions = {
@@ -46,7 +46,7 @@ export function assertPilotAllowsImport(args: {
   if (args.dryRun) return;
   if (!args.confirmedAfterDryRun) {
     throw new Error(
-      'Controlled pilot: run a dry-run first, then confirm before importing patients (CSV migration only — not full EHR conversion).',
+      'Controlled pilot: run a dry-run first, then confirm before importing patients (CSV migration only: not full EHR conversion).',
     );
   }
 }

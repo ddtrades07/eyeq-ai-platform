@@ -3,7 +3,7 @@
 **Date:** July 20, 2026
 
 Use this as the single reference for local demo, pilot, and production PHI gates.  
-Missing production-required vars should fail clearly — do not silently mock success.
+Missing production-required vars should fail clearly: do not silently mock success.
 
 ## Core
 
@@ -34,7 +34,7 @@ Missing production-required vars should fail clearly — do not silently mock su
 | `AI_LOGGING_MODE` | Recommended | `redacted` (default) \| `off` \| `full` (never full in prod) |
 | `AI_BAA_CONFIRMED` / `OPENAI_BAA_CONFIRMED` | Yes for PHI | Legal gate |
 | `AI_HIPAA_MODE` | Recommended | Default `true` |
-| `NEXT_PUBLIC_AI_PROVIDER` | Optional | UI badge only — not the key |
+| `NEXT_PUBLIC_AI_PROVIDER` | Optional | UI badge only: not the key |
 
 Public website AI must not accept PHI. Clinical AI must stay organization-scoped, role-gated, audit-logged, and provider-reviewed.
 
@@ -49,7 +49,7 @@ Public website AI must not accept PHI. Clinical AI must stay organization-scoped
 | `IMAGING_ANALYSIS_MODE` | `manual` (default) \| vendor mode |
 | `IMAGING_AI_BAA_CONFIRMED` | PHI gate |
 
-If unset: show **Not configured** / **Manual review only** — never fabricate findings.
+If unset: show **Not configured** / **Manual review only**: never fabricate findings.
 
 ## Comms
 
@@ -67,7 +67,7 @@ If unset: reminders show disabled / not configured. Do not pretend messages sent
 | Variable | Notes |
 |----------|-------|
 | `ERROR_TRACKING_PROVIDER` | e.g. `sentry` or `none` |
-| `ERROR_TRACKING_DSN` | Server-only DSN — never expose to client |
+| `ERROR_TRACKING_DSN` | Server-only DSN: never expose to client |
 | `MONITORING_WEBHOOK_URL` | Optional ops webhook |
 
 Admin must still mark monitoring verified on PHI readiness. EyeQ does not auto-claim monitoring.
@@ -101,7 +101,7 @@ If unset or `demoMode` on connection: sync uses demo reviews; publish → `DEMO_
 
 `src/lib/env.ts` exports:
 
-- `validateEnvironment()` — returns errors/warnings
-- `assertProductionEnvironmentSafe()` — throws on production errors
+- `validateEnvironment()`: returns errors/warnings
+- `assertProductionEnvironmentSafe()`: throws on production errors
 
 Call these from health / boot paths in production deploys.

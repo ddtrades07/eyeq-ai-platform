@@ -47,7 +47,7 @@ export function PlanCheckoutCards({
       {checkoutSuccess ? (
         <div className="rounded-lg border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm text-emerald-950">
           Checkout returned successfully. Membership activates only after Stripe confirms payment via
-          webhook — refresh in a moment if status is still inactive.
+          webhook: refresh in a moment if status is still inactive.
         </div>
       ) : null}
 
@@ -78,7 +78,7 @@ export function PlanCheckoutCards({
           {SAAS_PLANS[plan].cta === 'checkout' ? 'Continue to Stripe Checkout' : 'Contact EyeQ'}
         </Button>
         <Link href="/demo" className={buttonVariants({ variant: 'outline' })}>
-          Skip — explore Live Demo (free)
+          Skip: explore Live Demo (free)
         </Link>
       </div>
       <p className="text-xs text-muted-foreground">

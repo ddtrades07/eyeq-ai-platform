@@ -1,4 +1,4 @@
-# EyeQ AI — Security Architecture
+# EyeQ AI. Security Architecture
 
 **Date:** July 6, 2026  
 **Scope:** Technical security design of the EyeQ AI platform (`eyeq-ai-platform/`)
@@ -68,7 +68,7 @@ EyeQ AI is a **multi-tenant SaaS** application:
 | API routes | `getCurrentUser()` + `isStaffRole()` (partial permission checks) |
 | UI | Conditional render based on `hasPermission()` |
 
-**Policy source of truth:** `src/lib/auth/rbac.ts` — `ROLE_PERMISSIONS` map.
+**Policy source of truth:** `src/lib/auth/rbac.ts`: `ROLE_PERMISSIONS` map.
 
 **Principle:** Deny by default; least privilege per role.
 
@@ -84,7 +84,7 @@ EyeQ AI is a **multi-tenant SaaS** application:
 | Query scoping | Server actions filter by `user.organizationId` |
 | Demo isolation | Separate org slug `eyeq-demo`; reset scoped to demo org ID |
 
-**Defense in depth gap:** PostgreSQL Row Level Security (RLS) not yet applied — isolation depends on application code correctness.
+**Defense in depth gap:** PostgreSQL Row Level Security (RLS) not yet applied: isolation depends on application code correctness.
 
 ---
 
@@ -156,7 +156,7 @@ audit({ organizationId, userId, action, resourceType, resourceId, metadata })
 |------|-----|-----|
 | Database | `AUDIT_LOG_SINK=db` | Default production |
 | Stdout JSON | `stdout` | Log aggregators |
-| External | `external` | Stub — implement before compliance audit |
+| External | `external` | Stub: implement before compliance audit |
 
 AI invocations additionally log via `ai-gateway/audit-logger.ts`.
 
@@ -168,8 +168,8 @@ AI invocations additionally log via `ai-gateway/audit-logger.ts`.
 
 | Control | Detail |
 |---------|--------|
-| Enable flag | `FEATURE_DEMO_MODE` — default `false` in production |
-| Shared account | `demo@eyeqai.app` — acceptable only in demo |
+| Enable flag | `FEATURE_DEMO_MODE`: default `false` in production |
+| Shared account | `demo@eyeqai.app`: acceptable only in demo |
 | Data wipe | `resetDemoMode()` scoped to demo org |
 | Banner | Visible on staff layout when in demo org |
 

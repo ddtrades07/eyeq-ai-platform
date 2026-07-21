@@ -180,7 +180,7 @@ export default async function BillingSettingsPage() {
 
       <p className="text-xs text-muted-foreground">
         Invoices and payment methods are managed in the Stripe Customer Portal. EyeQ never stores
-        card numbers. Stripe metadata contains organizationId only — never PHI.
+        card numbers. Stripe metadata contains organizationId only: never PHI.
       </p>
     </div>
   );

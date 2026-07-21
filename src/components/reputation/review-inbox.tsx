@@ -78,7 +78,7 @@ function ReviewReplyCard({
       return;
     }
     setDraft(result.data.draftReply ?? '');
-    toast.success('AI draft generated — review before publishing.');
+    toast.success('AI draft generated: review before publishing.');
     router.refresh();
   }
 

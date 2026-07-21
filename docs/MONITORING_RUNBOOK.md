@@ -18,9 +18,9 @@ Admin UI: **Settings → PHI readiness** / **Pilot launch** → mark monitoring 
 
 ## Health surfaces
 
-- `GET /api/health` — process + DB + vendor configuration snapshot (no secrets).
-- Pilot launch page — app, database, jobs, email/SMS, AI, storage status.
-- Structured server errors via `logServerError(scope, err, meta)` — redacts key-like fields.
+- `GET /api/health`: process + DB + vendor configuration snapshot (no secrets).
+- Pilot launch page: app, database, jobs, email/SMS, AI, storage status.
+- Structured server errors via `logServerError(scope, err, meta)`: redacts key-like fields.
 
 ## User-facing errors
 

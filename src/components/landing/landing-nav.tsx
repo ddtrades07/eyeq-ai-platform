@@ -7,11 +7,11 @@ import { Button, buttonVariants } from '@/components/ui/button';
 import { cn } from '@/lib/utils';
 
 const NAV_LINKS = [
-  { href: '#for-practices', label: 'For Practices' },
+  { href: '#features', label: 'Features' },
+  { href: '#ai-safety', label: 'AI Safety' },
   { href: '#for-patients', label: 'For Patients' },
-  { href: '#how-eyeq-helps', label: 'How EyeQ Helps' },
-  { href: '#our-approach', label: 'Our Approach' },
-  { href: '#trust', label: 'Trust & Privacy' },
+  { href: '/pricing', label: 'Pricing' },
+  { href: '#trust', label: 'Trust' },
 ] as const;
 
 export function LandingNav({ liveDemoHref = '/demo' }: { liveDemoHref?: string }) {
@@ -40,15 +40,25 @@ export function LandingNav({ liveDemoHref = '/demo' }: { liveDemoHref?: string }
         </Link>
 
         <nav className="hidden items-center gap-1 lg:flex" aria-label="Main">
-          {NAV_LINKS.map((link) => (
-            <a
-              key={link.href}
-              href={link.href}
-              className="rounded-md px-3 py-2 text-sm text-landing-muted transition-colors hover:bg-landing-sand/40 hover:text-landing-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-landing-teal"
-            >
-              {link.label}
-            </a>
-          ))}
+          {NAV_LINKS.map((link) =>
+            link.href.startsWith('/') ? (
+              <Link
+                key={link.href}
+                href={link.href}
+                className="rounded-md px-3 py-2 text-sm text-landing-muted transition-colors hover:bg-landing-sand/40 hover:text-landing-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-landing-teal"
+              >
+                {link.label}
+              </Link>
+            ) : (
+              <a
+                key={link.href}
+                href={link.href}
+                className="rounded-md px-3 py-2 text-sm text-landing-muted transition-colors hover:bg-landing-sand/40 hover:text-landing-navy focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-landing-teal"
+              >
+                {link.label}
+              </a>
+            ),
+          )}
         </nav>
 
         <div className="hidden items-center gap-2 lg:flex">
@@ -93,13 +103,23 @@ export function LandingNav({ liveDemoHref = '/demo' }: { liveDemoHref?: string }
           <ul className="space-y-1">
             {NAV_LINKS.map((link) => (
               <li key={link.href}>
-                <a
-                  href={link.href}
-                  className="block rounded-md px-3 py-2.5 text-sm font-medium text-landing-navy"
-                  onClick={() => setOpen(false)}
-                >
-                  {link.label}
-                </a>
+                {link.href.startsWith('/') ? (
+                  <Link
+                    href={link.href}
+                    className="block rounded-md px-3 py-2.5 text-sm font-medium text-landing-navy"
+                    onClick={() => setOpen(false)}
+                  >
+                    {link.label}
+                  </Link>
+                ) : (
+                  <a
+                    href={link.href}
+                    className="block rounded-md px-3 py-2.5 text-sm font-medium text-landing-navy"
+                    onClick={() => setOpen(false)}
+                  >
+                    {link.label}
+                  </a>
+                )}
               </li>
             ))}
           </ul>

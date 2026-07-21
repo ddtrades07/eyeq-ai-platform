@@ -17,19 +17,19 @@ describe('resolveDemoModeEnabled', () => {
   });
 
   it('defaults on in development when flags unset', async () => {
-    process.env.NODE_ENV = 'development';
+    (process.env as { NODE_ENV?: string }).NODE_ENV = 'development';
     const { resolveDemoModeEnabled } = await import('@/lib/env');
     expect(resolveDemoModeEnabled()).toBe(true);
   });
 
   it('defaults off in production NODE_ENV when flags unset', async () => {
-    process.env.NODE_ENV = 'production';
+    (process.env as { NODE_ENV?: string }).NODE_ENV = 'production';
     const { resolveDemoModeEnabled } = await import('@/lib/env');
     expect(resolveDemoModeEnabled()).toBe(false);
   });
 
   it('enables when APP_ENV=demo even if NODE_ENV=production', async () => {
-    process.env.NODE_ENV = 'production';
+    (process.env as { NODE_ENV?: string }).NODE_ENV = 'production';
     process.env.APP_ENV = 'demo';
     const { resolveDemoModeEnabled } = await import('@/lib/env');
     expect(resolveDemoModeEnabled()).toBe(true);
@@ -43,7 +43,7 @@ describe('resolveDemoModeEnabled', () => {
   });
 
   it('respects explicit DEMO_MODE=true', async () => {
-    process.env.NODE_ENV = 'production';
+    (process.env as { NODE_ENV?: string }).NODE_ENV = 'production';
     process.env.APP_ENV = 'staging';
     process.env.DEMO_MODE = 'true';
     const { resolveDemoModeEnabled } = await import('@/lib/env');

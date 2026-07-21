@@ -9,7 +9,11 @@ import { Label } from '@/components/ui/label';
 import { signupOrg } from '@/server/actions/auth';
 import { toast } from 'sonner';
 
-export function SignupOrgForm() {
+export function SignupOrgForm({
+  nextPath = '/onboarding/practice',
+}: {
+  nextPath?: string;
+}) {
   const router = useRouter();
   const [pending, startTransition] = React.useTransition();
   const [error, setError] = React.useState<string | null>(null);
@@ -33,8 +37,8 @@ export function SignupOrgForm() {
         toast.error(result.error);
         return;
       }
-      toast.success('Practice created. Check your inbox to verify your email if required.');
-      router.push('/provider/dashboard');
+      toast.success('Practice created. Next: choose a plan and activate membership.');
+      router.push(nextPath);
       router.refresh();
     });
   }

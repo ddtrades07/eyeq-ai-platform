@@ -3,6 +3,10 @@ import { createHmac, timingSafeEqual, createHash } from 'crypto';
 import { db } from '@/lib/db';
 import { serverEnv } from '@/lib/env';
 import { audit } from '@/lib/audit/log';
+import {
+  processSaasStripeEvent,
+  type StripeEventLike,
+} from '@/lib/billing/saas-webhook';
 
 export const dynamic = 'force-dynamic';
 
@@ -57,10 +61,15 @@ export async function POST(request: Request) {
     return NextResponse.json({ error: 'invalid signature' }, { status: 400 });
   }
 
-  let event: {
-    id?: string;
-    type: string;
-    data?: { object?: { metadata?: Record<string, string>; amount_total?: number; id?: string } };
+  let event: StripeEventLike & {
+    data?: {
+      object?: {
+        metadata?: Record<string, string>;
+        amount_total?: number;
+        id?: string;
+        mode?: string;
+      };
+    };
   };
   try {
     event = JSON.parse(body);
@@ -71,6 +80,25 @@ export async function POST(request: Request) {
   const eventId = event.id;
   if (!eventId) {
     return NextResponse.json({ error: 'missing event id' }, { status: 400 });
+  }
+
+  // Prefer SaaS membership handling (Checkout subscription + lifecycle).
+  const saas = await processSaasStripeEvent(event, body);
+  if (saas.handled) {
+    // Mirror into StripeWebhookEvent for unified ops visibility (idempotent).
+    await db.stripeWebhookEvent
+      .upsert({
+        where: { eventId },
+        create: {
+          eventId,
+          eventType: event.type,
+          payloadHash: createHash('sha256').update(body).digest('hex'),
+          metadata: { product: 'eyeq_saas', duplicate: saas.duplicate ?? false },
+        },
+        update: {},
+      })
+      .catch(() => undefined);
+    return NextResponse.json({ received: true, saas: true, duplicate: saas.duplicate ?? false });
   }
 
   const existing = await db.stripeWebhookEvent.findUnique({ where: { eventId } });

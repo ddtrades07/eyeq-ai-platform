@@ -2835,6 +2835,7 @@ enum SaasPlan {
 }
 
 enum SaasBillingStatus {
+  INACTIVE
   TRIALING
   ACTIVE
   PAST_DUE
@@ -2842,28 +2843,67 @@ enum SaasBillingStatus {
   MANUAL
 }
 
-/// Org-level SaaS plan + usage counters. Billing issues alert admins only —
-/// they must not hard-block clinical access.
+/// Org-level SaaS plan + usage counters. Billing issues alert admins /
+/// block new invites & locations when unpaid — they must not hard-block
+/// existing clinical record access.
 model OrgSubscription {
-  id                 String            @id @default(cuid())
-  organizationId     String            @unique
-  organization       Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  plan               SaasPlan          @default(PILOT)
-  billingStatus      SaasBillingStatus @default(MANUAL)
-  providerSeatLimit  Int               @default(5)
-  locationSeatLimit  Int               @default(2)
-  aiActionsUsed      Int               @default(0)
-  aiActionsLimit     Int?
-  scribeMinutesUsed  Int               @default(0)
-  scribeMinutesLimit Int?
-  smsRemindersUsed   Int               @default(0)
-  smsRemindersLimit  Int?
-  storageMbUsed      Int               @default(0)
-  storageMbLimit     Int?
-  nextInvoiceAt      DateTime?
-  adminAlertNote     String?           @db.Text
-  createdAt          DateTime          @default(now())
-  updatedAt          DateTime          @updatedAt
+  id                   String            @id @default(cuid())
+  organizationId       String            @unique
+  organization         Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  plan                 SaasPlan          @default(PILOT)
+  billingStatus        SaasBillingStatus @default(INACTIVE)
+  /// Stripe Customer id (cus_…). Never store card PANs.
+  stripeCustomerId     String?
+  /// Stripe Subscription id (sub_…).
+  stripeSubscriptionId String?
+  /// Stripe Price id currently billed (price_…).
+  stripePriceId        String?
+  /// Pending plan selected at Checkout before webhook activation.
+  pendingPlan          SaasPlan?
+  currentPeriodEnd     DateTime?
+  cancelAtPeriodEnd    Boolean           @default(false)
+  activatedAt          DateTime?
+  gracePeriodEndsAt    DateTime?
+  providerSeatLimit    Int               @default(5)
+  locationSeatLimit    Int               @default(2)
+  aiActionsUsed        Int               @default(0)
+  aiActionsLimit       Int?
+  scribeMinutesUsed    Int               @default(0)
+  scribeMinutesLimit   Int?
+  smsRemindersUsed     Int               @default(0)
+  smsRemindersLimit    Int?
+  storageMbUsed        Int               @default(0)
+  storageMbLimit       Int?
+  nextInvoiceAt        DateTime?
+  adminAlertNote       String?           @db.Text
+  createdAt            DateTime          @default(now())
+  updatedAt            DateTime          @updatedAt
+
+  billingEvents        SaasBillingEvent[]
+
+  @@index([stripeCustomerId])
+  @@index([stripeSubscriptionId])
+  @@index([billingStatus])
+}
+
+/// Idempotent SaaS billing lifecycle events (Checkout / subscription / invoice).
+/// No PHI — organizationId + Stripe ids only.
+model SaasBillingEvent {
+  id               String          @id @default(cuid())
+  organizationId   String?
+  subscriptionId   String?
+  subscription     OrgSubscription? @relation(fields: [subscriptionId], references: [id], onDelete: SetNull)
+  stripeEventId    String          @unique
+  eventType        String
+  /// checkout | subscription | invoice | portal | internal
+  source           String          @default("stripe")
+  payloadHash      String?
+  /// Non-PHI metadata only (plan ids, status transitions).
+  metadata         Json?
+  processedAt      DateTime        @default(now())
+
+  @@index([organizationId, processedAt])
+  @@index([eventType, processedAt])
 }
 
 // =================================================================

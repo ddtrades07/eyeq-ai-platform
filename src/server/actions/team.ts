@@ -10,6 +10,7 @@ import { assertPermission } from '@/lib/auth/require';
 import { audit } from '@/lib/audit/log';
 import { isStaffRole } from '@/lib/auth/rbac';
 import { publicEnv, serverEnv } from '@/lib/env';
+import { assertProviderSeatAvailable } from '@/lib/billing/seat-limits';
 
 const inviteSchema = z.object({
   email: z.string().email().max(200),
@@ -53,6 +54,8 @@ export const inviteTeamMember = action({
   async handler(input) {
     const inviter = await assertPermission('users:manage');
     if (!inviter.organizationId) throw new Error('No organization context');
+
+    await assertProviderSeatAvailable(inviter.organizationId);
 
     if (!isStaffRole(input.role)) {
       throw new Error('Role is not a staff role.');

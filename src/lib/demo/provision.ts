@@ -100,6 +100,25 @@ export async function ensureDemoMode(): Promise<string> {
 
   await syncDemoPrismaUsers(org.id, authByEmail);
 
+  await db.orgSubscription.upsert({
+    where: { organizationId: org.id },
+    create: {
+      organizationId: org.id,
+      plan: 'PRACTICE',
+      billingStatus: 'MANUAL',
+      providerSeatLimit: 50,
+      locationSeatLimit: 20,
+      activatedAt: new Date(),
+      adminAlertNote: 'Demo org — payment not required',
+    },
+    update: {
+      billingStatus: 'MANUAL',
+      providerSeatLimit: 50,
+      locationSeatLimit: 20,
+      adminAlertNote: 'Demo org — payment not required',
+    },
+  });
+
   const patientCount = await db.patient.count({
     where: { organizationId: org.id },
   });

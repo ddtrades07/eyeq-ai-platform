@@ -7,6 +7,7 @@ import { db } from '@/lib/db';
 import { action } from '@/lib/server-action';
 import { assertPermission, assertSameOrg } from '@/lib/auth/require';
 import { audit } from '@/lib/audit/log';
+import { assertLocationSeatAvailable } from '@/lib/billing/seat-limits';
 
 const updateOrgSchema = z.object({
   name: z.string().min(2).max(120).optional(),
@@ -61,6 +62,8 @@ export const createLocation = action({
   async handler(input) {
     const user = await assertPermission('org:manage');
     if (!user.organizationId) throw new Error('No organization context');
+
+    await assertLocationSeatAvailable(user.organizationId);
 
     // If this is set primary, demote any existing primary first.
     if (input.isPrimary) {

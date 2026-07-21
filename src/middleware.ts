@@ -6,7 +6,9 @@ const PUBLIC_ROUTES = new Set<string>([
   '/contact',
   '/login',
   '/demo',
+  '/pricing',
   '/signup',
+  '/signup/practice',
   '/signup-patient',
   '/forgot-password',
   '/reset-password',
@@ -67,7 +69,13 @@ export async function middleware(request: NextRequest) {
 
   if (isPublic(pathname)) {
     // Already logged in? Send to the role-aware launcher.
-    if (user && (pathname === '/login' || pathname === '/signup' || pathname === '/signup-patient')) {
+    if (
+      user &&
+      (pathname === '/login' ||
+        pathname === '/signup' ||
+        pathname === '/signup/practice' ||
+        pathname === '/signup-patient')
+    ) {
       const url = request.nextUrl.clone();
       url.pathname = '/launch';
       url.search = '';

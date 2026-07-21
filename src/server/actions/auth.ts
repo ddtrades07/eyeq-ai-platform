@@ -90,6 +90,15 @@ export const signupOrg = action({
             isPrimary: true,
           },
         },
+        subscription: {
+          create: {
+            plan: 'PRACTICE',
+            pendingPlan: 'PRACTICE',
+            billingStatus: 'INACTIVE',
+            providerSeatLimit: 10,
+            locationSeatLimit: 3,
+          },
+        },
       },
     });
 
@@ -118,7 +127,7 @@ export const signupOrg = action({
       action: 'CREATE',
       resourceType: 'Organization',
       resourceId: org.id,
-      metadata: { slug },
+      metadata: { slug, subscription: 'INACTIVE' },
     });
 
     return { organizationId: org.id, slug, userId: user.id };

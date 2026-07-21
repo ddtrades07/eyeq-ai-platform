@@ -146,6 +146,18 @@ export default async function SettingsPage() {
               >
                 Staff onboarding
               </Link>
+              <Link
+                href="/provider/settings/billing"
+                className={buttonVariants({ variant: 'outline', size: 'sm' })}
+              >
+                Billing
+              </Link>
+              <Link
+                href="/provider/settings/team"
+                className={buttonVariants({ variant: 'outline', size: 'sm' })}
+              >
+                Team
+              </Link>
             </div>
           </CardHeader>
           <CardContent className="text-sm text-muted-foreground">

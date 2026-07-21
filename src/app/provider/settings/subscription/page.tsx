@@ -106,7 +106,15 @@ export default async function SubscriptionPage() {
     <div className="space-y-6">
       <PageHeader
         title="Plan & usage"
-        description={`${org.name} SaaS billing readiness. Billing alerts never hard-block clinical access.`}
+        description={`${org.name} SaaS billing. Manage Checkout and the Stripe portal under Billing. Billing alerts never hard-block clinical record access.`}
+        actions={
+          <Link
+            href="/provider/settings/billing"
+            className={buttonVariants({ size: 'sm' })}
+          >
+            Open billing
+          </Link>
+        }
       />
 
       {pastDue ? (
@@ -200,7 +208,7 @@ export default async function SubscriptionPage() {
       <section>
         <SectionHeader
           title="Available plans"
-          description="Informational only — plan changes are coordinated with EyeQ, not self-serve checkout yet."
+          description="Informational plan catalog — use Billing settings for Checkout and the Stripe Customer Portal."
         />
         <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-4">
           {(Object.keys(PLAN_COPY) as SaasPlan[]).map((key) => (
